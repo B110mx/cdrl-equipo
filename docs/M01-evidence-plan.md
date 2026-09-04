@@ -11,7 +11,7 @@ cadenas de conexión reales.
 | Requisito | Evidencia esperada | Estado |
 | --- | --- | --- |
 | Partir de `CDRL-base-2026.zip` | Historial Git con commit inicial | Completo |
-| Repositorio propio del equipo | URL del remoto GitHub | Pendiente |
+| Repositorio propio del equipo | <https://github.com/B110mx/cdrl-equipo> | Completo |
 | Interfaz común | Salida de `make setup`, `make verify` y `make run` | Completo localmente; falta captura final consolidada |
 | Respaldo reproducible | PostgreSQL y DynamoDB activos mediante Docker Compose | Completo localmente |
 | Trabajo sin secretos | Revisión de archivos versionados y `.gitignore` | Pendiente de revisión final |
