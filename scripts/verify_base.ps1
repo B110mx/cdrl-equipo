@@ -15,7 +15,6 @@ foreach ($required in $requiredFiles) {
         throw "missing required file: $required"
     }
 }
-
 if (Get-Command docker -ErrorAction SilentlyContinue) {
     & docker compose config --quiet
     if ($LASTEXITCODE -ne 0) {
