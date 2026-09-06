@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:16-alpine
+    image: postgres:16.10-alpine
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-cdrl}
       POSTGRES_USER: ${POSTGRES_USER:-cdrl_dev}
@@ -16,7 +16,7 @@ services:
       retries: 10
 
   dynamodb:
-    image: amazon/dynamodb-local:latest
+    image: amazon/dynamodb-local:2.6.1
     command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data"
     ports:
       - "${DYNAMODB_PORT:-8000}:8000"

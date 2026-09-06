@@ -1,8 +1,18 @@
-﻿.PHONY: setup verify
+.PHONY: setup verify run
+ifeq ($(OS),Windows_NT)
+PYTHON ?= python
+VENV_PYTHON = .venv/Scripts/python.exe
+else
+PYTHON ?= python3
+VENV_PYTHON = .venv/bin/python
+endif
 
 setup:
-	pip install -r requirements.txt
+	$(PYTHON) -m venv .venv
+	$(VENV_PYTHON) -m pip install -r requirements.txt
 
 verify:
-	python -m unittest discover -s tests -v
+	$(VENV_PYTHON) scripts/verify_m01.py
 
+run:
+	docker compose up -d --wait

@@ -1,0 +1,29 @@
+{
+  "assignment_id": "m01-data-contract",
+  "generated_at": "2026-09-06T21:15:28.547849+00:00",
+  "status": "passed",
+  "checks": {
+    "required_files": {
+      "status": "passed"
+    },
+    "postgres_started": {
+      "status": "passed"
+    },
+    "tests": {
+      "status": "passed",
+      "total": 31,
+      "passed": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "database_reproducibility": {
+      "status": "passed",
+      "migration_runs": 2,
+      "seed_runs": 2,
+      "stable_row_count": 3,
+      "identical_seed_rows": true,
+      "temporary_schema_removed": true
+    }
+  }
+}

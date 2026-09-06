@@ -71,7 +71,9 @@ class TelemetryManager:
         metric: str,
         value: float,
         unit: str,
-        metadata: Optional[Dict] = None
+        metadata: Optional[Dict] = None,
+        *,
+        now: Optional[datetime] = None
     ) -> None:
         # event_id: UUID no vacío
         if not event_id or not self._is_valid_uuid(event_id):
@@ -89,7 +91,7 @@ class TelemetryManager:
             raise TelemetryValidationError("recorded_at debe ser un objeto datetime.")
         if recorded_at.tzinfo is None or recorded_at.tzinfo.utcoffset(recorded_at) is None:
             raise TelemetryValidationError("recorded_at debe incluir zona horaria.")
-        now = datetime.now(timezone.utc)
+        now = now if now is not None else datetime.now(timezone.utc)
         recorded_utc = recorded_at.astimezone(timezone.utc)
         if recorded_utc - now > timedelta(minutes=self.MAX_FUTURE_MINUTES):
             raise TelemetryValidationError(

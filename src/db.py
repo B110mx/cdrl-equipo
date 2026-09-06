@@ -24,7 +24,8 @@ class DatabaseConnection:
                 port=self.port,
                 dbname=self.dbname,
                 user=self.user,
-                password=self.password
+                password=self.password,
+                connect_timeout=10
             )
             self.connection.autocommit = False
             return self.connection

@@ -29,6 +29,26 @@ make run
 
 El hito M01 transforma esta base en un contrato de datos ejecutable: agrega el esquema relacional, migraciones idempotentes, seed sintético, pruebas, reporte y ADR. La base inicial solamente verifica la estructura de arranque; no es una solución terminada.
 
+La implementación usa Python 3 y PostgreSQL 16. El contrato y sus decisiones se
+documentan en `docs/M01-data-contract.md` y `docs/ADR-001-python.md`. El flujo reproducible es:
+
+```text
+make setup
+make verify
+make run
+```
+
+`make setup` instala las dependencias en un entorno virtual `.venv`.
+`make verify` inicia PostgreSQL y ejecuta las pruebas del integrante 3
+(`tests/test_telemetry.py` y `tests/test_integration.py`).
+La integración repite dos veces la migración y el seed en un esquema temporal,
+compara las tres filas completas y elimina ese esquema incluso si falla una prueba.
+Una base inaccesible o una prueba omitida hace fallar la verificación.
+El resultado se guarda en `artifacts/m01-verify.json` y la salida en
+`artifacts/make-verify-output.txt`, también cuando hay fallos.
+`make run` deja los servicios de Docker Compose activos en segundo plano
+y espera a que estén disponibles.
+
 ## Entrega de cada hito
 
 En Classroom entrega el repositorio propio del equipo, el tag semanal solicitado, el SHA exacto y el reporte de `make verify`. El repositorio debe conservar el historial y la evidencia de participación técnica de cada integrante.

@@ -1,21 +1,40 @@
 {
   "assignmentId": "m01-data-contract",
-  "commitSha": "REPLACE_AT_SUBMISSION",
+  "commitSha": "PENDING_FINAL_COMMIT",
   "commands": [
     "make setup",
     "make verify",
     "make run"
   ],
   "results": {
-    "starterBase": "pending_team_execution"
+    "contractTests": {
+      "expected": 31,
+      "passed": 31,
+      "skipped": 0,
+      "status": "passed"
+    },
+    "databaseReproducibility": {
+      "migrationRuns": 2,
+      "seedRuns": 2,
+      "expectedStableRowCount": 3,
+      "actualStableRowCount": 3,
+      "declaredFailureRejected": true,
+      "executionMode": "docker_compose_postgresql_temporary_schema",
+      "identicalSeedRows": true,
+      "temporarySchemaRemoved": true,
+      "status": "passed"
+    },
+    "machineReadableReport": "artifacts/m01-verify.json",
+    "verificationOutput": "artifacts/make-verify-output.txt"
   },
   "assumptions": [
-    "El equipo elegirá y documentará el lenguaje de la aplicación.",
+    "No se encontró una especificación del dominio más concreta que telemetría; M01 adopta mediciones neutrales de sensores.",
+    "La aplicación usa Python 3 y PostgreSQL 16.",
     "AWS Academy Learner Lab se usará solo si el servicio está habilitado.",
     "Los datos iniciales serán sintéticos."
   ],
   "limitations": [
-    "La base inicial no es una implementación completa de M01.",
-    "La imagen local de DynamoDB debe fijarse y reportarse cuando el equipo la use."
+    "El vocabulario de métricas es cerrado y requiere una migración para ampliarse.",
+    "El límite de desfase futuro se valida en Python, no mediante una restricción SQL dependiente del reloj."
   ]
 }

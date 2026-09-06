@@ -1,0 +1,42 @@
+test_config_reads_env_vars (tests.test_telemetry.TestDatabaseConnectionConfig.test_config_reads_env_vars) ... ok
+test_connect_failure_raises_connection_error (tests.test_telemetry.TestDatabaseConnectionConfig.test_connect_failure_raises_connection_error) ... ok
+test_connect_success (tests.test_telemetry.TestDatabaseConnectionConfig.test_connect_success) ... ok
+test_insert_measurement_db_error_rolls_back (tests.test_telemetry.TestTelemetryInsertion.test_insert_measurement_db_error_rolls_back) ... ok
+test_insert_measurement_invalid_data_raises_validation_error (tests.test_telemetry.TestTelemetryInsertion.test_insert_measurement_invalid_data_raises_validation_error) ... ok
+test_insert_measurement_success (tests.test_telemetry.TestTelemetryInsertion.test_insert_measurement_success) ... ok
+test_validate_bool_value_fails (tests.test_telemetry.TestTelemetryValidation.test_validate_bool_value_fails) ... ok
+test_validate_boundary_temperature_max (tests.test_telemetry.TestTelemetryValidation.test_validate_boundary_temperature_max) ... ok
+test_validate_boundary_temperature_min (tests.test_telemetry.TestTelemetryValidation.test_validate_boundary_temperature_min) ... ok
+test_validate_device_id_at_rejected (tests.test_telemetry.TestTelemetryValidation.test_validate_device_id_at_rejected) ... ok
+test_validate_device_id_colon_rejected (tests.test_telemetry.TestTelemetryValidation.test_validate_device_id_colon_rejected) ... ok
+test_validate_device_id_invalid_chars_fails (tests.test_telemetry.TestTelemetryValidation.test_validate_device_id_invalid_chars_fails) ... ok
+test_validate_device_id_too_long_fails (tests.test_telemetry.TestTelemetryValidation.test_validate_device_id_too_long_fails) ... ok
+test_validate_empty_event_id_fails (tests.test_telemetry.TestTelemetryValidation.test_validate_empty_event_id_fails) ... ok
+test_validate_future_exactly_5_minutes_accepted (tests.test_telemetry.TestTelemetryValidation.test_validate_future_exactly_5_minutes_accepted) ... ok
+test_validate_future_more_than_5_minutes_fails (tests.test_telemetry.TestTelemetryValidation.test_validate_future_more_than_5_minutes_fails) ... ok
+test_validate_invalid_metadata_fails (tests.test_telemetry.TestTelemetryValidation.test_validate_invalid_metadata_fails) ... ok
+test_validate_invalid_metric_fails (tests.test_telemetry.TestTelemetryValidation.test_validate_invalid_metric_fails) ... ok
+test_validate_invalid_unit_fails (tests.test_telemetry.TestTelemetryValidation.test_validate_invalid_unit_fails) ... ok
+test_validate_invalid_uuid_fails (tests.test_telemetry.TestTelemetryValidation.test_validate_invalid_uuid_fails) ... ok
+test_validate_metadata_exceeds_bytes_fails (tests.test_telemetry.TestTelemetryValidation.test_validate_metadata_exceeds_bytes_fails) ... ok
+test_validate_missing_timezone_fails (tests.test_telemetry.TestTelemetryValidation.test_validate_missing_timezone_fails) ... ok
+test_validate_nan_value_fails (tests.test_telemetry.TestTelemetryValidation.test_validate_nan_value_fails) ... ok
+test_validate_normal_temperature (tests.test_telemetry.TestTelemetryValidation.test_validate_normal_temperature) ... ok
+test_validate_temperature_above_max_fails (tests.test_telemetry.TestTelemetryValidation.test_validate_temperature_above_max_fails) ... ok
+test_validate_temperature_below_min_fails (tests.test_telemetry.TestTelemetryValidation.test_validate_temperature_below_min_fails) ... ok
+test_01_seed_data_exists (tests.test_integration.TestTelemetryIntegration.test_01_seed_data_exists)
+El seed conserva exactamente tres registros. ... ok
+test_02_insert_real_measurement (tests.test_integration.TestTelemetryIntegration.test_02_insert_real_measurement)
+Inserción real usando TelemetryManager y verificación. ... ok
+test_03_battery_voltage_max (tests.test_integration.TestTelemetryIntegration.test_03_battery_voltage_max)
+Inserción con battery_voltage en su límite máximo (1000). ... ok
+test_04_database_rejects_invalid_data (tests.test_integration.TestTelemetryIntegration.test_04_database_rejects_invalid_data)
+Check SQL constraints directly, bypassing Python validation. ... ok
+test_05_index_exists (tests.test_integration.TestTelemetryIntegration.test_05_index_exists) ... ok
+
+----------------------------------------------------------------------
+Ran 31 tests in 0.204s
+
+OK
+
+M01 verification: passed

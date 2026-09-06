@@ -5,8 +5,6 @@ from datetime import datetime, timezone, timedelta
 from unittest.mock import MagicMock, patch
 import json
 
-from freezegun import freeze_time
-
 from src.db import DatabaseConnection
 from src.telemetry import TelemetryManager, TelemetryValidationError
 
@@ -67,21 +65,21 @@ class TestTelemetryValidation(unittest.TestCase):
             self.manager.validate_telemetry_data(**data)
 
     # ---------- Caso límite: fecha exactamente 5 minutos en el futuro ----------
-    @freeze_time("2025-01-01 12:00:00")
     def test_validate_future_exactly_5_minutes_accepted(self):
         data = self._valid_data()
-        data["recorded_at"] = datetime.now(timezone.utc) + timedelta(minutes=5)
+        now = datetime(2025, 1, 1, 12, tzinfo=timezone.utc)
+        data["recorded_at"] = now + timedelta(minutes=5)
         try:
-            self.manager.validate_telemetry_data(**data)
+            self.manager.validate_telemetry_data(**data, now=now)
         except TelemetryValidationError:
             self.fail("validate_telemetry_data lanzó excepción para fecha exactamente 5 min en futuro")
 
-    @freeze_time("2025-01-01 12:00:00")
     def test_validate_future_more_than_5_minutes_fails(self):
         data = self._valid_data()
-        data["recorded_at"] = datetime.now(timezone.utc) + timedelta(minutes=6)
+        now = datetime(2025, 1, 1, 12, tzinfo=timezone.utc)
+        data["recorded_at"] = now + timedelta(minutes=5, microseconds=1)
         with self.assertRaises(TelemetryValidationError):
-            self.manager.validate_telemetry_data(**data)
+            self.manager.validate_telemetry_data(**data, now=now)
 
     # ---------- Fallo declarado: event_id vacío ----------
     def test_validate_empty_event_id_fails(self):
