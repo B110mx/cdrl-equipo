@@ -1,9 +1,11 @@
-"""Pruebas unitarias para TelemetryManager usando unittest."""
+﻿"""Pruebas unitarias para TelemetryManager usando unittest."""
 import unittest
 import uuid
 from datetime import datetime, timezone, timedelta
 from unittest.mock import MagicMock, patch
 import json
+
+from freezegun import freeze_time
 
 from src.db import DatabaseConnection
 from src.telemetry import TelemetryManager, TelemetryValidationError
@@ -17,7 +19,6 @@ class TestTelemetryValidation(unittest.TestCase):
         self.manager = TelemetryManager(self.mock_db)
 
     def _valid_data(self):
-        """Devuelve un conjunto de datos válidos base (métrica temperatura)."""
         return {
             "event_id": str(uuid.uuid4()),
             "device_id": "sensor-001",
@@ -30,7 +31,6 @@ class TestTelemetryValidation(unittest.TestCase):
 
     # ---------- Caso normal ----------
     def test_validate_normal_temperature(self):
-        """Temperatura 23.75 celsius es aceptada."""
         data = self._valid_data()
         try:
             self.manager.validate_telemetry_data(**data)
@@ -67,6 +67,7 @@ class TestTelemetryValidation(unittest.TestCase):
             self.manager.validate_telemetry_data(**data)
 
     # ---------- Caso límite: fecha exactamente 5 minutos en el futuro ----------
+    @freeze_time("2025-01-01 12:00:00")
     def test_validate_future_exactly_5_minutes_accepted(self):
         data = self._valid_data()
         data["recorded_at"] = datetime.now(timezone.utc) + timedelta(minutes=5)
@@ -75,6 +76,7 @@ class TestTelemetryValidation(unittest.TestCase):
         except TelemetryValidationError:
             self.fail("validate_telemetry_data lanzó excepción para fecha exactamente 5 min en futuro")
 
+    @freeze_time("2025-01-01 12:00:00")
     def test_validate_future_more_than_5_minutes_fails(self):
         data = self._valid_data()
         data["recorded_at"] = datetime.now(timezone.utc) + timedelta(minutes=6)
@@ -88,7 +90,7 @@ class TestTelemetryValidation(unittest.TestCase):
         with self.assertRaises(TelemetryValidationError):
             self.manager.validate_telemetry_data(**data)
 
-    # Otras validaciones importantes
+    # Otras validaciones
     def test_validate_invalid_uuid_fails(self):
         data = self._valid_data()
         data["event_id"] = "not-a-uuid"
@@ -97,7 +99,7 @@ class TestTelemetryValidation(unittest.TestCase):
 
     def test_validate_missing_timezone_fails(self):
         data = self._valid_data()
-        data["recorded_at"] = datetime.now()  # sin tzinfo
+        data["recorded_at"] = datetime.now()
         with self.assertRaises(TelemetryValidationError):
             self.manager.validate_telemetry_data(**data)
 
@@ -121,7 +123,6 @@ class TestTelemetryValidation(unittest.TestCase):
 
     def test_validate_metadata_exceeds_bytes_fails(self):
         data = self._valid_data()
-        # Crear metadata de más de 2048 bytes
         data["metadata"] = {"large_field": "x" * 2049}
         with self.assertRaises(TelemetryValidationError):
             self.manager.validate_telemetry_data(**data)
@@ -135,6 +136,30 @@ class TestTelemetryValidation(unittest.TestCase):
     def test_validate_device_id_invalid_chars_fails(self):
         data = self._valid_data()
         data["device_id"] = "sensor with spaces!"
+        with self.assertRaises(TelemetryValidationError):
+            self.manager.validate_telemetry_data(**data)
+
+    def test_validate_device_id_colon_rejected(self):
+        data = self._valid_data()
+        data["device_id"] = "sensor:001"
+        with self.assertRaises(TelemetryValidationError):
+            self.manager.validate_telemetry_data(**data)
+
+    def test_validate_device_id_at_rejected(self):
+        data = self._valid_data()
+        data["device_id"] = "sensor@001"
+        with self.assertRaises(TelemetryValidationError):
+            self.manager.validate_telemetry_data(**data)
+
+    def test_validate_bool_value_fails(self):
+        data = self._valid_data()
+        data["value"] = True
+        with self.assertRaises(TelemetryValidationError):
+            self.manager.validate_telemetry_data(**data)
+
+    def test_validate_nan_value_fails(self):
+        data = self._valid_data()
+        data["value"] = float('nan')
         with self.assertRaises(TelemetryValidationError):
             self.manager.validate_telemetry_data(**data)
 
@@ -162,7 +187,6 @@ class TestTelemetryInsertion(unittest.TestCase):
         }
 
     def test_insert_measurement_success(self):
-        """Inserción exitosa ejecuta el INSERT correcto y hace commit."""
         data = self._valid_data()
         self.manager.insert_measurement(**data)
 
@@ -171,7 +195,6 @@ class TestTelemetryInsertion(unittest.TestCase):
         sql = args[0]
         params = args[1]
 
-        # Verificar que las columnas sean las correctas
         self.assertIn("INSERT INTO telemetry_measurements", sql)
         self.assertIn("event_id", sql)
         self.assertIn("device_id", sql)
@@ -180,13 +203,11 @@ class TestTelemetryInsertion(unittest.TestCase):
         self.assertIn("value", sql)
         self.assertIn("unit", sql)
         self.assertIn("metadata", sql)
-        # No debe contener la columna temperature
         self.assertNotIn("temperature", sql)
 
-        # Verificar parámetros
         self.assertEqual(params[0], data["event_id"])
         self.assertEqual(params[1], data["device_id"])
-        self.assertEqual(params[3], "temperature")  # métrica
+        self.assertEqual(params[3], "temperature")
         self.assertEqual(params[4], 23.75)
         self.assertEqual(params[5], "celsius")
         self.assertEqual(params[6], json.dumps(data["metadata"]))
@@ -195,7 +216,6 @@ class TestTelemetryInsertion(unittest.TestCase):
         self.mock_db.connection.rollback.assert_not_called()
 
     def test_insert_measurement_db_error_rolls_back(self):
-        """Si hay error en la BD, se hace rollback y se lanza RuntimeError."""
         data = self._valid_data()
         self.mock_cursor.execute.side_effect = Exception("DB error")
 
@@ -206,9 +226,8 @@ class TestTelemetryInsertion(unittest.TestCase):
         self.mock_db.connection.commit.assert_not_called()
 
     def test_insert_measurement_invalid_data_raises_validation_error(self):
-        """Datos inválidos no llegan a la BD."""
         data = self._valid_data()
-        data["event_id"] = ""  # inválido
+        data["event_id"] = ""
         with self.assertRaises(TelemetryValidationError):
             self.manager.insert_measurement(**data)
         self.mock_cursor.execute.assert_not_called()
@@ -217,20 +236,20 @@ class TestTelemetryInsertion(unittest.TestCase):
 class TestDatabaseConnectionConfig(unittest.TestCase):
     """Pruebas de configuración de conexión usando variables de entorno sintéticas."""
 
-    @patch.dict('os.environ', {
-        'POSTGRES_HOST': 'synthetic-host',
-        'POSTGRES_PORT': '5433',
-        'POSTGRES_DB': 'synthetic_db',
-        'POSTGRES_USER': 'synthetic_user',
-        'POSTGRES_PASSWORD': 'synthetic_pass'
-    })
     def test_config_reads_env_vars(self):
-        db = DatabaseConnection()
-        self.assertEqual(db.host, 'synthetic-host')
-        self.assertEqual(db.port, 5433)
-        self.assertEqual(db.dbname, 'synthetic_db')
-        self.assertEqual(db.user, 'synthetic_user')
-        self.assertEqual(db.password, 'synthetic_pass')
+        with patch.dict('os.environ', {
+            'POSTGRES_HOST': 'synthetic-host',
+            'POSTGRES_PORT': '5433',
+            'POSTGRES_DB': 'synthetic_db',
+            'POSTGRES_USER': 'synthetic_user',
+            'POSTGRES_PASSWORD': 'synthetic_pass'
+        }):
+            db = DatabaseConnection()
+            self.assertEqual(db.host, 'synthetic-host')
+            self.assertEqual(db.port, 5433)
+            self.assertEqual(db.dbname, 'synthetic_db')
+            self.assertEqual(db.user, 'synthetic_user')
+            self.assertEqual(db.password, 'synthetic_pass')
 
     @patch('src.db.psycopg2.connect')
     def test_connect_success(self, mock_connect):

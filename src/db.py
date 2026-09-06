@@ -1,4 +1,4 @@
-"""Conexión a PostgreSQL usando configuración de entorno sintética."""
+﻿"""Conexión a PostgreSQL usando configuración de entorno sintética."""
 import os
 import psycopg2
 from psycopg2 import OperationalError

@@ -1,5 +1,7 @@
+
 """Gestión de telemetría: validación e inserción en PostgreSQL."""
 import json
+import math
 import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Optional, Dict, Any
@@ -14,11 +16,10 @@ class TelemetryValidationError(ValueError):
 class TelemetryManager:
     """Clase para validar y almacenar mediciones de telemetría."""
 
-    # Constantes según contrato de datos
     VALID_METRICS = {
         "temperature": {"min": -80.0, "max": 200.0},
         "humidity": {"min": 0.0, "max": 100.0},
-        "battery_voltage": {"min": 0.0, "max": 100.0}  # Rango supuesto, verificar contrato
+        "battery_voltage": {"min": 0.0, "max": 1000.0}
     }
     VALID_UNITS = {
         "temperature": {"celsius"},
@@ -27,7 +28,8 @@ class TelemetryManager:
     }
     MAX_FUTURE_MINUTES = 5
     MAX_DEVICE_ID_LENGTH = 64
-    ALLOWED_DEVICE_ID_CHARS = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.:@")
+    # Solo letras, números, guion, guion bajo y punto
+    ALLOWED_DEVICE_ID_CHARS = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.")
     MAX_METADATA_BYTES = 2048
     TABLE_NAME = "telemetry_measurements"
 
@@ -36,7 +38,6 @@ class TelemetryManager:
 
     @staticmethod
     def _is_valid_uuid(value: str) -> bool:
-        """Comprueba si value es un UUID válido."""
         try:
             uuid.UUID(str(value))
             return True
@@ -45,18 +46,15 @@ class TelemetryManager:
 
     @staticmethod
     def _is_valid_device_id(device_id: str) -> bool:
-        """Valida device_id: no vacío, longitud ≤64 y caracteres permitidos."""
         if not isinstance(device_id, str) or not device_id.strip():
             return False
         device_id = device_id.strip()
         if len(device_id) > TelemetryManager.MAX_DEVICE_ID_LENGTH:
             return False
-        # Comprobar que todos los caracteres están en el conjunto permitido
         return all(ch in TelemetryManager.ALLOWED_DEVICE_ID_CHARS for ch in device_id)
 
     @staticmethod
     def _is_valid_metadata(metadata: Any) -> bool:
-        """La metadata debe ser un dict, serializable a JSON y ≤2048 bytes."""
         if not isinstance(metadata, dict):
             return False
         try:
@@ -75,10 +73,6 @@ class TelemetryManager:
         unit: str,
         metadata: Optional[Dict] = None
     ) -> None:
-        """
-        Valida todos los campos según el contrato.
-        Lanza TelemetryValidationError si algún campo no cumple.
-        """
         # event_id: UUID no vacío
         if not event_id or not self._is_valid_uuid(event_id):
             raise TelemetryValidationError("event_id debe ser un UUID válido y no vacío.")
@@ -87,7 +81,7 @@ class TelemetryManager:
         if not self._is_valid_device_id(device_id):
             raise TelemetryValidationError(
                 f"device_id debe tener entre 1 y {self.MAX_DEVICE_ID_LENGTH} caracteres, "
-                f"y solo incluir letras, números, '-', '_', '.', ':', '@'."
+                f"y solo incluir letras, números, '-', '_', '.'."
             )
 
         # recorded_at: datetime con zona horaria
@@ -106,9 +100,11 @@ class TelemetryManager:
         if metric not in self.VALID_METRICS:
             raise TelemetryValidationError(f"Métrica '{metric}' no soportada.")
 
-        # value: numérico y dentro del rango de la métrica
-        if not isinstance(value, (int, float)):
-            raise TelemetryValidationError("value debe ser un número.")
+        # value: numérico, no booleano ni NaN, dentro del rango
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise TelemetryValidationError("value debe ser un número (no booleano).")
+        if isinstance(value, float) and not math.isfinite(value):
+            raise TelemetryValidationError("value no puede ser NaN o infinito.")
         value_float = float(value)
         range_min = self.VALID_METRICS[metric]["min"]
         range_max = self.VALID_METRICS[metric]["max"]
@@ -137,13 +133,8 @@ class TelemetryManager:
         unit: str,
         metadata: Optional[Dict] = None
     ) -> None:
-        """
-        Inserta una medición en la tabla telemetry_measurements.
-        Realiza la validación antes de insertar.
-        """
         self.validate_telemetry_data(event_id, device_id, recorded_at, metric, value, unit, metadata)
 
-        # Normalizar
         device_id = device_id.strip()
         if metadata is None:
             metadata_json = json.dumps({})
@@ -154,7 +145,7 @@ class TelemetryManager:
         try:
             cursor.execute(
                 f"""
-                INSERT INTO {self.TABLE_NAME} 
+                INSERT INTO {self.TABLE_NAME}
                 (event_id, device_id, recorded_at, metric, value, unit, metadata)
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
                 """,
