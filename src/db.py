@@ -8,12 +8,12 @@ class DatabaseConnection:
     """Gestiona la conexión a PostgreSQL con variables de entorno."""
 
     def __init__(self):
-        # Valores por defecto coinciden con .env.example (sintéticos)
-        self.host = os.getenv("DB_HOST", "localhost")
-        self.port = int(os.getenv("DB_PORT", "5432"))
-        self.dbname = os.getenv("DB_NAME", "telemetry_db")
-        self.user = os.getenv("DB_USER", "telemetry_user")
-        self.password = os.getenv("DB_PASSWORD", "telemetry_password")
+        # Valores por defecto coinciden con .env.example y Docker
+        self.host = os.getenv("POSTGRES_HOST", "localhost")
+        self.port = int(os.getenv("POSTGRES_PORT", "5432"))
+        self.dbname = os.getenv("POSTGRES_DB", "cdrl")
+        self.user = os.getenv("POSTGRES_USER", "cdrl_dev")
+        self.password = os.getenv("POSTGRES_PASSWORD", "cdrl_dev_only")
         self.connection = None
 
     def connect(self):
