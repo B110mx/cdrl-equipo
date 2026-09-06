@@ -51,4 +51,12 @@ y espera a que estén disponibles.
 
 ## Entrega de cada hito
 
+Después de obtener el commit final, ejecutar otra vez `make verify`.
+El comando genera `evidence/m01-data-contract.json` con el SHA de ese checkout;
+ese archivo generado es el que se adjunta en Classroom junto con el reporte.
+La copia versionada conserva una ejecución anterior: un archivo no puede
+contener literalmente el hash del commit que lo incluye sin cambiar ese hash.
+No se debe crear otro commit sólo para incorporar el SHA generado.
+GitHub Actions conserva la evidencia regenerada como un artefacto descargable.
+
 En Classroom entrega el repositorio propio del equipo, el tag semanal solicitado, el SHA exacto y el reporte de `make verify`. El repositorio debe conservar el historial y la evidencia de participación técnica de cada integrante.

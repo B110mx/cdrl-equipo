@@ -87,6 +87,23 @@ def main():
             log + "\nM01 verification: " + report["status"] + "\n", encoding="utf-8"
         )
         print("M01 verification:", report["status"])
+        # Regenerate after checkout so the delivered evidence names that commit.
+        evidence_path = ROOT / "evidence/m01-data-contract.json"
+        evidence = json.loads(evidence_path.read_text(encoding="utf-8-sig"))
+        evidence["commitSha"] = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], text=True, timeout=10
+        ).strip()
+        evidence["results"] = {
+            "status": report["status"],
+            "tests": checks.get("tests", {"status": "failed"}),
+            "databaseReproducibility": checks.get("database_reproducibility", {"status": "failed"}),
+            "machineReadableReport": "artifacts/m01-verify.json",
+            "verificationOutput": "artifacts/make-verify-output.txt",
+        }
+        evidence["generatedAt"] = report["generated_at"]
+        evidence_path.write_text(
+            json.dumps(evidence, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        )
     return 0 if report["status"] == "passed" else 1
 
 

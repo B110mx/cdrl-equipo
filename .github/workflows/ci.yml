@@ -29,4 +29,5 @@ jobs:
           path: |
             artifacts/m01-verify.json
             artifacts/make-verify-output.txt
+            evidence/m01-data-contract.json
           if-no-files-found: warn

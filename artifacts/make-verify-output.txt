@@ -35,7 +35,7 @@ Check SQL constraints directly, bypassing Python validation. ... ok
 test_05_index_exists (tests.test_integration.TestTelemetryIntegration.test_05_index_exists) ... ok
 
 ----------------------------------------------------------------------
-Ran 31 tests in 0.204s
+Ran 31 tests in 0.249s
 
 OK
 
