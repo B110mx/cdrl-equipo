@@ -10,6 +10,7 @@ endif
 setup:
 	$(PYTHON) -m venv .venv
 	$(VENV_PYTHON) -m pip install -r requirements.txt
+	docker compose up -d --wait postgres
 
 verify:
 	$(VENV_PYTHON) scripts/verify_m01.py
