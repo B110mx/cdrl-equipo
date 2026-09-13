@@ -1,0 +1,7 @@
+{
+  "team": ["Tu Nombre", "Nombre A", "Nombre B"],
+  "repository": "URL_DEL_REPO",
+  "commit_sha": "SE_LLENA_AL_FINAL",
+  "constraints_implemented": ["Check nulo", "Llave foránea X", "Unicidad Y"],
+  "declared_failure": "Intento de inserción de un registro con fecha negativa rechazada por constraint X"
+}
