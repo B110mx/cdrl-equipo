@@ -1,6 +1,6 @@
 {
   "assignmentId": "m01-data-contract",
-  "commitSha": "aeb7399b308484df1352bf8a191eac987af221f9",
+  "commitSha": "337da10f03592115604b46456ab87788051210c4",
   "commands": [
     "make setup",
     "make verify",
@@ -37,5 +37,5 @@
     "El vocabulario de métricas es cerrado y requiere una migración para ampliarse.",
     "El límite de desfase futuro se valida en Python, no mediante una restricción SQL dependiente del reloj."
   ],
-  "generatedAt": "2026-09-06T21:52:57.078080+00:00"
+  "generatedAt": "2026-09-13T20:14:12.000806+00:00"
 }
