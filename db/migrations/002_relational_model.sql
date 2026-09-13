@@ -14,6 +14,13 @@ CREATE TABLE IF NOT EXISTS devices (
 CREATE INDEX IF NOT EXISTS devices_status_idx
 	ON devices (status);
 
+-- Conserva las mediciones M01: registra sus dispositivos antes de validar la FK.
+-- No reemplaza nombres ni estados de dispositivos que ya estén registrados.
+INSERT INTO devices (device_id, device_name)
+SELECT DISTINCT device_id, device_id
+FROM telemetry_measurements
+ON CONFLICT (device_id) DO NOTHING;
+
 DO $$
 BEGIN
 	IF NOT EXISTS (

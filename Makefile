@@ -11,6 +11,7 @@ setup:
 	$(PYTHON) -m venv .venv
 	$(VENV_PYTHON) -m pip install -r requirements.txt
 	docker compose up -d --wait postgres
+	$(VENV_PYTHON) scripts/migrate.py --compose
 
 verify:
 	$(VENV_PYTHON) scripts/verify_m01.py
@@ -22,3 +23,4 @@ verify:
 
 run:
 	docker compose up -d --wait
+	$(VENV_PYTHON) scripts/run_m02.py --compose
