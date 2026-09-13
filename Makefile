@@ -14,6 +14,11 @@ setup:
 
 verify:
 	$(VENV_PYTHON) scripts/verify_m01.py
+	echo "Verificando estructura de entrega..."
+	test -d docs || (echo "Error: Falta carpeta docs/" && exit 1)
+	test -d artifacts || (echo "Error: Falta carpeta artifacts/" && exit 1)
+	test -f evidence/m02-relational-model.json || (echo "Error: Falta JSON de evidencia" && exit 1)
+	echo "Verificación exitosa. Estructura de entrega completa."
 
 run:
 	docker compose up -d --wait
