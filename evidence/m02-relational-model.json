@@ -1,7 +1,108 @@
 {
-  "team": ["Tu Nombre", "Nombre A", "Nombre B"],
-  "repository": "URL_DEL_REPO",
-  "commit_sha": "SE_LLENA_AL_FINAL",
-  "constraints_implemented": ["Check nulo", "Llave foránea X", "Unicidad Y"],
-  "declared_failure": "Intento de inserción de un registro con fecha negativa rechazada por constraint X"
+  "assignment_id": "m02-relational-model",
+  "team": [
+    "Integrante 1: arquitectura e infraestructura",
+    "Integrante 2: DML y consultas",
+    "Integrante 3: QA y documentación"
+  ],
+  "repository": "https://github.com/B110mx/cdrl-equipo",
+  "commands": [
+    "make setup",
+    "make verify",
+    "make run"
+  ],
+  "constraints_implemented": [
+    "PK devices.device_id y telemetry_measurements.event_id",
+    "FK telemetry_measurements_device_fk: ON UPDATE CASCADE, ON DELETE RESTRICT",
+    "Dispositivo: identificador válido, nombre no vacío, estado active o inactive",
+    "Mediciones: NOT NULL, métrica/unidad/rango coherentes y metadata JSON objeto"
+  ],
+  "declared_failure": {
+    "input": "Medición válida con device_id inexistente",
+    "expected_sqlstate": "23503",
+    "constraint": "telemetry_measurements_device_fk",
+    "test": "tests.test_relational.TestRelational.test_declared_failure_unknown_device"
+  },
+  "limitations": [
+    "Validación realizada con Docker Compose; no acredita ejecución en AWS Academy.",
+    "El desfase futuro se valida en Python M01; PostgreSQL no tiene un CHECK dependiente del reloj.",
+    "La evidencia se regenera para el checkout probado; source_dirty=true indica cambios locales sin commit.",
+    "El tag final se debe confirmar después de autorizar y publicar las correcciones."
+  ],
+  "commit_sha": "22967d94687c489e92140aef62bc3db1e35ed4ba",
+  "source_dirty": true,
+  "generated_at": "2026-09-14T02:04:24.794268+00:00",
+  "environment": "docker-compose",
+  "results": {
+    "status": "passed",
+    "checks": {
+      "required_files": {
+        "status": "passed"
+      },
+      "database_available": {
+        "status": "passed"
+      },
+      "tests": {
+        "status": "passed",
+        "total": 51,
+        "passed": 51,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "regression_m01": {
+        "status": "passed",
+        "migration_runs": 2,
+        "seed_runs": 2,
+        "stable_row_count": 3,
+        "identical_seed_rows": true,
+        "temporary_schema_removed": true
+      },
+      "m02_coverage": {
+        "status": "passed",
+        "categories": {
+          "normal": {
+            "status": "passed",
+            "cases": 1
+          },
+          "empty": {
+            "status": "passed",
+            "cases": 1
+          },
+          "limits": {
+            "status": "passed",
+            "cases": 4
+          },
+          "declared_failure": {
+            "status": "passed",
+            "cases": 1
+          },
+          "constraints": {
+            "status": "passed",
+            "cases": 5
+          },
+          "reproducibility": {
+            "status": "passed",
+            "cases": 2
+          },
+          "parameterization": {
+            "status": "passed",
+            "cases": 1
+          },
+          "runtime": {
+            "status": "passed",
+            "cases": 1
+          }
+        }
+      },
+      "isolated_schemas": {
+        "created": 16,
+        "removed": 16,
+        "status": "passed"
+      }
+    },
+    "machine_readable_report": "artifacts/m02-verify.json",
+    "verification_output": "artifacts/make-verify-output.txt",
+    "declared_failure_output": "artifacts/failure_result.txt"
+  }
 }

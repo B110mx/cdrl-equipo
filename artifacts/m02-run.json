@@ -1,0 +1,80 @@
+{
+  "module": "m02-relational-model",
+  "status": "passed",
+  "commit_sha": "22967d94687c489e92140aef62bc3db1e35ed4ba",
+  "source_dirty": true,
+  "migrations": [
+    "001_telemetry.sql",
+    "002_relational_model.sql"
+  ],
+  "seeds": [
+    "000_devices_seed.sql",
+    "001_telemetry_seed.sql"
+  ],
+  "parameters": {
+    "device_id": "sensor-lab-01",
+    "start": "2026-09-03T00:00:00Z",
+    "end": "2026-09-04T00:00:00Z",
+    "limit": 100,
+    "device_status": "active"
+  },
+  "measurements": [
+    {
+      "event_id": "018f47a0-79f2-7c19-bc7f-1a26d47e9123",
+      "device_id": "sensor-lab-01",
+      "recorded_at": "2026-09-03T17:59:30Z",
+      "metric": "temperature",
+      "value": "23.75",
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic"
+      }
+    },
+    {
+      "event_id": "018f47a0-79f2-7c19-bc7f-1a26d47e9124",
+      "device_id": "sensor-lab-01",
+      "recorded_at": "2026-09-03T18:00:00Z",
+      "metric": "humidity",
+      "value": "45.20",
+      "unit": "percent",
+      "metadata": {
+        "source": "synthetic"
+      }
+    }
+  ],
+  "metric_summary": [
+    {
+      "device_id": "sensor-lab-01",
+      "metric": "humidity",
+      "unit": "percent",
+      "measurement_count": 1,
+      "minimum": "45.20",
+      "maximum": "45.20",
+      "average": "45.2000000000000000"
+    },
+    {
+      "device_id": "sensor-lab-01",
+      "metric": "temperature",
+      "unit": "celsius",
+      "measurement_count": 1,
+      "minimum": "23.75",
+      "maximum": "23.75",
+      "average": "23.7500000000000000"
+    }
+  ],
+  "devices": [
+    {
+      "device_id": "sensor-lab-01",
+      "device_name": "sensor-lab-01",
+      "status": "active",
+      "measurement_count": 2
+    },
+    {
+      "device_id": "sensor-lab-02",
+      "device_name": "sensor-lab-02",
+      "status": "active",
+      "measurement_count": 1
+    }
+  ],
+  "generated_at": "2026-09-14T02:04:34.266143+00:00"
+}

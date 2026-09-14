@@ -1,4 +1,4 @@
-"""Puebla la base y ejecuta consultas parametrizadas M02; imprime JSON, no evidencia."""
+"""Puebla la base, ejecuta consultas M02 e imprime/guarda su reporte JSON."""
 import argparse
 import json
 import sys
@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from scripts.migrate import apply_migrations
+from scripts.evidence_support import source_revision
 from src.relational import (
     seed_database, measurements_by_device, metric_summary, devices_by_status,
 )
@@ -39,6 +40,8 @@ def timestamp(value):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--compose", action="store_true")
+    parser.add_argument("--no-artifact", action="store_true",
+                        help="No guardar reporte (para pruebas aisladas)")
     parser.add_argument("--device-id", default="sensor-lab-01")
     parser.add_argument("--start", type=timestamp, default="2026-09-03T00:00:00Z")
     parser.add_argument("--end", type=timestamp, default="2026-09-04T00:00:00Z")
@@ -48,11 +51,14 @@ def main():
     if args.start >= args.end or not 1 <= args.limit <= 1000 or not args.device_id:
         parser.error("Revisa dispositivo, inicio < fin y límite entre 1 y 1000")
     db = None
+    result = {"module": "m02-relational-model", "status": "failed"}
     try:
+        result.update(source_revision())
         db = connect_database(compose=args.compose)
         migrations = apply_migrations(db.connection)
         seeds = seed_database(db.connection)
         result = {
+            **result,
             "module": "m02-relational-model", "status": "passed",
             "migrations": migrations, "seeds": seeds,
             "parameters": {
@@ -66,17 +72,21 @@ def main():
             "devices": devices_by_status(db.connection, args.status),
         }
         db.connection.commit()
-        print(json.dumps(result, ensure_ascii=False, indent=2, default=json_value))
         return 0
     except Exception as exc:
         if db is not None:
             db.connection.rollback()
-        print(json.dumps({"status": "failed", "error_type": type(exc).__name__}),
-              file=sys.stderr)
+        result.update(status="failed", error_type=type(exc).__name__)
         return 1
     finally:
         if db is not None:
             db.close()
+        result["generated_at"] = datetime.now(timezone.utc).isoformat()
+        payload = json.dumps(result, ensure_ascii=False, indent=2, default=json_value) + "\n"
+        if not args.no_artifact:
+            (ROOT / "artifacts").mkdir(exist_ok=True)
+            (ROOT / "artifacts/m02-run.json").write_text(payload, encoding="utf-8")
+        print(payload, end="", file=sys.stdout if result["status"] == "passed" else sys.stderr)
 
 
 if __name__ == "__main__":

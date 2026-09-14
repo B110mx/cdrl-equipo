@@ -21,13 +21,16 @@ jobs:
           set -euo pipefail
           make setup
           make verify
+          make run
       - name: Save verification evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: m01-verification
+          name: m02-verification
           path: |
-            artifacts/m01-verify.json
+            artifacts/m02-verify.json
+            artifacts/m02-run.json
             artifacts/make-verify-output.txt
-            evidence/m01-data-contract.json
-          if-no-files-found: warn
+            artifacts/failure_result.txt
+            evidence/m02-relational-model.json
+          if-no-files-found: error

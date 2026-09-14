@@ -1,3 +1,28 @@
+test_01_seed_data_exists (tests.test_integration.TestTelemetryIntegration.test_01_seed_data_exists)
+El seed conserva exactamente tres registros. ... ok
+test_02_insert_real_measurement (tests.test_integration.TestTelemetryIntegration.test_02_insert_real_measurement)
+Inserción real usando TelemetryManager y verificación. ... ok
+test_03_battery_voltage_max (tests.test_integration.TestTelemetryIntegration.test_03_battery_voltage_max)
+Inserción con battery_voltage en su límite máximo (1000). ... ok
+test_04_database_rejects_invalid_data (tests.test_integration.TestTelemetryIntegration.test_04_database_rejects_invalid_data)
+Check SQL constraints directly, bypassing Python validation. ... ok
+test_05_index_exists (tests.test_integration.TestTelemetryIntegration.test_05_index_exists) ... ok
+test_constraints_devices (tests.test_relational.TestRelational.test_constraints_devices) ... ok
+test_constraints_indexes (tests.test_relational.TestRelational.test_constraints_indexes) ... ok
+test_constraints_referential_actions (tests.test_relational.TestRelational.test_constraints_referential_actions) ... ok
+test_constraints_sql_examples (tests.test_relational.TestRelational.test_constraints_sql_examples) ... ok
+test_constraints_wrong_unit (tests.test_relational.TestRelational.test_constraints_wrong_unit) ... ok
+test_declared_failure_unknown_device (tests.test_relational.TestRelational.test_declared_failure_unknown_device) ... ok
+test_empty_queries (tests.test_relational.TestRelational.test_empty_queries) ... ok
+test_limits_date_interval (tests.test_relational.TestRelational.test_limits_date_interval) ... ok
+test_limits_invalid_parameters (tests.test_relational.TestRelational.test_limits_invalid_parameters) ... ok
+test_limits_metric_ranges (tests.test_relational.TestRelational.test_limits_metric_ranges) ... ok
+test_limits_row_count (tests.test_relational.TestRelational.test_limits_row_count) ... ok
+test_normal_queries (tests.test_relational.TestRelational.test_normal_queries) ... ok
+test_parameterization_injection_is_data (tests.test_relational.TestRelational.test_parameterization_injection_is_data) ... ok
+test_reproducibility_migrations_seed (tests.test_relational.TestRelational.test_reproducibility_migrations_seed) ... ok
+test_runtime_cli_json (tests.test_relational.TestRelational.test_runtime_cli_json) ... ok
+test_reproducibility_upgrade_m01 (tests.test_relational.TestUpgrade.test_reproducibility_upgrade_m01) ... ok
 test_config_reads_env_vars (tests.test_telemetry.TestDatabaseConnectionConfig.test_config_reads_env_vars) ... ok
 test_connect_failure_raises_connection_error (tests.test_telemetry.TestDatabaseConnectionConfig.test_connect_failure_raises_connection_error) ... ok
 test_connect_success (tests.test_telemetry.TestDatabaseConnectionConfig.test_connect_success) ... ok
@@ -24,19 +49,14 @@ test_validate_nan_value_fails (tests.test_telemetry.TestTelemetryValidation.test
 test_validate_normal_temperature (tests.test_telemetry.TestTelemetryValidation.test_validate_normal_temperature) ... ok
 test_validate_temperature_above_max_fails (tests.test_telemetry.TestTelemetryValidation.test_validate_temperature_above_max_fails) ... ok
 test_validate_temperature_below_min_fails (tests.test_telemetry.TestTelemetryValidation.test_validate_temperature_below_min_fails) ... ok
-test_01_seed_data_exists (tests.test_integration.TestTelemetryIntegration.test_01_seed_data_exists)
-El seed conserva exactamente tres registros. ... ok
-test_02_insert_real_measurement (tests.test_integration.TestTelemetryIntegration.test_02_insert_real_measurement)
-Inserción real usando TelemetryManager y verificación. ... ok
-test_03_battery_voltage_max (tests.test_integration.TestTelemetryIntegration.test_03_battery_voltage_max)
-Inserción con battery_voltage en su límite máximo (1000). ... ok
-test_04_database_rejects_invalid_data (tests.test_integration.TestTelemetryIntegration.test_04_database_rejects_invalid_data)
-Check SQL constraints directly, bypassing Python validation. ... ok
-test_05_index_exists (tests.test_integration.TestTelemetryIntegration.test_05_index_exists) ... ok
+test_database_failure_produces_failed_evidence (tests.test_verification.TestVerification.test_database_failure_produces_failed_evidence) ... ok
+test_error_messages_are_sanitized (tests.test_verification.TestVerification.test_error_messages_are_sanitized) ... ok
+test_missing_category_is_failure (tests.test_verification.TestVerification.test_missing_category_is_failure) ... ok
+test_skipped_case_is_failure (tests.test_verification.TestVerification.test_skipped_case_is_failure) ... ok
 
 ----------------------------------------------------------------------
-Ran 31 tests in 0.318s
+Ran 51 tests in 3.047s
 
 OK
 
-M01 verification: passed
+M02 verification: passed
