@@ -24,11 +24,8 @@ BEGIN
     EXECUTE format('GRANT USAGE, CREATE ON SCHEMA %I TO cdrl_migrator', app_schema);
     EXECUTE format('GRANT USAGE ON SCHEMA %I TO cdrl_writer, cdrl_reader, cdrl_operator', app_schema);
     EXECUTE format('GRANT INSERT ON telemetry_measurements TO cdrl_writer');
-    EXECUTE format('GRANT SELECT ON devices TO cdrl_reader');
+    EXECUTE format('GRANT SELECT ON devices, telemetry_measurements TO cdrl_reader');
     EXECUTE format('GRANT SELECT ON devices, telemetry_measurements TO cdrl_operator');
 END $$;
-
--- El usuario de Compose ejecuta las pruebas SET ROLE; no se guardan contraseñas.
-GRANT cdrl_migrator, cdrl_writer, cdrl_reader, cdrl_operator TO CURRENT_USER;
 
 COMMIT;

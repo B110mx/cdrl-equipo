@@ -11,13 +11,19 @@ responsabilidades de la base de datos:
 | --- | --- |
 | `cdrl_migrator` | `USAGE` y `CREATE` en el esquema actual para aplicar migraciones. |
 | `cdrl_writer` | `INSERT` en `telemetry_measurements`. |
-| `cdrl_reader` | `SELECT` en `devices`. |
+| `cdrl_reader` | `SELECT` en `devices` y `telemetry_measurements`. |
 | `cdrl_operator` | `SELECT` en `devices` y `telemetry_measurements`. |
 
 Ningún rol puede crear otros roles, crear bases de datos o ser superusuario.
 La migración es repetible: crea cada rol solo si no existe y vuelve a aplicar los
-permisos declarados. Las pruebas también comprueban tres accesos rechazados:
-lector insertando, escritor leyendo telemetría y operador actualizando dispositivos.
+permisos declarados. Los usuarios `cdrl_migrator_user`, `cdrl_writer_user`,
+`cdrl_reader_user` y `cdrl_operator_user` se crean mediante variables de entorno
+y reciben una sola membresía. El migrador es propietario de las tablas existentes
+para poder aplicar cambios posteriores.
+
+Las pruebas usan conexiones reales y comprueban operaciones permitidas y cuatro
+denegaciones: lector insertando, escritor leyendo telemetría, operador actualizando
+dispositivos y migrador creando roles.
 
 El usuario configurado por el entorno recibe membresía de los cuatro roles solo
 para poder ejecutar las pruebas locales con `SET ROLE`. En un despliegue real,
@@ -28,9 +34,10 @@ que necesita.
 
 No se versionan contraseñas, tokens ni cadenas de conexión. PostgreSQL recibe la
 configuración desde variables de entorno y `.env` está excluido por `.gitignore`.
-Para rotar una credencial, genera una nueva fuera del repositorio, cambia
-`POSTGRES_PASSWORD` en el entorno seguro, actualiza la contraseña del usuario
-con `ALTER ROLE nombre_de_usuario PASSWORD 'nueva-credencial'` mediante un canal
-administrativo y reinicia el servicio. Revoca la credencial anterior cuando los
-clientes ya usen la nueva; nunca escribas el valor en SQL, documentación o
-reportes.
+Para rotar una credencial, genera una nueva fuera del repositorio y cambia la
+variable correspondiente (`POSTGRES_MIGRATOR_PASSWORD`, `POSTGRES_WRITER_PASSWORD`,
+`POSTGRES_READER_PASSWORD` o `POSTGRES_OPERATOR_PASSWORD`) en el entorno seguro.
+Ejecuta `scripts/configure_roles.py --compose` con el usuario administrador; el
+script aplica `ALTER ROLE` al usuario separado sin imprimir la contraseña. Reinicia
+los clientes y revoca la credencial anterior cuando ya usen la nueva. Nunca
+escribas el valor en SQL, documentación o reportes.
