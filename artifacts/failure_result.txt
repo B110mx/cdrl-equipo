@@ -1,5 +1,5 @@
 Fallo declarado M02: medición con dispositivo inexistente.
 Resultado de la prueba: passed
 Rechazo esperado: SQLSTATE 23503, telemetry_measurements_device_fk.
-SHA base: 22967d94687c489e92140aef62bc3db1e35ed4ba
+SHA base: a2c4193203a73ce56745a2fd1e7daa72bc77646e
 Cambios locales de código: True

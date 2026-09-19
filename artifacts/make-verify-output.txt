@@ -23,6 +23,10 @@ test_parameterization_injection_is_data (tests.test_relational.TestRelational.te
 test_reproducibility_migrations_seed (tests.test_relational.TestRelational.test_reproducibility_migrations_seed) ... ok
 test_runtime_cli_json (tests.test_relational.TestRelational.test_runtime_cli_json) ... ok
 test_reproducibility_upgrade_m01 (tests.test_relational.TestUpgrade.test_reproducibility_upgrade_m01) ... ok
+test_declared_permissions_are_available (tests.test_roles.TestRolePermissions.test_declared_permissions_are_available) ... ok
+test_operator_cannot_modify_devices (tests.test_roles.TestRolePermissions.test_operator_cannot_modify_devices) ... ok
+test_reader_cannot_insert (tests.test_roles.TestRolePermissions.test_reader_cannot_insert) ... ok
+test_writer_cannot_read_telemetry (tests.test_roles.TestRolePermissions.test_writer_cannot_read_telemetry) ... ok
 test_config_reads_env_vars (tests.test_telemetry.TestDatabaseConnectionConfig.test_config_reads_env_vars) ... ok
 test_connect_failure_raises_connection_error (tests.test_telemetry.TestDatabaseConnectionConfig.test_connect_failure_raises_connection_error) ... ok
 test_connect_success (tests.test_telemetry.TestDatabaseConnectionConfig.test_connect_success) ... ok
@@ -55,7 +59,7 @@ test_missing_category_is_failure (tests.test_verification.TestVerification.test_
 test_skipped_case_is_failure (tests.test_verification.TestVerification.test_skipped_case_is_failure) ... ok
 
 ----------------------------------------------------------------------
-Ran 51 tests in 3.047s
+Ran 55 tests in 7.660s
 
 OK
 

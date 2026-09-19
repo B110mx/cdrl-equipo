@@ -1,7 +1,7 @@
 {
   "assignment_id": "m02-relational-model",
   "status": "passed",
-  "generated_at": "2026-09-14T02:04:24.794268+00:00",
+  "generated_at": "2026-09-19T03:19:52.351354+00:00",
   "environment": "docker-compose",
   "checks": {
     "required_files": {
@@ -12,8 +12,8 @@
     },
     "tests": {
       "status": "passed",
-      "total": 51,
-      "passed": 51,
+      "total": 55,
+      "passed": 55,
       "failures": 0,
       "errors": 0,
       "skipped": 0
@@ -176,6 +176,26 @@
       "status": "passed"
     },
     {
+      "test": "tests.test_roles.TestRolePermissions.test_declared_permissions_are_available",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_roles.TestRolePermissions.test_operator_cannot_modify_devices",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_roles.TestRolePermissions.test_reader_cannot_insert",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_roles.TestRolePermissions.test_writer_cannot_read_telemetry",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
       "test": "tests.test_telemetry.TestDatabaseConnectionConfig.test_config_reads_env_vars",
       "category": "regression_m01",
       "status": "passed"
@@ -326,6 +346,6 @@
       "status": "passed"
     }
   ],
-  "commit_sha": "22967d94687c489e92140aef62bc3db1e35ed4ba",
+  "commit_sha": "a2c4193203a73ce56745a2fd1e7daa72bc77646e",
   "source_dirty": true
 }
