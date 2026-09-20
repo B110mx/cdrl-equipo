@@ -1,0 +1,15 @@
+test_declared_permissions_are_available (tests.test_roles.TestRolePermissions.test_declared_permissions_are_available) ... ok
+test_each_login_has_exactly_one_cdrl_membership (tests.test_roles.TestRolePermissions.test_each_login_has_exactly_one_cdrl_membership) ... ok
+test_migrator_cannot_create_roles (tests.test_roles.TestRolePermissions.test_migrator_cannot_create_roles) ... ok
+test_operator_cannot_modify_devices (tests.test_roles.TestRolePermissions.test_operator_cannot_modify_devices) ... ok
+test_reader_cannot_insert (tests.test_roles.TestRolePermissions.test_reader_cannot_insert) ... ok
+test_writer_boundary_cases (tests.test_roles.TestRolePermissions.test_writer_boundary_cases)
+Prueba de casos límite (Edge Cases) de la base de datos permitidos para el escritor. ... ok
+test_writer_cannot_read_telemetry (tests.test_roles.TestRolePermissions.test_writer_cannot_read_telemetry) ... ok
+test_writer_declared_failure (tests.test_roles.TestRolePermissions.test_writer_declared_failure)
+Prueba de fallo declarado: La base de datos rechaza datos inválidos (Constraint). ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 3.233s
+
+OK

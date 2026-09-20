@@ -1,7 +1,7 @@
 {
   "assignment_id": "m03-role-separation",
   "status": "passed",
-  "generated_at": "2026-09-20T02:28:47.192718+00:00",
+  "generated_at": "2026-09-20T05:57:45.373768+00:00",
   "environment": "docker-compose",
   "checks": {
     "required_files": {
@@ -15,15 +15,15 @@
     },
     "tests": {
       "status": "passed",
-      "total": 57,
-      "passed": 57,
+      "total": 59,
+      "passed": 59,
       "failures": 0,
       "errors": 0,
       "skipped": 0
     },
     "role_contract": {
       "status": "passed",
-      "cases": 6,
+      "cases": 8,
       "negative_access_cases": 4,
       "single_membership_verified": true
     }
@@ -160,7 +160,17 @@
       "status": "passed"
     },
     {
+      "test": "tests.test_roles.TestRolePermissions.test_writer_boundary_cases",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
       "test": "tests.test_roles.TestRolePermissions.test_writer_cannot_read_telemetry",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_roles.TestRolePermissions.test_writer_declared_failure",
       "category": "regression_m01",
       "status": "passed"
     },
@@ -315,6 +325,6 @@
       "status": "passed"
     }
   ],
-  "commit_sha": "b35b49aa6b7b6217c63b590a8f93346269260cd0",
+  "commit_sha": "cca1a69362ec5b60958e853dcd5a5dc54127be3b",
   "source_dirty": true
 }

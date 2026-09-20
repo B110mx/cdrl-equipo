@@ -28,7 +28,11 @@ test_each_login_has_exactly_one_cdrl_membership (tests.test_roles.TestRolePermis
 test_migrator_cannot_create_roles (tests.test_roles.TestRolePermissions.test_migrator_cannot_create_roles) ... ok
 test_operator_cannot_modify_devices (tests.test_roles.TestRolePermissions.test_operator_cannot_modify_devices) ... ok
 test_reader_cannot_insert (tests.test_roles.TestRolePermissions.test_reader_cannot_insert) ... ok
+test_writer_boundary_cases (tests.test_roles.TestRolePermissions.test_writer_boundary_cases)
+Prueba de casos límite (Edge Cases) de la base de datos permitidos para el escritor. ... ok
 test_writer_cannot_read_telemetry (tests.test_roles.TestRolePermissions.test_writer_cannot_read_telemetry) ... ok
+test_writer_declared_failure (tests.test_roles.TestRolePermissions.test_writer_declared_failure)
+Prueba de fallo declarado: La base de datos rechaza datos inválidos (Constraint). ... ok
 test_config_reads_env_vars (tests.test_telemetry.TestDatabaseConnectionConfig.test_config_reads_env_vars) ... ok
 test_connect_failure_raises_connection_error (tests.test_telemetry.TestDatabaseConnectionConfig.test_connect_failure_raises_connection_error) ... ok
 test_connect_success (tests.test_telemetry.TestDatabaseConnectionConfig.test_connect_success) ... ok
@@ -61,14 +65,14 @@ test_missing_category_is_failure (tests.test_verification.TestVerification.test_
 test_skipped_case_is_failure (tests.test_verification.TestVerification.test_skipped_case_is_failure) ... ok
 
 ----------------------------------------------------------------------
-Ran 57 tests in 3.534s
+Ran 59 tests in 8.523s
 
 OK
 
 {
   "assignment_id": "m03-role-separation",
   "status": "passed",
-  "generated_at": "2026-09-20T02:28:47.192718+00:00",
+  "generated_at": "2026-09-20T05:57:45.373768+00:00",
   "environment": "docker-compose",
   "checks": {
     "required_files": {
@@ -82,15 +86,15 @@ OK
     },
     "tests": {
       "status": "passed",
-      "total": 57,
-      "passed": 57,
+      "total": 59,
+      "passed": 59,
       "failures": 0,
       "errors": 0,
       "skipped": 0
     },
     "role_contract": {
       "status": "passed",
-      "cases": 6,
+      "cases": 8,
       "negative_access_cases": 4,
       "single_membership_verified": true
     }
@@ -227,7 +231,17 @@ OK
       "status": "passed"
     },
     {
+      "test": "tests.test_roles.TestRolePermissions.test_writer_boundary_cases",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
       "test": "tests.test_roles.TestRolePermissions.test_writer_cannot_read_telemetry",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_roles.TestRolePermissions.test_writer_declared_failure",
       "category": "regression_m01",
       "status": "passed"
     },
@@ -382,6 +396,6 @@ OK
       "status": "passed"
     }
   ],
-  "commit_sha": "b35b49aa6b7b6217c63b590a8f93346269260cd0",
+  "commit_sha": "cca1a69362ec5b60958e853dcd5a5dc54127be3b",
   "source_dirty": true
 }

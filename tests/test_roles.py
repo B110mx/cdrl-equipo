@@ -115,6 +115,38 @@ class TestRolePermissions(unittest.TestCase):
             """, (user,))
             self.assertEqual(memberships, [(expected_role,)])
 
+    def test_writer_boundary_cases(self):
+        """Prueba de casos límite (Edge Cases) de la base de datos permitidos para el escritor."""
+        with self.role_connection("cdrl_writer") as connection:
+            with connection.cursor() as cursor:
+                # Límite 1: Valor mínimo razonable (0.0) con métrica permitida
+                cursor.execute("""
+                    INSERT INTO telemetry_measurements 
+                    (event_id, device_id, recorded_at, metric, value, unit) 
+                    VALUES (%s, 'role-device', CURRENT_TIMESTAMP, 'temperature', 0.0, 'celsius')
+                """, (str(uuid.uuid4()),))
+                
+                # Límite 2: Valor con máxima precisión decimal normal
+                cursor.execute("""
+                    INSERT INTO telemetry_measurements 
+                    (event_id, device_id, recorded_at, metric, value, unit) 
+                    VALUES (%s, 'role-device', CURRENT_TIMESTAMP, 'temperature', 99.99, 'celsius')
+                """, (str(uuid.uuid4()),))
+            connection.commit()
+
+    def test_writer_declared_failure(self):
+        """Prueba de fallo declarado: La base de datos rechaza datos inválidos (Constraint)."""
+        with self.role_connection("cdrl_writer") as connection:
+            # Esperamos que falle por restricción de CHECK, NOT NULL o Error de Datos, no por privilegios
+            with self.assertRaises((errors.CheckViolation, errors.NotNullViolation, errors.DataError)):
+                with connection.cursor() as cursor:
+                    # Intento de inserción con un valor inválido (ej. metric en NULL)
+                    cursor.execute("""
+                        INSERT INTO telemetry_measurements 
+                        (event_id, device_id, recorded_at, metric, value, unit) 
+                        VALUES (%s, 'role-device', CURRENT_TIMESTAMP, NULL, 20.0, 'celsius')
+                    """, (str(uuid.uuid4()),))
+
 
 if __name__ == "__main__":
     unittest.main()
