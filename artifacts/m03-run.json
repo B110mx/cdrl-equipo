@@ -1,0 +1,25 @@
+{
+  "module": "m03-role-separation",
+  "status": "passed",
+  "commit_sha": "b35b49aa6b7b6217c63b590a8f93346269260cd0",
+  "source_dirty": true,
+  "operations": {
+    "migration": "create_and_drop_probe",
+    "write": {
+      "event_id": "018f47a0-79f2-7c19-bc7f-1a26d47e93ff",
+      "result": "inserted"
+    },
+    "read": {
+      "device_id": "sensor-lab-01",
+      "metric": "temperature",
+      "value": "24.5",
+      "unit": "celsius"
+    },
+    "operation": {
+      "device_count": 3,
+      "measurement_count": 4
+    }
+  },
+  "synthetic_probe_removed": true,
+  "generated_at": "2026-09-20T02:28:51.585947+00:00"
+}

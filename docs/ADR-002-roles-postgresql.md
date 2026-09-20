@@ -25,10 +25,14 @@ Las pruebas usan conexiones reales y comprueban operaciones permitidas y cuatro
 denegaciones: lector insertando, escritor leyendo telemetría, operador actualizando
 dispositivos y migrador creando roles.
 
-El usuario configurado por el entorno recibe membresía de los cuatro roles solo
-para poder ejecutar las pruebas locales con `SET ROLE`. En un despliegue real,
-cada aplicación debe usar un usuario separado y recibir únicamente la membresía
-que necesita.
+El configurador revoca primero las cuatro membresías conocidas de cada usuario y
+después concede únicamente la que corresponde. Esto corrige configuraciones
+anteriores y permite comprobar la separación efectiva.
+
+`make run` abre cuatro conexiones independientes. El migrador crea y elimina una
+tabla de prueba, el escritor inserta una medición sintética, el lector recupera
+esa medición y el operador consulta conteos. Al terminar se elimina la medición
+de demostración para que las ejecuciones repetidas conserven el mismo estado.
 
 ## Secretos y rotación
 

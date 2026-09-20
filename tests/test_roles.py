@@ -97,6 +97,24 @@ class TestRolePermissions(unittest.TestCase):
                 with connection.cursor() as cursor:
                     cursor.execute("CREATE ROLE denied_role")
 
+    def test_each_login_has_exactly_one_cdrl_membership(self):
+        expected = {
+            os.getenv("POSTGRES_MIGRATOR_USER", "cdrl_migrator_user"): "cdrl_migrator",
+            os.getenv("POSTGRES_WRITER_USER", "cdrl_writer_user"): "cdrl_writer",
+            os.getenv("POSTGRES_READER_USER", "cdrl_reader_user"): "cdrl_reader",
+            os.getenv("POSTGRES_OPERATOR_USER", "cdrl_operator_user"): "cdrl_operator",
+        }
+        for user, expected_role in expected.items():
+            memberships = self.execute("""
+                SELECT granted.rolname
+                FROM pg_auth_members AS membership
+                JOIN pg_roles AS login_role ON login_role.oid = membership.member
+                JOIN pg_roles AS granted ON granted.oid = membership.roleid
+                WHERE login_role.rolname = %s AND granted.rolname LIKE 'cdrl_%%'
+                ORDER BY granted.rolname
+            """, (user,))
+            self.assertEqual(memberships, [(expected_role,)])
+
 
 if __name__ == "__main__":
     unittest.main()

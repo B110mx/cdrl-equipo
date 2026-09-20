@@ -111,4 +111,19 @@ Antes de entregar M02, confirmar que `week-02-final` apunta al SHA aprobado, que
 setup/verify/run terminaron correctamente y que la evidencia corresponde a ese SHA.
 La existencia del tag o un resultado M01 en verde no bastan para acreditar M02.
 
+## Tercera entrega: M03 (roles y secretos)
+
+M03 separa migración, escritura, lectura y operación mediante cuatro usuarios de
+PostgreSQL. Sus nombres y contraseñas se reciben por variables de entorno;
+`.env.example` contiene marcadores o valores sintéticos para desarrollo.
+
+- `make setup` aplica migraciones y configura cada usuario con una sola membresía.
+- `make verify` ejecuta la suite completa, las pruebas negativas de permisos y
+  la revisión automática de patrones de secretos versionados.
+- `make run` demuestra las cuatro conexiones y guarda `artifacts/m03-run.json`.
+
+La matriz de permisos y la rotación están en `docs/ADR-002-roles-postgresql.md`.
+El reporte se guarda en `artifacts/m03-verify.json` y la evidencia en
+`evidence/m03-role-separation.json`. Los reportes no imprimen contraseñas.
+
 En Classroom entrega el repositorio propio del equipo, el tag semanal solicitado, el SHA exacto y el reporte de `make verify`. El repositorio debe conservar el historial y la evidencia de participación técnica de cada integrante.

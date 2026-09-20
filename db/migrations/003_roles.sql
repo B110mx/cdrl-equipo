@@ -21,6 +21,8 @@ DO $$
 DECLARE
     app_schema name := current_schema();
 BEGIN
+    EXECUTE format('REVOKE ALL ON SCHEMA %I FROM cdrl_migrator, cdrl_writer, cdrl_reader, cdrl_operator', app_schema);
+    EXECUTE format('REVOKE ALL ON devices, telemetry_measurements FROM cdrl_writer, cdrl_reader, cdrl_operator');
     EXECUTE format('GRANT USAGE, CREATE ON SCHEMA %I TO cdrl_migrator', app_schema);
     EXECUTE format('GRANT USAGE ON SCHEMA %I TO cdrl_writer, cdrl_reader, cdrl_operator', app_schema);
     EXECUTE format('GRANT INSERT ON telemetry_measurements TO cdrl_writer');

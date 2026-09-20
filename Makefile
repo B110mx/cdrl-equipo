@@ -19,4 +19,4 @@ verify:
 
 run:
 	docker compose up -d --wait
-	$(VENV_PYTHON) scripts/run_m02.py --compose
+	$(VENV_PYTHON) scripts/run_m03.py --compose

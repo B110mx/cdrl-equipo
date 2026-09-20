@@ -1,7 +1,5 @@
 """Crea usuarios de conexión y los vincula a un único rol de permisos."""
-import json
 import os
-import subprocess
 import sys
 from pathlib import Path
 
@@ -10,7 +8,7 @@ from psycopg2 import sql
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from src.runtime import connect_database
+from src.runtime import compose_database_config, connect_database
 
 ROLE_USERS = (
     ("cdrl_migrator", "POSTGRES_MIGRATOR_USER", "POSTGRES_MIGRATOR_PASSWORD"),
@@ -21,10 +19,7 @@ ROLE_USERS = (
 
 
 def compose_environment():
-    return json.loads(subprocess.check_output(
-        ["docker", "compose", "config", "--format", "json"],
-        cwd=ROOT, text=True, timeout=30, stderr=subprocess.PIPE,
-    ))["services"]["postgres"]["environment"]
+    return compose_database_config()["environment"]
 
 
 def configure_roles(connection, environment=None):
@@ -38,6 +33,10 @@ def configure_roles(connection, environment=None):
                 cursor.execute(sql.SQL(
                     "CREATE ROLE {} LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE"
                 ).format(sql.Identifier(user)))
+            # Una ejecución repetida también corrige membresías concedidas por error.
+            cursor.execute(sql.SQL("REVOKE {} FROM {}").format(
+                sql.SQL(", ").join(sql.Identifier(item[0]) for item in ROLE_USERS),
+                sql.Identifier(user)))
             cursor.execute(sql.SQL("ALTER ROLE {} PASSWORD %s").format(
                 sql.Identifier(user)), (password,))
             cursor.execute(sql.SQL("GRANT {} TO {}").format(

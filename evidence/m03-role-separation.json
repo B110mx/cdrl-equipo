@@ -1,8 +1,8 @@
 {
   "assignment_id": "m03-role-separation",
-  "commit_sha": "0a202410148ec062e2b404f4a0cf2c2216ee0515",
+  "commit_sha": "b35b49aa6b7b6217c63b590a8f93346269260cd0",
   "source_dirty": true,
-  "generated_at": "2026-09-19T15:36:38.902800+00:00",
+  "generated_at": "2026-09-20T02:28:47.192718+00:00",
   "environment": "docker-compose",
   "results": {
     "status": "passed",
@@ -16,13 +16,22 @@
       "no_versioned_secrets": {
         "status": "passed"
       },
-      "role_tests": {
+      "tests": {
         "status": "passed",
-        "total": 5,
+        "total": 57,
+        "passed": 57,
         "failures": 0,
-        "errors": 0
+        "errors": 0,
+        "skipped": 0
+      },
+      "role_contract": {
+        "status": "passed",
+        "cases": 6,
+        "negative_access_cases": 4,
+        "single_membership_verified": true
       }
     },
-    "machine_readable_report": "artifacts/m03-verify.json"
+    "machine_readable_report": "artifacts/m03-verify.json",
+    "verification_output": "artifacts/make-verify-output.txt"
   }
 }

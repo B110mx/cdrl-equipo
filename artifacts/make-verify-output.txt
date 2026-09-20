@@ -24,6 +24,8 @@ test_reproducibility_migrations_seed (tests.test_relational.TestRelational.test_
 test_runtime_cli_json (tests.test_relational.TestRelational.test_runtime_cli_json) ... ok
 test_reproducibility_upgrade_m01 (tests.test_relational.TestUpgrade.test_reproducibility_upgrade_m01) ... ok
 test_declared_permissions_are_available (tests.test_roles.TestRolePermissions.test_declared_permissions_are_available) ... ok
+test_each_login_has_exactly_one_cdrl_membership (tests.test_roles.TestRolePermissions.test_each_login_has_exactly_one_cdrl_membership) ... ok
+test_migrator_cannot_create_roles (tests.test_roles.TestRolePermissions.test_migrator_cannot_create_roles) ... ok
 test_operator_cannot_modify_devices (tests.test_roles.TestRolePermissions.test_operator_cannot_modify_devices) ... ok
 test_reader_cannot_insert (tests.test_roles.TestRolePermissions.test_reader_cannot_insert) ... ok
 test_writer_cannot_read_telemetry (tests.test_roles.TestRolePermissions.test_writer_cannot_read_telemetry) ... ok
@@ -59,8 +61,327 @@ test_missing_category_is_failure (tests.test_verification.TestVerification.test_
 test_skipped_case_is_failure (tests.test_verification.TestVerification.test_skipped_case_is_failure) ... ok
 
 ----------------------------------------------------------------------
-Ran 55 tests in 7.660s
+Ran 57 tests in 3.534s
 
 OK
 
-M02 verification: passed
+{
+  "assignment_id": "m03-role-separation",
+  "status": "passed",
+  "generated_at": "2026-09-20T02:28:47.192718+00:00",
+  "environment": "docker-compose",
+  "checks": {
+    "required_files": {
+      "status": "passed"
+    },
+    "database_roles": {
+      "status": "passed"
+    },
+    "no_versioned_secrets": {
+      "status": "passed"
+    },
+    "tests": {
+      "status": "passed",
+      "total": 57,
+      "passed": 57,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "role_contract": {
+      "status": "passed",
+      "cases": 6,
+      "negative_access_cases": 4,
+      "single_membership_verified": true
+    }
+  },
+  "cases": [
+    {
+      "test": "tests.test_integration.TestTelemetryIntegration.test_01_seed_data_exists",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_integration.TestTelemetryIntegration.test_02_insert_real_measurement",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_integration.TestTelemetryIntegration.test_03_battery_voltage_max",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_integration.TestTelemetryIntegration.test_04_database_rejects_invalid_data",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_integration.TestTelemetryIntegration.test_05_index_exists",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_relational.TestRelational.test_constraints_devices",
+      "category": "constraints",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_relational.TestRelational.test_constraints_indexes",
+      "category": "constraints",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_relational.TestRelational.test_constraints_referential_actions",
+      "category": "constraints",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_relational.TestRelational.test_constraints_sql_examples",
+      "category": "constraints",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_relational.TestRelational.test_constraints_wrong_unit",
+      "category": "constraints",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_relational.TestRelational.test_declared_failure_unknown_device",
+      "category": "declared_failure",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_relational.TestRelational.test_empty_queries",
+      "category": "empty",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_relational.TestRelational.test_limits_date_interval",
+      "category": "limits",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_relational.TestRelational.test_limits_invalid_parameters",
+      "category": "limits",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_relational.TestRelational.test_limits_metric_ranges",
+      "category": "limits",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_relational.TestRelational.test_limits_row_count",
+      "category": "limits",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_relational.TestRelational.test_normal_queries",
+      "category": "normal",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_relational.TestRelational.test_parameterization_injection_is_data",
+      "category": "parameterization",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_relational.TestRelational.test_reproducibility_migrations_seed",
+      "category": "reproducibility",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_relational.TestRelational.test_runtime_cli_json",
+      "category": "runtime",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_relational.TestUpgrade.test_reproducibility_upgrade_m01",
+      "category": "reproducibility",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_roles.TestRolePermissions.test_declared_permissions_are_available",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_roles.TestRolePermissions.test_each_login_has_exactly_one_cdrl_membership",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_roles.TestRolePermissions.test_migrator_cannot_create_roles",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_roles.TestRolePermissions.test_operator_cannot_modify_devices",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_roles.TestRolePermissions.test_reader_cannot_insert",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_roles.TestRolePermissions.test_writer_cannot_read_telemetry",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestDatabaseConnectionConfig.test_config_reads_env_vars",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestDatabaseConnectionConfig.test_connect_failure_raises_connection_error",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestDatabaseConnectionConfig.test_connect_success",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestTelemetryInsertion.test_insert_measurement_db_error_rolls_back",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestTelemetryInsertion.test_insert_measurement_invalid_data_raises_validation_error",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestTelemetryInsertion.test_insert_measurement_success",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestTelemetryValidation.test_validate_bool_value_fails",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestTelemetryValidation.test_validate_boundary_temperature_max",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestTelemetryValidation.test_validate_boundary_temperature_min",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestTelemetryValidation.test_validate_device_id_at_rejected",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestTelemetryValidation.test_validate_device_id_colon_rejected",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestTelemetryValidation.test_validate_device_id_invalid_chars_fails",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestTelemetryValidation.test_validate_device_id_too_long_fails",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestTelemetryValidation.test_validate_empty_event_id_fails",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestTelemetryValidation.test_validate_future_exactly_5_minutes_accepted",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestTelemetryValidation.test_validate_future_more_than_5_minutes_fails",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestTelemetryValidation.test_validate_invalid_metadata_fails",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestTelemetryValidation.test_validate_invalid_metric_fails",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestTelemetryValidation.test_validate_invalid_unit_fails",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestTelemetryValidation.test_validate_invalid_uuid_fails",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestTelemetryValidation.test_validate_metadata_exceeds_bytes_fails",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestTelemetryValidation.test_validate_missing_timezone_fails",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestTelemetryValidation.test_validate_nan_value_fails",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestTelemetryValidation.test_validate_normal_temperature",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestTelemetryValidation.test_validate_temperature_above_max_fails",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_telemetry.TestTelemetryValidation.test_validate_temperature_below_min_fails",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_verification.TestVerification.test_database_failure_produces_failed_evidence",
+      "category": "verification_safety",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_verification.TestVerification.test_error_messages_are_sanitized",
+      "category": "verification_safety",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_verification.TestVerification.test_missing_category_is_failure",
+      "category": "verification_safety",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_verification.TestVerification.test_skipped_case_is_failure",
+      "category": "verification_safety",
+      "status": "passed"
+    }
+  ],
+  "commit_sha": "b35b49aa6b7b6217c63b590a8f93346269260cd0",
+  "source_dirty": true
+}

@@ -1,4 +1,4 @@
-"""Verifica separación de usuarios, permisos mínimos y ausencia de secretos."""
+"""Verifica M03, conserva las regresiones y genera evidencia reproducible."""
 import argparse
 import io
 import json
@@ -15,11 +15,19 @@ sys.path.insert(0, str(ROOT))
 from scripts.configure_roles import compose_environment, configure_roles
 from scripts.evidence_support import source_revision
 from scripts.migrate import apply_migrations
+from scripts.verify_m02 import AuditedResult
 from src.runtime import connect_database
 
 
-def save(path, value):
+def save_json(path, value):
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def sanitized(text, environment):
+    for key, value in environment.items():
+        if key.endswith("_PASSWORD") and value:
+            text = text.replace(value, "[REDACTED]")
+    return text
 
 
 def main():
@@ -30,15 +38,18 @@ def main():
         "assignment_id": "m03-role-separation", "status": "failed",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "environment": "docker-compose" if args.compose else "postgres-env",
-        "checks": {}, "commit_sha": None, "source_dirty": True,
+        "checks": {}, "cases": [], "commit_sha": None, "source_dirty": True,
     }
     db = None
+    environment = dict(os.environ)
+    test_output = io.StringIO()
     try:
         report.update(source_revision())
         required = (
             "db/migrations/003_roles.sql", "scripts/configure_roles.py",
-            "scripts/check_no_secrets.py", "tests/test_roles.py",
-            "docs/ADR-002-roles-postgresql.md",
+            "scripts/check_no_secrets.py", "scripts/run_m03.py",
+            "tests/test_roles.py", "docs/ADR-002-roles-postgresql.md",
+            "evidence/m03-role-separation.json",
         )
         report["checks"]["required_files"] = {
             "status": "passed" if all((ROOT / path).is_file() for path in required) else "failed"
@@ -48,26 +59,43 @@ def main():
         if args.compose:
             subprocess.run(["docker", "compose", "up", "-d", "--wait", "postgres"],
                            cwd=ROOT, check=True, timeout=180, capture_output=True)
-            os.environ.update(compose_environment())
+            environment.update(compose_environment())
+            os.environ.update(environment)
         db = connect_database(compose=args.compose)
         apply_migrations(db.connection)
-        configure_roles(db.connection)
+        configure_roles(db.connection, environment)
         db.close()
         db = None
         report["checks"]["database_roles"] = {"status": "passed"}
+
         secret_check = subprocess.run([sys.executable, "scripts/check_no_secrets.py"],
                                       cwd=ROOT, capture_output=True, text=True)
         report["checks"]["no_versioned_secrets"] = {
             "status": "passed" if secret_check.returncode == 0 else "failed"
         }
-        suite = unittest.defaultTestLoader.loadTestsFromName("tests.test_roles")
-        output = io.StringIO()
-        result = unittest.TextTestRunner(stream=output, verbosity=0).run(suite)
-        report["checks"]["role_tests"] = {
-            "status": "passed" if result.wasSuccessful() else "failed",
+
+        suite = unittest.defaultTestLoader.discover(str(ROOT / "tests"), pattern="test_*.py",
+                                                     top_level_dir=str(ROOT))
+        result = unittest.TextTestRunner(
+            stream=test_output, verbosity=2, resultclass=AuditedResult).run(suite)
+        report["cases"] = result.cases
+        role_cases = [case for case in result.cases if case["test"].startswith("tests.test_roles.")]
+        report["checks"]["tests"] = {
+            "status": "passed" if result.wasSuccessful() and result.testsRun > 0 else "failed",
             "total": result.testsRun,
-            "failures": len(result.failures),
-            "errors": len(result.errors),
+            "passed": sum(case["status"] == "passed" for case in result.cases),
+            "failures": len(result.failures), "errors": len(result.errors),
+            "skipped": len(result.skipped),
+        }
+        negative_cases = [case for case in role_cases if "cannot" in case["test"]]
+        report["checks"]["role_contract"] = {
+            "status": "passed" if len(role_cases) >= 6 and len(negative_cases) >= 3 and
+            all(case["status"] == "passed" for case in role_cases) else "failed",
+            "cases": len(role_cases),
+            "negative_access_cases": sum(case["status"] == "passed" for case in negative_cases),
+            "single_membership_verified": any(
+                "exactly_one_cdrl_membership" in case["test"] and case["status"] == "passed"
+                for case in role_cases),
         }
         report["status"] = "passed" if all(
             check["status"] == "passed" for check in report["checks"].values()
@@ -79,17 +107,20 @@ def main():
             db.close()
         report["generated_at"] = datetime.now(timezone.utc).isoformat()
         (ROOT / "artifacts").mkdir(exist_ok=True)
-        save(ROOT / "artifacts/m03-verify.json", report)
-        save(ROOT / "evidence/m03-role-separation.json", {
-            "assignment_id": report["assignment_id"],
-            "commit_sha": report["commit_sha"],
-            "source_dirty": report["source_dirty"],
-            "generated_at": report["generated_at"],
+        save_json(ROOT / "artifacts/m03-verify.json", report)
+        evidence = {
+            "assignment_id": report["assignment_id"], "commit_sha": report["commit_sha"],
+            "source_dirty": report["source_dirty"], "generated_at": report["generated_at"],
             "environment": report["environment"],
             "results": {"status": report["status"], "checks": report["checks"],
-                        "machine_readable_report": "artifacts/m03-verify.json"},
-        })
-        print(json.dumps(report, ensure_ascii=False, indent=2))
+                        "machine_readable_report": "artifacts/m03-verify.json",
+                        "verification_output": "artifacts/make-verify-output.txt"},
+        }
+        save_json(ROOT / "evidence/m03-role-separation.json", evidence)
+        summary = json.dumps(report, ensure_ascii=False, indent=2)
+        log = sanitized(test_output.getvalue() + "\n" + summary + "\n", environment)
+        (ROOT / "artifacts/make-verify-output.txt").write_text(log, encoding="utf-8")
+        print(summary)
     return 0 if report["status"] == "passed" else 1
 
 

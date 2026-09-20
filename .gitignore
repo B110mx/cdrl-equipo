@@ -10,6 +10,7 @@ artifacts/*.log
 !artifacts/m02-verify.json
 !artifacts/m02-run.json
 !artifacts/m03-verify.json
+!artifacts/m03-run.json
 evidence/*-local.json
 db/data/
 docker-data/

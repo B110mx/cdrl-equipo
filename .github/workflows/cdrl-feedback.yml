@@ -26,11 +26,10 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: m02-verification
+          name: m03-verification
           path: |
-            artifacts/m02-verify.json
-            artifacts/m02-run.json
+            artifacts/m03-verify.json
+            artifacts/m03-run.json
             artifacts/make-verify-output.txt
-            artifacts/failure_result.txt
-            evidence/m02-relational-model.json
+            evidence/m03-role-separation.json
           if-no-files-found: error
