@@ -25,6 +25,12 @@ Las pruebas usan conexiones reales y comprueban operaciones permitidas y cuatro
 denegaciones: lector insertando, escritor leyendo telemetría, operador actualizando
 dispositivos y migrador creando roles.
 
+La cobertura funcional de M03 incluye un caso normal con las cuatro conexiones,
+dos límites inclusivos de temperatura (`-80` y `200`) y un fallo declarado:
+`metric = NULL` debe producir SQLSTATE `23502`. El reporte machine-readable
+clasifica estos casos como `normal`, `limits`, `declared_failure` y
+`access_denied` para que puedan evaluarse automáticamente.
+
 El configurador revoca primero las cuatro membresías conocidas de cada usuario y
 después concede únicamente la que corresponde. Esto corrige configuraciones
 anteriores y permite comprobar la separación efectiva.
@@ -45,3 +51,10 @@ Ejecuta `scripts/configure_roles.py --compose` con el usuario administrador; el
 script aplica `ALTER ROLE` al usuario separado sin imprimir la contraseña. Reinicia
 los clientes y revoca la credencial anterior cuando ya usen la nueva. Nunca
 escribas el valor en SQL, documentación o reportes.
+
+## Consecuencias
+
+La separación reduce el impacto de una credencial comprometida y evita cambios
+accidentales fuera de cada responsabilidad. A cambio, cada tabla nueva requiere
+actualizar explícitamente sus permisos y mantener cuatro credenciales en el
+entorno de despliegue.

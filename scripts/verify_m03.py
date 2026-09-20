@@ -79,6 +79,20 @@ def main():
         result = unittest.TextTestRunner(
             stream=test_output, verbosity=2, resultclass=AuditedResult).run(suite)
         report["cases"] = result.cases
+        for case in report["cases"]:
+            if not case["test"].startswith("tests.test_roles."):
+                continue
+            name = case["test"].rsplit(".", 1)[-1]
+            if name == "test_declared_permissions_are_available":
+                case["category"] = "normal"
+            elif name.startswith("test_limits_"):
+                case["category"] = "limits"
+            elif name.startswith("test_declared_failure_"):
+                case["category"] = "declared_failure"
+            elif "cannot" in name:
+                case["category"] = "access_denied"
+            else:
+                case["category"] = "constraints"
         role_cases = [case for case in result.cases if case["test"].startswith("tests.test_roles.")]
         report["checks"]["tests"] = {
             "status": "passed" if result.wasSuccessful() and result.testsRun > 0 else "failed",
@@ -96,6 +110,21 @@ def main():
             "single_membership_verified": any(
                 "exactly_one_cdrl_membership" in case["test"] and case["status"] == "passed"
                 for case in role_cases),
+        }
+        coverage = {
+            category: [case for case in role_cases if case["category"] == category]
+            for category in ("normal", "limits", "declared_failure", "access_denied")
+        }
+        report["checks"]["m03_coverage"] = {
+            "status": "passed" if len(coverage["normal"]) >= 1 and
+            len(coverage["limits"]) >= 2 and len(coverage["declared_failure"]) >= 1 and
+            len(coverage["access_denied"]) >= 3 and
+            all(case["status"] == "passed" for cases in coverage.values() for case in cases)
+            else "failed",
+            "normal_cases": len(coverage["normal"]),
+            "limit_cases": len(coverage["limits"]),
+            "declared_failure_cases": len(coverage["declared_failure"]),
+            "access_denied_cases": len(coverage["access_denied"]),
         }
         report["status"] = "passed" if all(
             check["status"] == "passed" for check in report["checks"].values()

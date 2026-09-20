@@ -23,16 +23,18 @@ test_parameterization_injection_is_data (tests.test_relational.TestRelational.te
 test_reproducibility_migrations_seed (tests.test_relational.TestRelational.test_reproducibility_migrations_seed) ... ok
 test_runtime_cli_json (tests.test_relational.TestRelational.test_runtime_cli_json) ... ok
 test_reproducibility_upgrade_m01 (tests.test_relational.TestUpgrade.test_reproducibility_upgrade_m01) ... ok
+test_declared_failure_writer_rejects_null_metric (tests.test_roles.TestRolePermissions.test_declared_failure_writer_rejects_null_metric)
+Fallo declarado: metric NULL se rechaza con SQLSTATE 23502. ... ok
 test_declared_permissions_are_available (tests.test_roles.TestRolePermissions.test_declared_permissions_are_available) ... ok
 test_each_login_has_exactly_one_cdrl_membership (tests.test_roles.TestRolePermissions.test_each_login_has_exactly_one_cdrl_membership) ... ok
+test_limits_writer_temperature_maximum (tests.test_roles.TestRolePermissions.test_limits_writer_temperature_maximum)
+Límite 2: el escritor acepta exactamente 200 grados. ... ok
+test_limits_writer_temperature_minimum (tests.test_roles.TestRolePermissions.test_limits_writer_temperature_minimum)
+Límite 1: el escritor acepta exactamente -80 grados. ... ok
 test_migrator_cannot_create_roles (tests.test_roles.TestRolePermissions.test_migrator_cannot_create_roles) ... ok
 test_operator_cannot_modify_devices (tests.test_roles.TestRolePermissions.test_operator_cannot_modify_devices) ... ok
 test_reader_cannot_insert (tests.test_roles.TestRolePermissions.test_reader_cannot_insert) ... ok
-test_writer_boundary_cases (tests.test_roles.TestRolePermissions.test_writer_boundary_cases)
-Prueba de casos límite (Edge Cases) de la base de datos permitidos para el escritor. ... ok
 test_writer_cannot_read_telemetry (tests.test_roles.TestRolePermissions.test_writer_cannot_read_telemetry) ... ok
-test_writer_declared_failure (tests.test_roles.TestRolePermissions.test_writer_declared_failure)
-Prueba de fallo declarado: La base de datos rechaza datos inválidos (Constraint). ... ok
 test_config_reads_env_vars (tests.test_telemetry.TestDatabaseConnectionConfig.test_config_reads_env_vars) ... ok
 test_connect_failure_raises_connection_error (tests.test_telemetry.TestDatabaseConnectionConfig.test_connect_failure_raises_connection_error) ... ok
 test_connect_success (tests.test_telemetry.TestDatabaseConnectionConfig.test_connect_success) ... ok
@@ -65,14 +67,14 @@ test_missing_category_is_failure (tests.test_verification.TestVerification.test_
 test_skipped_case_is_failure (tests.test_verification.TestVerification.test_skipped_case_is_failure) ... ok
 
 ----------------------------------------------------------------------
-Ran 59 tests in 8.523s
+Ran 60 tests in 4.410s
 
 OK
 
 {
   "assignment_id": "m03-role-separation",
   "status": "passed",
-  "generated_at": "2026-09-20T05:57:45.373768+00:00",
+  "generated_at": "2026-09-20T16:17:26.812246+00:00",
   "environment": "docker-compose",
   "checks": {
     "required_files": {
@@ -86,17 +88,24 @@ OK
     },
     "tests": {
       "status": "passed",
-      "total": 59,
-      "passed": 59,
+      "total": 60,
+      "passed": 60,
       "failures": 0,
       "errors": 0,
       "skipped": 0
     },
     "role_contract": {
       "status": "passed",
-      "cases": 8,
+      "cases": 9,
       "negative_access_cases": 4,
       "single_membership_verified": true
+    },
+    "m03_coverage": {
+      "status": "passed",
+      "normal_cases": 1,
+      "limit_cases": 2,
+      "declared_failure_cases": 1,
+      "access_denied_cases": 4
     }
   },
   "cases": [
@@ -206,43 +215,48 @@ OK
       "status": "passed"
     },
     {
+      "test": "tests.test_roles.TestRolePermissions.test_declared_failure_writer_rejects_null_metric",
+      "category": "declared_failure",
+      "status": "passed"
+    },
+    {
       "test": "tests.test_roles.TestRolePermissions.test_declared_permissions_are_available",
-      "category": "regression_m01",
+      "category": "normal",
       "status": "passed"
     },
     {
       "test": "tests.test_roles.TestRolePermissions.test_each_login_has_exactly_one_cdrl_membership",
-      "category": "regression_m01",
+      "category": "constraints",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_roles.TestRolePermissions.test_limits_writer_temperature_maximum",
+      "category": "limits",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_roles.TestRolePermissions.test_limits_writer_temperature_minimum",
+      "category": "limits",
       "status": "passed"
     },
     {
       "test": "tests.test_roles.TestRolePermissions.test_migrator_cannot_create_roles",
-      "category": "regression_m01",
+      "category": "access_denied",
       "status": "passed"
     },
     {
       "test": "tests.test_roles.TestRolePermissions.test_operator_cannot_modify_devices",
-      "category": "regression_m01",
+      "category": "access_denied",
       "status": "passed"
     },
     {
       "test": "tests.test_roles.TestRolePermissions.test_reader_cannot_insert",
-      "category": "regression_m01",
-      "status": "passed"
-    },
-    {
-      "test": "tests.test_roles.TestRolePermissions.test_writer_boundary_cases",
-      "category": "regression_m01",
+      "category": "access_denied",
       "status": "passed"
     },
     {
       "test": "tests.test_roles.TestRolePermissions.test_writer_cannot_read_telemetry",
-      "category": "regression_m01",
-      "status": "passed"
-    },
-    {
-      "test": "tests.test_roles.TestRolePermissions.test_writer_declared_failure",
-      "category": "regression_m01",
+      "category": "access_denied",
       "status": "passed"
     },
     {
@@ -396,6 +410,6 @@ OK
       "status": "passed"
     }
   ],
-  "commit_sha": "cca1a69362ec5b60958e853dcd5a5dc54127be3b",
+  "commit_sha": "7e7783972ae6c2377c4cba5af7b88d8837075350",
   "source_dirty": true
 }

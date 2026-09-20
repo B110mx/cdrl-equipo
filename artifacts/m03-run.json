@@ -1,7 +1,7 @@
 {
   "module": "m03-role-separation",
   "status": "passed",
-  "commit_sha": "b35b49aa6b7b6217c63b590a8f93346269260cd0",
+  "commit_sha": "7e7783972ae6c2377c4cba5af7b88d8837075350",
   "source_dirty": true,
   "operations": {
     "migration": "create_and_drop_probe",
@@ -21,5 +21,5 @@
     }
   },
   "synthetic_probe_removed": true,
-  "generated_at": "2026-09-20T02:28:51.585947+00:00"
+  "generated_at": "2026-09-20T16:17:31.566018+00:00"
 }

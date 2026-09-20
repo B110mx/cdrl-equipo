@@ -115,37 +115,39 @@ class TestRolePermissions(unittest.TestCase):
             """, (user,))
             self.assertEqual(memberships, [(expected_role,)])
 
-    def test_writer_boundary_cases(self):
-        """Prueba de casos límite (Edge Cases) de la base de datos permitidos para el escritor."""
+    def _assert_writer_accepts_temperature(self, value):
+        event_id = str(uuid.uuid4())
         with self.role_connection("cdrl_writer") as connection:
             with connection.cursor() as cursor:
-                # Límite 1: Valor mínimo razonable (0.0) con métrica permitida
                 cursor.execute("""
-                    INSERT INTO telemetry_measurements 
-                    (event_id, device_id, recorded_at, metric, value, unit) 
-                    VALUES (%s, 'role-device', CURRENT_TIMESTAMP, 'temperature', 0.0, 'celsius')
-                """, (str(uuid.uuid4()),))
-                
-                # Límite 2: Valor con máxima precisión decimal normal
-                cursor.execute("""
-                    INSERT INTO telemetry_measurements 
-                    (event_id, device_id, recorded_at, metric, value, unit) 
-                    VALUES (%s, 'role-device', CURRENT_TIMESTAMP, 'temperature', 99.99, 'celsius')
-                """, (str(uuid.uuid4()),))
+                    INSERT INTO telemetry_measurements
+                    (event_id, device_id, recorded_at, metric, value, unit)
+                    VALUES (%s, 'role-device', CURRENT_TIMESTAMP, 'temperature', %s, 'celsius')
+                """, (event_id, value))
             connection.commit()
+        stored = self.execute(
+            "SELECT value FROM telemetry_measurements WHERE event_id = %s", (event_id,))
+        self.assertEqual(float(stored[0][0]), float(value))
 
-    def test_writer_declared_failure(self):
-        """Prueba de fallo declarado: La base de datos rechaza datos inválidos (Constraint)."""
+    def test_limits_writer_temperature_minimum(self):
+        """Límite 1: el escritor acepta exactamente -80 grados."""
+        self._assert_writer_accepts_temperature(-80)
+
+    def test_limits_writer_temperature_maximum(self):
+        """Límite 2: el escritor acepta exactamente 200 grados."""
+        self._assert_writer_accepts_temperature(200)
+
+    def test_declared_failure_writer_rejects_null_metric(self):
+        """Fallo declarado: metric NULL se rechaza con SQLSTATE 23502."""
         with self.role_connection("cdrl_writer") as connection:
-            # Esperamos que falle por restricción de CHECK, NOT NULL o Error de Datos, no por privilegios
-            with self.assertRaises((errors.CheckViolation, errors.NotNullViolation, errors.DataError)):
+            with self.assertRaises(errors.NotNullViolation) as caught:
                 with connection.cursor() as cursor:
-                    # Intento de inserción con un valor inválido (ej. metric en NULL)
                     cursor.execute("""
-                        INSERT INTO telemetry_measurements 
-                        (event_id, device_id, recorded_at, metric, value, unit) 
+                        INSERT INTO telemetry_measurements
+                        (event_id, device_id, recorded_at, metric, value, unit)
                         VALUES (%s, 'role-device', CURRENT_TIMESTAMP, NULL, 20.0, 'celsius')
                     """, (str(uuid.uuid4()),))
+            self.assertEqual(caught.exception.pgcode, "23502")
 
 
 if __name__ == "__main__":

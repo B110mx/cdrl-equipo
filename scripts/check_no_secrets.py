@@ -18,7 +18,12 @@ def main():
                              capture_output=True, text=False).stdout.decode().split("\0")
     suspicious = []
     for relative in filter(None, tracked):
-        content = (ROOT / relative).read_text(encoding="utf-8", errors="ignore")
+        path = ROOT / relative
+        # Durante una corrección local, Git aún enumera archivos eliminados no
+        # preparados. Su ausencia no debe convertir la revisión en un error.
+        if not path.is_file():
+            continue
+        content = path.read_text(encoding="utf-8", errors="ignore")
         if any(re.search(pattern, content) for pattern in PATTERNS):
             suspicious.append(relative)
     if suspicious:
