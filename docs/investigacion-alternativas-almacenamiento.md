@@ -63,7 +63,3 @@ Estas pruebas permiten contrastar la matriz sin desplegar infraestructura de pag
 - **[O1]** AWS, [Qué es Amazon S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html).
 - **[O2]** AWS, [Modelo de consistencia de datos de S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html#ConsistencyModel).
 - **[O3]** AWS, [Precios de Amazon S3](https://aws.amazon.com/s3/pricing/).
-
-## Conclusión
-
-Este documento entrega la comparación cualitativa y sus bases para los patrones de eventos CDRL descritos arriba. No asigna pesos ni recomienda una alternativa: el integrante 2 puede consolidar la matriz ponderada y tomar la decisión en el ADR con los resultados de las pruebas del integrante 3.
