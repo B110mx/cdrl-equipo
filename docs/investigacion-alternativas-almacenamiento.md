@@ -1,5 +1,7 @@
 # Investigación y comparación de alternativas de almacenamiento
 
+**Autoría técnica:** Abril Miranda Baltazar Varillas (Integrante 1)
+
 ## Alcance
 
 Este documento compara cuatro familias de almacenamiento solicitadas: Document Store, Graph Store, Column Store y Object Store. Se usan servicios de AWS como ejemplos concretos por ser el entorno contemplado por el proyecto; no se propone cambiar la implementación relacional actual.
@@ -33,7 +35,7 @@ La relación presente en el modelo es dispositivo → eventos. No se asumen rela
 | **Escalabilidad** | Distribuye datos por clave de partición y administra particiones automáticamente; una mala distribución de claves es un riesgo de diseño. [D2] | El almacenamiento administrado crece automáticamente; la capacidad de cómputo y el rendimiento deben dimensionarse y comprobarse para la carga elegida. [G2] | Servicio administrado sin servidores que escala tablas según el tráfico; validar límites/cuotas y comportamiento con la carga del equipo. [C1] | Permite almacenar objetos a gran escala y ofrece clases de almacenamiento para distintos patrones de acceso; la selección de clase afecta latencia y costo. [O1] |
 | **Consistencia** | Las lecturas de tabla pueden ser eventualmente consistentes (predeterminado) o fuertemente consistentes; los índices globales no admiten lecturas fuertemente consistentes. [D3] | Neptune define semántica transaccional e aislamiento para cargas OLTP de grafos. [G3] | La consistencia depende de las garantías y niveles soportados por el servicio compatible con Cassandra; confirmar niveles admitidos por Keyspaces y el controlador en uso antes de fijar requisitos. [C2] | S3 ofrece consistencia fuerte de lectura tras escritura para objetos y operaciones PUT/DELETE; escrituras concurrentes sobre una clave no tienen bloqueo y no hay atomicidad entre varias claves. [O2] |
 | **Costo** | Medir solicitudes de lectura/escritura, modo de capacidad, almacenamiento, índices y transferencia. Una lectura fuertemente consistente cuesta más que una eventualmente consistente. [D3][D4] | Comparar costo de cómputo/instancias, almacenamiento, E/S y respaldos con la carga prevista; el tamaño del clúster importa. [G2][G4] | Comparar solicitudes o capacidad aprovisionada, almacenamiento, transferencia y respaldos según modo y carga; contrastar con los precios de la región elegida. [C1][C3] | Medir GB-mes por clase, solicitudes, recuperación de archivo, transferencia y replicación. Hay varias clases y cargos, por lo que “más barato” depende del acceso. [O1][O3] |
-| **Fallos y límites** | La disponibilidad administrada no elimina errores de diseño: una clave caliente o capacidad insuficiente puede limitar solicitudes; probar throttling y recuperación con carga representativa. La distribución depende de la clave. [D2] | Hay que probar pérdida de conexión, failover y recuperación con la configuración elegida; la documentación describe replicación de almacenamiento entre zonas, pero no sustituye una prueba del clúster. [G2] | Probar throttling, timeout y recuperación del cliente, además de particiones desbalanceadas. Son hipótesis operativas: el efecto depende del esquema, cuotas y configuración. | Versioning puede ayudar a recuperar versiones anteriores, pero no impide por sí mismo sobrescrituras concurrentes; tampoco hay transacción entre claves. Probar borrado, sobrescritura y acceso durante fallos de red. [O1][O2] |
+| **Fallos y límites** | La disponibilidad administrada no elimina errores de diseño: una clave caliente o capacidad insuficiente puede limitar solicitudes; probar throttling y recuperación con carga representativa. La distribución depende de la clave. [D2] | Hay que probar pérdida de conexión, failover y recuperación con la configuración elegida; la documentación describe replicación de almacenamiento entre zonas, pero no sustituye una prueba del clúster. [G2] | Probar throttling, timeout y recuperación del cliente, además de particiones desbalanceadas. Son hipótesis operativas: el efecto depende del esquema, cuotas y configuración. [C1][C2] | Versioning puede ayudar a recuperar versiones anteriores, pero no impide por sí mismo sobrescrituras concurrentes; tampoco hay transacción entre claves. Probar borrado, sobrescritura y acceso durante fallos de red. [O1][O2][O4] |
 
 ## Hipótesis comprobables para el equipo
 
@@ -49,7 +51,7 @@ Estas pruebas permiten contrastar la matriz sin desplegar infraestructura de pag
 
 ## Fuentes
 
-- **[D1]** AWS, [Particiones y distribución de datos en DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.Partitions.html).
+- **[D1]** AWS, [Consultas de tablas en DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Query.html) y [uso de claves de ordenación](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-sort-keys.html).
 - **[D2]** AWS, [Particiones y distribución de datos en DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.Partitions.html).
 - **[D3]** AWS, [Consistencia de lectura en DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadConsistency.html).
 - **[D4]** AWS, [Precios de DynamoDB](https://aws.amazon.com/dynamodb/pricing/).
@@ -63,3 +65,4 @@ Estas pruebas permiten contrastar la matriz sin desplegar infraestructura de pag
 - **[O1]** AWS, [Qué es Amazon S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html).
 - **[O2]** AWS, [Modelo de consistencia de datos de S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html#ConsistencyModel).
 - **[O3]** AWS, [Precios de Amazon S3](https://aws.amazon.com/s3/pricing/).
+- **[O4]** AWS, [Uso del versionado en buckets de S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html).
