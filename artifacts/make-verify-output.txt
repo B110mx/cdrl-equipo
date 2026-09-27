@@ -67,18 +67,21 @@ test_missing_category_is_failure (tests.test_verification.TestVerification.test_
 test_skipped_case_is_failure (tests.test_verification.TestVerification.test_skipped_case_is_failure) ... ok
 
 ----------------------------------------------------------------------
-Ran 60 tests in 4.410s
+Ran 60 tests in 4.281s
 
 OK
 
 {
   "assignment_id": "m03-role-separation",
-  "status": "passed",
-  "generated_at": "2026-09-20T16:17:26.812246+00:00",
+  "status": "failed",
+  "generated_at": "2026-09-27T19:40:51.660698+00:00",
   "environment": "docker-compose",
   "checks": {
     "required_files": {
       "status": "passed"
+    },
+    "synthetic_fixtures": {
+      "status": "failed"
     },
     "database_roles": {
       "status": "passed"
@@ -410,6 +413,6 @@ OK
       "status": "passed"
     }
   ],
-  "commit_sha": "7e7783972ae6c2377c4cba5af7b88d8837075350",
+  "commit_sha": "92304e71aca70185917d6f055d45dbae386f9e0d",
   "source_dirty": true
 }

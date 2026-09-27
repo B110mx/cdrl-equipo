@@ -1,14 +1,17 @@
 {
   "assignment_id": "m03-role-separation",
-  "commit_sha": "7e7783972ae6c2377c4cba5af7b88d8837075350",
+  "commit_sha": "92304e71aca70185917d6f055d45dbae386f9e0d",
   "source_dirty": true,
-  "generated_at": "2026-09-20T16:17:26.812246+00:00",
+  "generated_at": "2026-09-27T19:40:51.660698+00:00",
   "environment": "docker-compose",
   "results": {
-    "status": "passed",
+    "status": "failed",
     "checks": {
       "required_files": {
         "status": "passed"
+      },
+      "synthetic_fixtures": {
+        "status": "failed"
       },
       "database_roles": {
         "status": "passed"
