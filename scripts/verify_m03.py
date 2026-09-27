@@ -39,9 +39,16 @@ def check_and_generate_fixtures():
     
     if fixture_script.is_file():
         try:
-            subprocess.run([sys.executable, str(fixture_script)], check=True, capture_output=True)
+            # Agregamos text=True para decodificar la salida y capturamos el error
+            subprocess.run([sys.executable, str(fixture_script)], check=True, capture_output=True, text=True)
             return "passed"
-        except Exception:
+        except subprocess.CalledProcessError as e:
+            # Esto imprimirá el error real en la terminal
+            print(f"\n[!] ERROR INTERNO EN {fixture_script.name}:", file=sys.stderr)
+            print(e.stderr, file=sys.stderr)
+            return "failed"
+        except Exception as e:
+            print(f"\n[!] ERROR INESPERADO: {e}", file=sys.stderr)
             return "failed"
     return "passed"
 

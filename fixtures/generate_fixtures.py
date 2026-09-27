@@ -39,7 +39,7 @@ def generar_datos():
     with open('fixtures/object_blob.bin', 'wb') as f:
         f.write(os.urandom(5 * 1024 * 1024))
 
-    print("✅ Fixtures generados correctamente en la carpeta /fixtures")
+    print("OK: Fixtures generados correctamente en la carpeta /fixtures")
 
 if __name__ == "__main__":
     generar_datos()
