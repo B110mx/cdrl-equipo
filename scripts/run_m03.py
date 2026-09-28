@@ -1,9 +1,7 @@
-"""Demuestra el flujo M03 usando cuatro conexiones con privilegios separados y pruebas NoSQL."""
+"""Demuestra el flujo M03 usando cuatro conexiones con privilegios separados."""
 import argparse
 import json
 import sys
-import time
-import concurrent.futures
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -18,72 +16,6 @@ from src.runtime import connect_database
 
 EVENT_ID = "018f47a0-79f2-7c19-bc7f-1a26d47e93ff"
 
-def guardar_evidencia_fallo(mensaje):
-    evidence_dir = ROOT / "evidence"
-    evidence_dir.mkdir(exist_ok=True)
-    with open(evidence_dir / "error_log.txt", "a", encoding="utf-8") as f:
-        f.write(f"[{datetime.now(timezone.utc).isoformat()}] FALLO DECLARADO: {mensaje}\n")
-
-def ejecutar_pruebas_nosql():
-    """Ejecuta los 4 escenarios de prueba en Document, Graph, Column y Object Store."""
-    resultados = {}
-    
-    try:
-        # Intento de importar drivers reales. Asegúrate de tenerlos en requirements.txt
-        # pip install pymongo neo4j cassandra-driver minio
-        from pymongo import MongoClient
-        drivers_instalados = True
-        client = MongoClient("mongodb://localhost:27017/", serverSelectionTimeoutMS=2000)
-        client.admin.command('ping') # Verificar conexión
-        db = client["benchmark_db"]
-    except Exception:
-        drivers_instalados = False
-        db = None
-
-    # 1. CASO NORMAL
-    inicio = time.time()
-    if drivers_instalados:
-        db.users.insert_one({"_id": "normal_1", "test": True})
-        db.users.find_one({"_id": "normal_1"})
-    else:
-        time.sleep(0.05) # Fallback si no hay BD levantada
-    resultados["caso_normal"] = {"estado": "EXITO", "latencia_seg": time.time() - inicio}
-
-    # 2. CASO LÍMITE 1: VOLUMEN (BATCH)
-    inicio = time.time()
-    if drivers_instalados:
-        lote = [{"_id": f"batch_{i}", "val": i} for i in range(10000)]
-        db.users.insert_many(lote)
-    else:
-        time.sleep(0.8)
-    resultados["limite_volumen"] = {"estado": "EXITO", "registros": 10000, "latencia_seg": time.time() - inicio}
-
-    # 3. CASO LÍMITE 2: CONCURRENCIA
-    inicio = time.time()
-    def tarea_concurrente(x):
-        if drivers_instalados:
-            return db.users.find_one({"_id": "normal_1"})
-        time.sleep(0.02)
-        return x
-
-    with concurrent.futures.ThreadPoolExecutor(max_workers=50) as executor:
-        list(executor.map(tarea_concurrente, range(50)))
-    resultados["limite_concurrencia"] = {"estado": "EXITO", "hilos": 50, "latencia_seg": time.time() - inicio}
-
-    # 4. FALLO DECLARADO
-    try:
-        if drivers_instalados:
-            # Forzar DuplicateKeyError insertando el mismo ID
-            db.users.insert_one({"_id": "normal_1", "test": "duplicado"})
-        else:
-            raise ValueError("SimulacionError: Violacion de unicidad de clave.")
-    except Exception as e:
-        guardar_evidencia_fallo(str(e))
-        resultados["fallo_declarado"] = {"estado": "CAPTURADO", "error_type": type(e).__name__}
-
-    return resultados
-
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--compose", action="store_true")
@@ -92,7 +24,6 @@ def main():
     opened = []
     admin = None
     try:
-        # --- BLOQUE ORIGINAL: VALIDACIÓN DE ROLES POSTGRESQL ---
         admin = connect_database(compose=args.compose)
         opened.append(admin)
         apply_migrations(admin.connection)
@@ -137,17 +68,13 @@ def main():
             cursor.execute("SELECT count(*) FROM telemetry_measurements")
             measurement_count = cursor.fetchone()[0]
 
-        # --- BLOQUE NUEVO: PRUEBAS NOSQL (INTEGRANTE 3) ---
-        metricas_nosql = ejecutar_pruebas_nosql()
-
         report.update(status="passed", operations={
             "migration": "create_and_drop_probe",
             "write": {"event_id": EVENT_ID, "result": "inserted"},
             "read": {"device_id": row[0], "metric": row[1],
-                    "value": str(row[2]), "unit": row[3]},
+                     "value": str(row[2]), "unit": row[3]},
             "operation": {"device_count": device_count,
-                        "measurement_count": measurement_count},
-            "nosql_benchmarks": metricas_nosql # Integración de tu tarea al reporte
+                          "measurement_count": measurement_count},
         })
         return 0
     except Exception as exc:

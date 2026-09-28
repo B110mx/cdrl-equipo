@@ -20,7 +20,6 @@ from src.runtime import connect_database
 
 
 def save_json(path, value):
-    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
@@ -29,28 +28,6 @@ def sanitized(text, environment):
         if key.endswith("_PASSWORD") and value:
             text = text.replace(value, "[REDACTED]")
     return text
-
-
-def check_and_generate_fixtures():
-    """Verifica o ejecuta la generación de datos sintéticos (fixtures)."""
-    fixture_script = ROOT / "fixtures/generate_fixtures.py"
-    if not fixture_script.is_file():
-        fixture_script = ROOT / "generate_fixtures.py"
-    
-    if fixture_script.is_file():
-        try:
-            # Agregamos text=True para decodificar la salida y capturamos el error
-            subprocess.run([sys.executable, str(fixture_script)], check=True, capture_output=True, text=True)
-            return "passed"
-        except subprocess.CalledProcessError as e:
-            # Esto imprimirá el error real en la terminal
-            print(f"\n[!] ERROR INTERNO EN {fixture_script.name}:", file=sys.stderr)
-            print(e.stderr, file=sys.stderr)
-            return "failed"
-        except Exception as e:
-            print(f"\n[!] ERROR INESPERADO: {e}", file=sys.stderr)
-            return "failed"
-    return "passed"
 
 
 def main():
@@ -68,35 +45,22 @@ def main():
     test_output = io.StringIO()
     try:
         report.update(source_revision())
-        
-        # Archivos obligatorios del módulo
         required = (
             "db/migrations/003_roles.sql", "scripts/configure_roles.py",
             "scripts/check_no_secrets.py", "scripts/run_m03.py",
             "tests/test_roles.py", "docs/ADR-002-roles-postgresql.md",
+            "evidence/m03-role-separation.json",
         )
-        
-        # Asegurar existencia de las carpetas de trabajo
-        (ROOT / "evidence").mkdir(exist_ok=True)
-        (ROOT / "artifacts").mkdir(exist_ok=True)
-
         report["checks"]["required_files"] = {
             "status": "passed" if all((ROOT / path).is_file() for path in required) else "failed"
         }
         if report["checks"]["required_files"]["status"] != "passed":
             raise RuntimeError("required_files")
-
-        # Validación de fixtures
-        report["checks"]["synthetic_fixtures"] = {
-            "status": check_and_generate_fixtures()
-        }
-
         if args.compose:
             subprocess.run(["docker", "compose", "up", "-d", "--wait", "postgres"],
                            cwd=ROOT, check=True, timeout=180, capture_output=True)
             environment.update(compose_environment())
             os.environ.update(environment)
-            
         db = connect_database(compose=args.compose)
         apply_migrations(db.connection)
         configure_roles(db.connection, environment)
@@ -111,7 +75,7 @@ def main():
         }
 
         suite = unittest.defaultTestLoader.discover(str(ROOT / "tests"), pattern="test_*.py",
-                                                    top_level_dir=str(ROOT))
+                                                     top_level_dir=str(ROOT))
         result = unittest.TextTestRunner(
             stream=test_output, verbosity=2, resultclass=AuditedResult).run(suite)
         report["cases"] = result.cases
@@ -129,7 +93,6 @@ def main():
                 case["category"] = "access_denied"
             else:
                 case["category"] = "constraints"
-                
         role_cases = [case for case in result.cases if case["test"].startswith("tests.test_roles.")]
         report["checks"]["tests"] = {
             "status": "passed" if result.wasSuccessful() and result.testsRun > 0 else "failed",
@@ -172,8 +135,7 @@ def main():
         if db is not None:
             db.close()
         report["generated_at"] = datetime.now(timezone.utc).isoformat()
-        
-        # Guardado de reportes y evidencias reproducibles
+        (ROOT / "artifacts").mkdir(exist_ok=True)
         save_json(ROOT / "artifacts/m03-verify.json", report)
         evidence = {
             "assignment_id": report["assignment_id"], "commit_sha": report["commit_sha"],
@@ -188,7 +150,6 @@ def main():
         log = sanitized(test_output.getvalue() + "\n" + summary + "\n", environment)
         (ROOT / "artifacts/make-verify-output.txt").write_text(log, encoding="utf-8")
         print(summary)
-        
     return 0 if report["status"] == "passed" else 1
 
 

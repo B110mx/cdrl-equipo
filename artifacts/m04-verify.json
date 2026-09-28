@@ -1,0 +1,76 @@
+{
+  "assignment_id": "m04-storage-comparison",
+  "status": "passed",
+  "generated_at": "2026-09-28T03:06:13.005445+00:00",
+  "environment": "docker-compose",
+  "checks": {
+    "required_files": {
+      "status": "passed",
+      "missing_count": 0
+    },
+    "deterministic_fixtures": {
+      "status": "passed",
+      "sha256": "a9e6d2d8a7bf71129c4b16b57c486f4a286355c544281f9f29d229fe95dc3b2c",
+      "event_count": 5
+    },
+    "m03_regression": {
+      "status": "passed"
+    },
+    "no_versioned_secrets": {
+      "status": "passed"
+    },
+    "tests": {
+      "status": "passed",
+      "total": 5,
+      "passed": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "m04_coverage": {
+      "status": "passed",
+      "normal_cases": 1,
+      "limit_cases": 2,
+      "declared_failure_cases": 1,
+      "stores_covered": [
+        "document",
+        "graph",
+        "column",
+        "object"
+      ]
+    },
+    "runtime": {
+      "status": "passed",
+      "report": "artifacts/m04-run.json"
+    }
+  },
+  "cases": [
+    {
+      "test": "tests.test_storage_comparison.TestStorageComparison.test_constraints_same_fixture_population",
+      "category": "constraints",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_storage_comparison.TestStorageComparison.test_declared_failure_duplicate_event_id",
+      "category": "declared_failure",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_storage_comparison.TestStorageComparison.test_limit_empty_device_range",
+      "category": "limits",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_storage_comparison.TestStorageComparison.test_limit_inclusive_time_boundaries",
+      "category": "limits",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_storage_comparison.TestStorageComparison.test_normal_lookup_by_event_id",
+      "category": "normal",
+      "status": "passed"
+    }
+  ],
+  "commit_sha": "901028e563eccb39bbe8e2d137d3c9d7b0fb4fa8",
+  "source_dirty": true
+}

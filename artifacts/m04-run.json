@@ -1,0 +1,104 @@
+{
+  "module": "m04-storage-comparison",
+  "status": "passed",
+  "commit_sha": "901028e563eccb39bbe8e2d137d3c9d7b0fb4fa8",
+  "source_dirty": true,
+  "generated_at": "2026-09-28T03:06:13.769114+00:00",
+  "fixture_count": 5,
+  "stores": {
+    "document": {
+      "status": "passed",
+      "cases": {
+        "normal": {
+          "status": "passed",
+          "event_id": "018f47a0-79f2-7c19-bc7f-1a26d47e9401"
+        },
+        "limit_empty": {
+          "status": "passed",
+          "count": 0
+        },
+        "limit_inclusive": {
+          "status": "passed",
+          "count": 3
+        },
+        "declared_failure_duplicate": {
+          "status": "passed",
+          "expected_error": "DuplicateEventError"
+        }
+      }
+    },
+    "graph": {
+      "status": "passed",
+      "cases": {
+        "normal": {
+          "status": "passed",
+          "event_id": "018f47a0-79f2-7c19-bc7f-1a26d47e9401"
+        },
+        "limit_empty": {
+          "status": "passed",
+          "count": 0
+        },
+        "limit_inclusive": {
+          "status": "passed",
+          "count": 3
+        },
+        "declared_failure_duplicate": {
+          "status": "passed",
+          "expected_error": "DuplicateEventError"
+        }
+      }
+    },
+    "column": {
+      "status": "passed",
+      "cases": {
+        "normal": {
+          "status": "passed",
+          "event_id": "018f47a0-79f2-7c19-bc7f-1a26d47e9401"
+        },
+        "limit_empty": {
+          "status": "passed",
+          "count": 0
+        },
+        "limit_inclusive": {
+          "status": "passed",
+          "count": 3
+        },
+        "declared_failure_duplicate": {
+          "status": "passed",
+          "expected_error": "DuplicateEventError"
+        }
+      }
+    },
+    "object": {
+      "status": "passed",
+      "cases": {
+        "normal": {
+          "status": "passed",
+          "event_id": "018f47a0-79f2-7c19-bc7f-1a26d47e9401"
+        },
+        "limit_empty": {
+          "status": "passed",
+          "count": 0
+        },
+        "limit_inclusive": {
+          "status": "passed",
+          "count": 3
+        },
+        "declared_failure_duplicate": {
+          "status": "passed",
+          "expected_error": "DuplicateEventError"
+        }
+      }
+    }
+  },
+  "weighted_decision": {
+    "selected": "document-dynamodb",
+    "scores": {
+      "document-dynamodb": 4.2,
+      "object-s3": 3.55,
+      "column-keyspaces": 3.4,
+      "graph-neptune": 2.95
+    },
+    "adr": "docs/ADR-003-seleccion-almacenamiento-eventos.md"
+  }
+}

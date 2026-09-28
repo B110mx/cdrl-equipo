@@ -127,3 +127,23 @@ El reporte se guarda en `artifacts/m03-verify.json` y la evidencia en
 `evidence/m03-role-separation.json`. Los reportes no imprimen contraseñas.
 
 En Classroom entrega el repositorio propio del equipo, el tag semanal solicitado, el SHA exacto y el reporte de `make verify`. El repositorio debe conservar el historial y la evidencia de participación técnica de cada integrante.
+
+## Cuarta entrega: M04 (comparación de almacenes)
+
+M04 compara Document Store, Graph Store, Column Store y Object Store con el
+mismo contrato sintético de eventos CDRL. La investigación y sus fuentes están
+en `docs/investigacion-alternativas-almacenamiento.md`; la matriz ponderada y la
+decisión se documentan en `docs/ADR-003-seleccion-almacenamiento-eventos.md`.
+
+- `make setup` conserva PostgreSQL para las regresiones y genera cuatro fixtures
+  deterministas equivalentes.
+- `make verify` ejecuta M01–M03 como regresión y verifica en M04 un caso normal,
+  dos límites y un fallo declarado sobre las cuatro representaciones.
+- `make run` produce `artifacts/m04-run.json` con los resultados comparables y la
+  decisión ponderada.
+
+La evidencia se guarda en `evidence/m04-storage-comparison.json` y el reporte
+machine-readable en `artifacts/m04-verify.json`. Los adaptadores de M04 son
+modelos locales reproducibles: validan el contrato y las consultas funcionales,
+pero no afirman medir latencia, costo o disponibilidad reales de AWS. Esas
+propiedades permanecen como hipótesis falsables en el ADR.

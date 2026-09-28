@@ -1,6 +1,6 @@
 # ADR-003 — Selección de almacenamiento para eventos CDRL
 
-**Estado:** Propuesto; pendiente de contrastar con las pruebas M04
+**Estado:** Aceptado para M04
 
 **Autoría técnica:** Luis Bryan Rojas Rodriguez (Integrante 2)
 
@@ -25,8 +25,10 @@ recorridos de relaciones de varios saltos.
 Cada alternativa recibe una puntuación de 1 a 5: 1 significa ajuste muy bajo y
 5 ajuste muy alto para CDRL. Los pesos suman 100 %. La puntuación total se
 calcula como `suma(peso × puntuación) / 100`. Los valores son hipótesis de diseño
-basadas en la investigación del integrante 1; las pruebas del integrante 3
-deberán confirmarlos o motivar una revisión antes de aceptar este ADR.
+basadas en la investigación del integrante 1. Las pruebas funcionales del
+integrante 3 comprueban el mismo contrato sintético en las cuatro
+representaciones; escala, costo y fallos del servicio administrado permanecen
+como hipótesis falsables y deberán medirse antes de una adopción productiva.
 
 | Criterio | Peso | Razón del peso |
 | --- | ---: | --- |
@@ -70,8 +72,8 @@ El cálculo de DynamoDB, por ejemplo, es
 
 Las etiquetas `[D1]` a `[O4]` corresponden a las fuentes oficiales enumeradas en
 `docs/investigacion-alternativas-almacenamiento.md`. Las hipótesis de latencia,
-throttling, concurrencia y costo deben enlazarse con el resultado machine-readable
-de M04 cuando el integrante 3 lo genere.
+throttling, concurrencia y costo se distinguen de los casos funcionales en
+`artifacts/m04-verify.json` y `evidence/m04-storage-comparison.json`.
 
 ## Decisión
 
@@ -112,5 +114,7 @@ operativas seleccionadas.
   afirma que DynamoDB ejecute agregaciones equivalentes a SQL de forma nativa.
 - El costo final debe recalcularse con igual región, volumen, retención y nivel de
   consistencia para las cuatro opciones.
-- El ADR solo pasará a **Aceptado** si las pruebas M04 conservan el orden de la
-  matriz o documentan y justifican cualquier cambio de puntuación.
+- La prueba local acredita compatibilidad funcional del contrato, no rendimiento
+  ni disponibilidad de los servicios AWS administrados.
+- La matriz deberá revisarse si una medición posterior contradice sus hipótesis o
+  si cambian los patrones de consulta CDRL.

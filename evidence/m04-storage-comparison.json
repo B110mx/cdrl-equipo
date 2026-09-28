@@ -1,0 +1,59 @@
+{
+  "assignment_id": "m04-storage-comparison",
+  "commit_sha": "901028e563eccb39bbe8e2d137d3c9d7b0fb4fa8",
+  "source_dirty": true,
+  "generated_at": "2026-09-28T03:06:13.005445+00:00",
+  "environment": "docker-compose",
+  "authors": [
+    "Abril Miranda Baltazar Varillas",
+    "Luis Bryan Rojas Rodriguez",
+    "Edwin Yahir Cruz Flores"
+  ],
+  "results": {
+    "status": "passed",
+    "checks": {
+      "required_files": {
+        "status": "passed",
+        "missing_count": 0
+      },
+      "deterministic_fixtures": {
+        "status": "passed",
+        "sha256": "a9e6d2d8a7bf71129c4b16b57c486f4a286355c544281f9f29d229fe95dc3b2c",
+        "event_count": 5
+      },
+      "m03_regression": {
+        "status": "passed"
+      },
+      "no_versioned_secrets": {
+        "status": "passed"
+      },
+      "tests": {
+        "status": "passed",
+        "total": 5,
+        "passed": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "m04_coverage": {
+        "status": "passed",
+        "normal_cases": 1,
+        "limit_cases": 2,
+        "declared_failure_cases": 1,
+        "stores_covered": [
+          "document",
+          "graph",
+          "column",
+          "object"
+        ]
+      },
+      "runtime": {
+        "status": "passed",
+        "report": "artifacts/m04-run.json"
+      }
+    },
+    "machine_readable_report": "artifacts/m04-verify.json",
+    "runtime_report": "artifacts/m04-run.json",
+    "verification_output": "artifacts/make-verify-output.txt"
+  }
+}
