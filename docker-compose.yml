@@ -25,11 +25,13 @@ services:
 
   dynamodb:
     image: amazon/dynamodb-local:2.6.1
-    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data"
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal"
+    environment:
+      AWS_REGION: ${AWS_REGION:-us-east-1}
     ports:
       - "${DYNAMODB_PORT:-8000}:8000"
     volumes:
-      - dynamodb_data:/home/dynamodblocal/data
+      - dynamodb_data:/home/dynamodblocal
 
 volumes:
   postgres_data:

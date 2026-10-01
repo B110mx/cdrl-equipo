@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CDRL telemetry event",
+  "type": "object",
+  "required": [
+    "event_id",
+    "device_id",
+    "recorded_at",
+    "metric",
+    "value",
+    "unit"
+  ],
+  "properties": {
+    "event_id": {"type": "string", "format": "uuid"},
+    "device_id": {"type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[A-Za-z0-9_.-]+$"},
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "metric": {"enum": ["temperature", "humidity", "battery_voltage"]},
+    "value": {"type": "number"},
+    "unit": {"enum": ["celsius", "percent", "volt"]},
+    "metadata": {"type": "object"},
+    "ingested_at": {"type": "string", "format": "date-time"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"metric": {"const": "temperature"}}},
+      "then": {"properties": {"unit": {"const": "celsius"}, "value": {"minimum": -80, "maximum": 200}}}
+    },
+    {
+      "if": {"properties": {"metric": {"const": "humidity"}}},
+      "then": {"properties": {"unit": {"const": "percent"}, "value": {"minimum": 0, "maximum": 100}}}
+    },
+    {
+      "if": {"properties": {"metric": {"const": "battery_voltage"}}},
+      "then": {"properties": {"unit": {"const": "volt"}, "value": {"minimum": 0, "maximum": 1000}}}
+    }
+  ],
+  "additionalProperties": false
+}
