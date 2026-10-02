@@ -42,9 +42,16 @@ def main():
         }
 
         # 3. Inicializar la base de datos
+        # 3. Inicializar la base de datos
         init_check = subprocess.run(
-            [sys.executable, "scripts/init_document_store.py"], cwd=ROOT, capture_output=True
+            [sys.executable, "scripts/init_document_store.py"], 
+            cwd=ROOT, capture_output=True, text=True
         )
+        
+        if init_check.returncode != 0:
+            print("\n[!] ERROR EN DATABASE INIT:", file=sys.stderr)
+            print(init_check.stderr, file=sys.stderr)
+            
         report["checks"]["database_init"] = {
             "status": "passed" if init_check.returncode == 0 else "failed"
         }
