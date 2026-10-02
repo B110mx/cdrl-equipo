@@ -1,0 +1,24 @@
+{
+  "assignment_id": "m05-documental",
+  "generated_at": "2026-10-02T23:19:43.730223+00:00",
+  "results": {
+    "status": "passed",
+    "checks": {
+      "required_files": {
+        "status": "passed"
+      },
+      "no_secrets": {
+        "status": "passed"
+      },
+      "database_init": {
+        "status": "passed"
+      },
+      "tests": {
+        "status": "passed",
+        "total": 5,
+        "failures": 0,
+        "errors": 0
+      }
+    }
+  }
+}
