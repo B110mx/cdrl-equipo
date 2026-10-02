@@ -21,4 +21,4 @@ verify:
 	$(VENV_PYTHON) scripts/verify_m04.py --compose
 
 run:
-	$(VENV_PYTHON) scripts/run_m04.py
+	$(VENV_PYTHON) scripts/run_m05.py

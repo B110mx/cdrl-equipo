@@ -18,10 +18,11 @@ EVENTS_TABLE = os.getenv("DYNAMODB_EVENTS_TABLE", "cdrl-events")
 DEVICES_TABLE = os.getenv("DYNAMODB_DEVICES_TABLE", "cdrl-devices")
 REGION = os.getenv("AWS_REGION", "us-east-1")
 ENDPOINT = os.getenv("DYNAMODB_ENDPOINT_URL", "http://localhost:8000") or None
-SCHEMA_PATH = ROOT / "docs" / "M04-event-document-schema.json"
+SCHEMA_PATH = ROOT / "docs" / "M05-event-document-schema.json"
 EVENT_INDEXES = {
     "EventIdIndex": ("event_id", None),
     "DeviceMetricTimeIndex": ("device_metric_unit", "recorded_at_event_id"),
+    "MetricUnitTimeIndex": ("metric_unit", "recorded_at_event_id"),
 }
 DEVICE_INDEXES = {"StatusIndex": ("status", "device_id")}
 
@@ -119,11 +120,11 @@ def validate_event(event, validator):
 
 
 def seed_events(client, validator):
-    resource = boto3.resource(
-        "dynamodb", region_name=REGION, endpoint_url=ENDPOINT,
-        **({"aws_access_key_id": "local", "aws_secret_access_key": "local"} if ENDPOINT else {}),
-    )
-    table = resource.Table(EVENTS_TABLE)
+    sys.path.insert(0, str(ROOT))
+    from src.document_store import DocumentEventStore
+
+    store = DocumentEventStore(
+        client=client, table_name=EVENTS_TABLE, schema_path=SCHEMA_PATH)
     documents = json.loads(
         (ROOT / "fixtures" / "document_data.json").read_text(encoding="utf-8"),
         parse_float=Decimal,
@@ -131,15 +132,7 @@ def seed_events(client, validator):
     for event in documents:
         event.setdefault("metadata", {})
         validate_event(event, validator)
-        item = dict(event)
-        item["recorded_at_event_id"] = f"{event['recorded_at']}#{event['event_id']}"
-        item["device_metric_unit"] = f"{event['device_id']}#{event['metric']}#{event['unit']}"
-        item.setdefault("ingested_at", datetime.now(timezone.utc).isoformat())
-        try:
-            table.put_item(Item=item, ConditionExpression="attribute_not_exists(event_id)")
-        except ClientError as error:
-            if error.response["Error"]["Code"] != "ConditionalCheckFailedException":
-                raise
+        store.put_event_idempotent(event)
 
 
 def seed_devices(client):
