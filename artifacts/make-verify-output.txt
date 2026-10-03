@@ -12,7 +12,7 @@ test_normal_crud_operations (test_document_store.TestDocumentStore.test_normal_c
 Verifica que un documento v�lido pueda crearse, leerse, actualizarse y eliminarse. ... ok
 
 ----------------------------------------------------------------------
-Ran 5 tests in 0.869s
+Ran 5 tests in 0.804s
 
 OK
 
@@ -20,7 +20,7 @@ OK
 {
   "assignment_id": "m05-documental",
   "status": "passed",
-  "generated_at": "2026-10-03T04:18:53.264236+00:00",
+  "generated_at": "2026-10-03T04:23:08.918948+00:00",
   "checks": {
     "required_files": {
       "status": "passed"
