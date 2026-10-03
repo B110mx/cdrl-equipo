@@ -19,7 +19,7 @@ setup:
 
 verify:
 	@echo "=> Verificando integridad del entorno y conexiones M05..."
-	$(PYTHON) scripts/verify_m05.py
+	$(VENV_PYTHON) scripts/verify_m05.py
 
 
 run:

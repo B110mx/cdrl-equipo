@@ -1,0 +1,36 @@
+{
+  "module": "m05-document-store-crud",
+  "status": "passed",
+  "commit_sha": "a6f7b1b36f5a41c07c67bec4db7b3810893e2408",
+  "source_dirty": true,
+  "generated_at": "2026-10-03T04:19:02.569609+00:00",
+  "table": "cdrl-events",
+  "indexes": [
+    "DeviceMetricTimeIndex",
+    "EventIdIndex",
+    "MetricUnitTimeIndex"
+  ],
+  "cases": {
+    "create": {
+      "status": "passed"
+    },
+    "read_by_event_id_index": {
+      "status": "passed"
+    },
+    "update": {
+      "status": "passed"
+    },
+    "query_by_device_time_key": {
+      "status": "passed"
+    },
+    "query_by_metric_unit_index": {
+      "status": "passed"
+    },
+    "delete": {
+      "status": "passed"
+    },
+    "absence_after_delete": {
+      "status": "passed"
+    }
+  }
+}
