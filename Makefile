@@ -13,6 +13,7 @@ setup:
 	$(VENV_PYTHON) -m pip install -r requirements.txt
 	docker compose up -d --wait postgres dynamodb
 	$(VENV_PYTHON) fixtures/generate_fixtures.py
+	@echo "=> Inicializando idempotentemente esquemas documentales v1/v2 y tabla de auditoría..."
 	$(VENV_PYTHON) scripts/init_document_store.py
 	$(VENV_PYTHON) scripts/migrate.py --compose
 	$(VENV_PYTHON) scripts/configure_roles.py --compose

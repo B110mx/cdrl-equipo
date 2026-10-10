@@ -28,6 +28,9 @@ services:
     command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal"
     environment:
       AWS_REGION: ${AWS_REGION:-us-east-1}
+      DYNAMODB_EVENTS_TABLE: ${DYNAMODB_EVENTS_TABLE:-cdrl-events}
+      DYNAMODB_DEVICES_TABLE: ${DYNAMODB_DEVICES_TABLE:-cdrl-devices}
+      DYNAMODB_AUDIT_TABLE: ${DYNAMODB_AUDIT_TABLE:-cdrl-audit}
     ports:
       - "${DYNAMODB_PORT:-8000}:8000"
     volumes:

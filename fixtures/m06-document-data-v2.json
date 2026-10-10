@@ -1,0 +1,14 @@
+[
+  {
+    "schema_version": 2,
+    "event_id": "018f47a0-79f2-7c19-bc7f-1a26d47e9502",
+    "device_id": "sensor-lab-06",
+    "recorded_at": "2026-10-01T12:00:00Z",
+    "metric": "temperature",
+    "value": 22.5,
+    "unit": "celsius",
+    "metadata": {
+      "source": "synthetic-m06"
+    }
+  }
+]
