@@ -19,8 +19,9 @@ setup:
 	$(VENV_PYTHON) scripts/configure_roles.py --compose
 
 verify:
-	@echo "=> Verificando integridad del entorno y conexiones M05..."
-	$(VENV_PYTHON) scripts/verify_m05.py
+	@echo "=> Verificando integridad y auditoría M06..."
+	python scripts/verify_m06.py
+	
 
 
 run:
