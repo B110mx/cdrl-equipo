@@ -1,0 +1,45 @@
+{
+  "module": "m06-evolution-audit-recovery",
+  "status": "passed",
+  "commit_sha": "36bf7a973911ff762f59a8b96230c113924deab7",
+  "source_dirty": true,
+  "generated_at": "2026-10-11T09:23:02.404857+00:00",
+  "strategy": "versioned-coexistence",
+  "schema_versions_observed": [
+    1,
+    2
+  ],
+  "audit": {
+    "audit_id": "m06-update-018f47a0-79f2-7c19-bc7f-1a26d47e9502",
+    "operation": "update_event",
+    "outcome": "succeeded",
+    "changed_fields": [
+      "metadata"
+    ],
+    "contains_forbidden_terms": false
+  },
+  "recovery": {
+    "fixture": "fixtures/m06-document-data-v2.json",
+    "duration_ms": 100.079,
+    "records_recovered": 1,
+    "expected_checksum_sha256": "e7f525033e7466d1310d774038e6a2946ac78f9a9506a8a943b6f6500a723909",
+    "recovered_checksum_sha256": "e7f525033e7466d1310d774038e6a2946ac78f9a9506a8a943b6f6500a723909"
+  },
+  "cases": {
+    "normal_versions_coexist": {
+      "status": "passed"
+    },
+    "boundary_legacy_without_explicit_version": {
+      "status": "passed"
+    },
+    "boundary_audit_contains_no_secrets": {
+      "status": "passed"
+    },
+    "declared_failure_removed_fixture": {
+      "status": "passed"
+    },
+    "recovery_restored_fixture": {
+      "status": "passed"
+    }
+  }
+}

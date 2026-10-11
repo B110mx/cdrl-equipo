@@ -14,6 +14,7 @@ artifacts/*.log
 !artifacts/m04-verify.json
 !artifacts/m04-run.json
 !artifacts/m05-run.json
+!artifacts/m06-run.json
 evidence/*-local.json
 db/data/
 docker-data/
