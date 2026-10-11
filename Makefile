@@ -24,4 +24,4 @@ verify:
 
 
 run:
-	$(VENV_PYTHON) scripts/run_m05.py
+	$(VENV_PYTHON) scripts/run_m06.py

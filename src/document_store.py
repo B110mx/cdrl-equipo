@@ -1,4 +1,4 @@
-"""CRUD reproducible para los eventos documentales M05 en DynamoDB."""
+"""CRUD versionado, auditoría y recuperación para eventos en DynamoDB."""
 
 import json
 import os
@@ -64,7 +64,8 @@ class DocumentEventStore:
 
     immutable_fields = {"event_id", "device_id", "recorded_at", "ingested_at"}
 
-    def __init__(self, client=None, table_name=None, schema_path=None):
+    def __init__(self, client=None, table_name=None, schema_path=None,
+                 schema_paths=None, audit_table_name=None):
         endpoint = os.getenv("DYNAMODB_ENDPOINT_URL", "http://localhost:8000") or None
         region = os.getenv("AWS_REGION", "us-east-1")
         options = {"region_name": region, "endpoint_url": endpoint}
@@ -72,9 +73,33 @@ class DocumentEventStore:
             options.update(aws_access_key_id="local", aws_secret_access_key="local")
         self.client = client or boto3.client("dynamodb", **options)
         self.table_name = table_name or os.getenv("DYNAMODB_EVENTS_TABLE", "cdrl-events")
-        schema_file = Path(schema_path or ROOT / "docs" / "M05-event-document-schema.json")
-        schema = json.loads(schema_file.read_text(encoding="utf-8"))
-        self.validator = Draft202012Validator(schema, format_checker=FormatChecker())
+        self.audit_table_name = audit_table_name or os.getenv(
+            "DYNAMODB_AUDIT_TABLE", "cdrl-audit")
+        if schema_path is not None:
+            selected_path = Path(schema_path)
+            selected_schema = json.loads(
+                selected_path.read_text(encoding="utf-8"))
+            declared_version = (
+                selected_schema.get("properties", {})
+                .get("schema_version", {})
+                .get("const", 1)
+            )
+            selected_schemas = {declared_version: selected_schema}
+        else:
+            selected_paths = schema_paths or {
+                1: ROOT / "docs" / "M05-event-document-schema.json",
+                2: ROOT / "docs" / "M06-event-document-schema-v2.json",
+            }
+            selected_schemas = {
+                version: json.loads(
+                    Path(selected_path).read_text(encoding="utf-8"))
+                for version, selected_path in selected_paths.items()
+            }
+        self.validators = {}
+        for version, schema in selected_schemas.items():
+            self.validators[version] = Draft202012Validator(
+                schema, format_checker=FormatChecker())
+        self.validator = self.validators[min(self.validators)]
         self.serializer = TypeSerializer()
         self.deserializer = TypeDeserializer()
 
@@ -82,7 +107,10 @@ class DocumentEventStore:
         document = deepcopy(event)
         document.setdefault("metadata", {})
         try:
-            self.validator.validate(document)
+            version = document.get("schema_version", 1)
+            if type(version) is not int or version not in self.validators:
+                raise ValueError(f"unsupported document schema_version: {version!r}")
+            self.validators[version].validate(document)
             recorded_at = datetime.fromisoformat(
                 document["recorded_at"].replace("Z", "+00:00"))
             if recorded_at.utcoffset() is None:
@@ -101,6 +129,46 @@ class DocumentEventStore:
         except (ValidationError, ValueError, TypeError, KeyError) as error:
             raise InvalidEventError(str(error)) from error
         return document
+
+    def record_audit(self, event_id, operation, changed_fields, outcome="succeeded",
+                     audit_id=None, occurred_at=None):
+        """Registra metadatos de una operación sin copiar valores ni secretos."""
+        timestamp = occurred_at or datetime.now(timezone.utc).isoformat()
+        identifier = audit_id or f"{operation}#{event_id}#{timestamp}"
+        record = {
+            "audit_id": identifier,
+            "event_id": event_id,
+            "occurred_at": timestamp,
+            "occurred_at_audit_id": f"{timestamp}#{identifier}",
+            "operation": operation,
+            "outcome": outcome,
+            "changed_fields": sorted(set(changed_fields)),
+        }
+        self.client.put_item(
+            TableName=self.audit_table_name,
+            Item=self._serialize_item(record),
+        )
+        return _to_plain(record)
+
+    def get_audit(self, audit_id):
+        response = self.client.get_item(
+            TableName=self.audit_table_name,
+            Key={"audit_id": {"S": audit_id}},
+            ConsistentRead=True,
+        )
+        item = response.get("Item")
+        return self._deserialize_item(item) if item else None
+
+    def update_event_audited(self, event_id, changes, audit_id=None):
+        """Actualiza un evento y deja una traza sin valores del documento."""
+        updated = self.update_event(event_id, changes)
+        audit = self.record_audit(
+            event_id=event_id,
+            operation="update_event",
+            changed_fields=changes.keys(),
+            audit_id=audit_id,
+        )
+        return {"event": updated, "audit": audit}
 
     def _serialize_item(self, item):
         return {key: self.serializer.serialize(value)
