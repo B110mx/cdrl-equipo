@@ -1,0 +1,41 @@
+{
+  "assignment_id": "m06-evolution-audit-recovery",
+  "status": "passed",
+  "generated_at": "2026-10-12T01:02:35.868608+00:00",
+  "commit_sha": "f57a2c58b2742e79172a9d0cc54ebf406437c1ef",
+  "source_dirty": false,
+  "team": [
+    "Abril Miranda Baltazar Varillas",
+    "Luis Bryan Rojas Rodriguez",
+    "Edwin Yahir Cruz Flores"
+  ],
+  "strategy": "versioned-coexistence",
+  "results": {
+    "required_files": {
+      "status": "passed",
+      "missing": []
+    },
+    "no_secrets": {
+      "status": "passed",
+      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/check_no_secrets.py",
+      "exit_code": 0,
+      "stdout": "Secretos versionados: ninguno detectado",
+      "stderr": ""
+    },
+    "document_store_init": {
+      "status": "passed",
+      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/init_document_store.py",
+      "exit_code": 0,
+      "stdout": "DynamoDB initialized with event schemas v1/v2 and audit table; event and device fixtures validated.",
+      "stderr": ""
+    },
+    "cumulative_tests": {
+      "status": "passed",
+      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe -m unittest discover -s tests -p test_*.py",
+      "total": 74,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  }
+}

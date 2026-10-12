@@ -1,9 +1,9 @@
 {
   "module": "m06-evolution-audit-recovery",
   "status": "passed",
-  "commit_sha": "36bf7a973911ff762f59a8b96230c113924deab7",
-  "source_dirty": true,
-  "generated_at": "2026-10-11T09:23:02.404857+00:00",
+  "commit_sha": "f57a2c58b2742e79172a9d0cc54ebf406437c1ef",
+  "source_dirty": false,
+  "generated_at": "2026-10-12T01:02:37.171389+00:00",
   "strategy": "versioned-coexistence",
   "schema_versions_observed": [
     1,
@@ -20,7 +20,7 @@
   },
   "recovery": {
     "fixture": "fixtures/m06-document-data-v2.json",
-    "duration_ms": 100.079,
+    "duration_ms": 89.35,
     "records_recovered": 1,
     "expected_checksum_sha256": "e7f525033e7466d1310d774038e6a2946ac78f9a9506a8a943b6f6500a723909",
     "recovered_checksum_sha256": "e7f525033e7466d1310d774038e6a2946ac78f9a9506a8a943b6f6500a723909"
