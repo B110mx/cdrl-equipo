@@ -59,6 +59,14 @@ def _to_plain(value):
     return value
 
 
+def _normalize_timestamp(value):
+    """Devuelve un instante ISO 8601 canónico en UTC para claves ordenables."""
+    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if parsed.utcoffset() is None:
+        raise ValueError("timestamp must include a timezone")
+    return parsed.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
 class DocumentEventStore:
     """Acceso a DynamoDB usando las claves e índices declarados por M05."""
 
@@ -117,6 +125,7 @@ class DocumentEventStore:
                 raise ValueError("recorded_at must include a timezone")
             if recorded_at > datetime.now(timezone.utc) + timedelta(minutes=5):
                 raise ValueError("recorded_at must be no more than five minutes ahead")
+            document["recorded_at"] = _normalize_timestamp(document["recorded_at"])
             metadata_size = len(json.dumps(
                 document["metadata"], ensure_ascii=False).encode("utf-8"))
             if metadata_size > 2048:
@@ -126,6 +135,8 @@ class DocumentEventStore:
                     document["ingested_at"].replace("Z", "+00:00"))
                 if ingested_at.utcoffset() is None:
                     raise ValueError("ingested_at must include a timezone")
+                document["ingested_at"] = _normalize_timestamp(
+                    document["ingested_at"])
         except (ValidationError, ValueError, TypeError, KeyError) as error:
             raise InvalidEventError(str(error)) from error
         return document
@@ -284,6 +295,8 @@ class DocumentEventStore:
 
     def events_by_device(self, device_id, start, end):
         """Consulta un intervalo inclusivo usando la clave primaria compuesta."""
+        start = _normalize_timestamp(start)
+        end = _normalize_timestamp(end)
         response = self.client.query(
             TableName=self.table_name,
             KeyConditionExpression=(
@@ -299,6 +312,8 @@ class DocumentEventStore:
 
     def events_by_metric_unit(self, metric, unit, start, end):
         """Consulta el resumen del ADR mediante MetricUnitTimeIndex."""
+        start = _normalize_timestamp(start)
+        end = _normalize_timestamp(end)
         response = self.client.query(
             TableName=self.table_name,
             IndexName="MetricUnitTimeIndex",

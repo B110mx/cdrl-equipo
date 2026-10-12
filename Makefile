@@ -2,14 +2,16 @@
 
 ifeq ($(OS),Windows_NT)
 PYTHON ?= python
-VENV_PYTHON = .venv/Scripts/python.exe
+VENV_PYTHON = .venv\Scripts\python.exe
+CREATE_VENV = if not exist "$(VENV_PYTHON)" $(PYTHON) -m venv .venv
 else
 PYTHON ?= python3
 VENV_PYTHON = .venv/bin/python
+CREATE_VENV = test -x "$(VENV_PYTHON)" || $(PYTHON) -m venv .venv
 endif
 
 setup:
-	$(PYTHON) -m venv .venv
+	$(CREATE_VENV)
 	$(VENV_PYTHON) -m pip install -r requirements.txt
 	docker compose up -d --wait postgres dynamodb
 	$(VENV_PYTHON) fixtures/generate_fixtures.py
@@ -19,8 +21,8 @@ setup:
 	$(VENV_PYTHON) scripts/configure_roles.py --compose
 
 verify:
-	@echo "=> Verificando integridad del entorno y conexiones M05..."
-	$(VENV_PYTHON) scripts/verify_m05.py
+	@echo "=> Verificando M06 y la regresión acumulada..."
+	$(VENV_PYTHON) scripts/verify_m06.py
 
 
 run:
