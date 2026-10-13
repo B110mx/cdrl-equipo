@@ -68,6 +68,11 @@ def main():
     report["checks"]["document_store_init"] = command_check(
         [sys.executable, "scripts/init_document_store.py"]
     )
+    # La regresión M02 no se limita a descubrir sus tests: ejecuta su
+    # verificador para regenerar y validar el reporte y la evidencia propios.
+    report["checks"]["m02_verification"] = command_check(
+        [sys.executable, "scripts/verify_m02.py", "--compose"]
+    )
 
     suite = unittest.defaultTestLoader.discover(
         str(ROOT / "tests"), pattern="test_*.py", top_level_dir=str(ROOT)

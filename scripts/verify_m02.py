@@ -17,6 +17,11 @@ from src.runtime import connect_database
 
 CATEGORIES = ("normal", "empty", "limits", "declared_failure", "constraints",
               "reproducibility", "parameterization", "runtime")
+EXPECTED_TEAM = (
+    "Abril Miranda Baltazar Varillas",
+    "Luis Bryan Rojas Rodriguez",
+    "Edwin Yahir Cruz Flores",
+)
 
 
 class AuditedResult(unittest.TextTestResult):
@@ -118,6 +123,11 @@ def main():
         if evidence.get("assignment_id") != report["assignment_id"]:
             raise ValueError("Identificador de evidencia incorrecto")
         checks["required_files"] = {"status": "passed"}
+        actual_team = tuple(evidence.get("team", ()))
+        checks["team_identity"] = {
+            "status": "passed" if actual_team == EXPECTED_TEAM else "failed",
+            "members": list(actual_team),
+        }
         if args.compose:
             subprocess.run(["docker", "compose", "config", "--quiet"],
                            check=True, timeout=30, capture_output=True)
@@ -185,7 +195,7 @@ def main():
         evidence.update(
             assignment_id=report["assignment_id"], commit_sha=report["commit_sha"],
             source_dirty=report["source_dirty"], generated_at=report["generated_at"],
-            environment=report["environment"],
+            environment=report["environment"], team=list(EXPECTED_TEAM),
             results={"status": report["status"], "checks": checks,
                      "machine_readable_report": "artifacts/m02-verify.json",
                      "verification_output": "artifacts/make-verify-output.txt",
