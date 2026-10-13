@@ -1,8 +1,8 @@
 {
   "assignment_id": "m04-storage-comparison",
-  "commit_sha": "901028e563eccb39bbe8e2d137d3c9d7b0fb4fa8",
-  "source_dirty": true,
-  "generated_at": "2026-09-28T03:06:13.005445+00:00",
+  "commit_sha": "94e40b8465e1eeb8a4e03665ee78d153ac712757",
+  "source_dirty": false,
+  "generated_at": "2026-10-13T06:14:25.579019+00:00",
   "environment": "docker-compose",
   "authors": [
     "Abril Miranda Baltazar Varillas",
@@ -50,6 +50,18 @@
       "runtime": {
         "status": "passed",
         "report": "artifacts/m04-run.json"
+      },
+      "weighted_decision": {
+        "status": "passed",
+        "weight_total_percent": 100,
+        "alternatives": [
+          "column-keyspaces",
+          "document-dynamodb",
+          "graph-neptune",
+          "object-s3"
+        ],
+        "selected": "document-dynamodb",
+        "discarded_alternative": "graph-neptune"
       }
     },
     "machine_readable_report": "artifacts/m04-verify.json",
