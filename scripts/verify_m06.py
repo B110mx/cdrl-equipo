@@ -68,6 +68,11 @@ def main():
     report["checks"]["document_store_init"] = command_check(
         [sys.executable, "scripts/init_document_store.py"]
     )
+    # M05 genera su propio reporte y demuestra la regresión M01-M05 desde
+    # el mismo `make verify` usado para la verificación acumulada.
+    report["checks"]["m05_verification"] = command_check(
+        [sys.executable, "scripts/verify_m05.py"]
+    )
     # La regresión M02 no se limita a descubrir sus tests: ejecuta su
     # verificador para regenerar y validar el reporte y la evidencia propios.
     report["checks"]["m02_verification"] = command_check(
