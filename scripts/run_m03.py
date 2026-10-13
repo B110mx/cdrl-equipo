@@ -63,18 +63,25 @@ def main():
         operator = connect_database(compose=args.compose, role="operator")
         opened.append(operator)
         with operator.connection.cursor() as cursor:
-            cursor.execute("SELECT count(*) FROM devices")
-            device_count = cursor.fetchone()[0]
-            cursor.execute("SELECT count(*) FROM telemetry_measurements")
-            measurement_count = cursor.fetchone()[0]
+            cursor.execute("""
+                SELECT measurement_count, earliest_recorded_at,
+                       latest_recorded_at, latest_ingested_at
+                FROM cdrl_operational_summary
+            """)
+            operational = cursor.fetchone()
 
         report.update(status="passed", operations={
             "migration": "create_and_drop_probe",
             "write": {"event_id": EVENT_ID, "result": "inserted"},
             "read": {"device_id": row[0], "metric": row[1],
                      "value": str(row[2]), "unit": row[3]},
-            "operation": {"device_count": device_count,
-                          "measurement_count": measurement_count},
+            "operation": {
+                "source": "cdrl_operational_summary",
+                "measurement_count": operational[0],
+                "earliest_recorded_at": operational[1].isoformat(),
+                "latest_recorded_at": operational[2].isoformat(),
+                "latest_ingested_at": operational[3].isoformat(),
+            },
         })
         return 0
     except Exception as exc:

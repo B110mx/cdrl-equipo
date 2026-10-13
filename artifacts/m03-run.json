@@ -1,7 +1,7 @@
 {
   "module": "m03-role-separation",
   "status": "passed",
-  "commit_sha": "7e7783972ae6c2377c4cba5af7b88d8837075350",
+  "commit_sha": "2988dd1d557ccd95a97d7f7abc8ba98b2b0d9f5d",
   "source_dirty": true,
   "operations": {
     "migration": "create_and_drop_probe",
@@ -16,10 +16,13 @@
       "unit": "celsius"
     },
     "operation": {
-      "device_count": 3,
-      "measurement_count": 4
+      "source": "cdrl_operational_summary",
+      "measurement_count": 4,
+      "earliest_recorded_at": "2026-09-03T17:59:30+00:00",
+      "latest_recorded_at": "2026-09-03T18:01:00+00:00",
+      "latest_ingested_at": "2026-10-13T05:55:59.242310+00:00"
     }
   },
   "synthetic_probe_removed": true,
-  "generated_at": "2026-09-20T16:17:31.566018+00:00"
+  "generated_at": "2026-10-13T05:55:59.911966+00:00"
 }

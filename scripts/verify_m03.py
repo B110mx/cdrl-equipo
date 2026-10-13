@@ -74,6 +74,8 @@ def main():
             "status": "passed" if secret_check.returncode == 0 else "failed"
         }
 
+        from tests import test_roles
+        test_roles.ACCESS_DENIALS.clear()
         suite = unittest.defaultTestLoader.discover(str(ROOT / "tests"), pattern="test_*.py",
                                                      top_level_dir=str(ROOT))
         result = unittest.TextTestRunner(
@@ -101,9 +103,15 @@ def main():
             "failures": len(result.failures), "errors": len(result.errors),
             "skipped": len(result.skipped),
         }
-        negative_cases = [case for case in role_cases if "cannot" in case["test"]]
+        negative_cases = list(test_roles.ACCESS_DENIALS)
+        report["checks"]["negative_access"] = {
+            "status": "passed" if len(negative_cases) >= 5 and all(
+                case["status"] == "passed" and case["sqlstate"] == "42501"
+                for case in negative_cases) else "failed",
+            "cases": negative_cases,
+        }
         report["checks"]["role_contract"] = {
-            "status": "passed" if len(role_cases) >= 6 and len(negative_cases) >= 3 and
+            "status": "passed" if len(role_cases) >= 6 and len(negative_cases) >= 5 and
             all(case["status"] == "passed" for case in role_cases) else "failed",
             "cases": len(role_cases),
             "negative_access_cases": sum(case["status"] == "passed" for case in negative_cases),
@@ -118,13 +126,13 @@ def main():
         report["checks"]["m03_coverage"] = {
             "status": "passed" if len(coverage["normal"]) >= 1 and
             len(coverage["limits"]) >= 2 and len(coverage["declared_failure"]) >= 1 and
-            len(coverage["access_denied"]) >= 3 and
+            len(negative_cases) >= 5 and
             all(case["status"] == "passed" for cases in coverage.values() for case in cases)
             else "failed",
             "normal_cases": len(coverage["normal"]),
             "limit_cases": len(coverage["limits"]),
             "declared_failure_cases": len(coverage["declared_failure"]),
-            "access_denied_cases": len(coverage["access_denied"]),
+            "access_denied_cases": len(negative_cases),
         }
         report["status"] = "passed" if all(
             check["status"] == "passed" for check in report["checks"].values()
@@ -141,6 +149,8 @@ def main():
             "assignment_id": report["assignment_id"], "commit_sha": report["commit_sha"],
             "source_dirty": report["source_dirty"], "generated_at": report["generated_at"],
             "environment": report["environment"],
+            "team": ["Abril Miranda Baltazar Varillas", "Luis Bryan Rojas Rodriguez",
+                     "Edwin Yahir Cruz Flores"],
             "results": {"status": report["status"], "checks": report["checks"],
                         "machine_readable_report": "artifacts/m03-verify.json",
                         "verification_output": "artifacts/make-verify-output.txt"},
