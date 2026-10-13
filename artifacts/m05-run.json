@@ -1,9 +1,9 @@
 {
   "module": "m05-document-store-crud",
   "status": "passed",
-  "commit_sha": "61355c2e3a3a7c13887a638ef4aa54c593325364",
-  "source_dirty": true,
-  "generated_at": "2026-10-03T04:23:09.978210+00:00",
+  "commit_sha": "6e3d6179eb187ebc492386041a08858c35c50952",
+  "source_dirty": false,
+  "generated_at": "2026-10-13T06:31:04.154423+00:00",
   "table": "cdrl-events",
   "indexes": [
     "DeviceMetricTimeIndex",

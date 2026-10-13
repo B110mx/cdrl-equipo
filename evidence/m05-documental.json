@@ -1,6 +1,19 @@
 {
   "assignment_id": "m05-documental",
-  "generated_at": "2026-10-03T04:23:08.918948+00:00",
+  "status": "passed",
+  "generated_at": "2026-10-13T06:31:03.154501+00:00",
+  "commit_sha": "6e3d6179eb187ebc492386041a08858c35c50952",
+  "source_dirty": false,
+  "commands": [
+    "make setup",
+    "make verify",
+    "make run"
+  ],
+  "team": [
+    "Abril Miranda Baltazar Varillas",
+    "Luis Bryan Rojas Rodriguez",
+    "Edwin Yahir Cruz Flores"
+  ],
   "results": {
     "status": "passed",
     "checks": {
@@ -13,11 +26,19 @@
       "database_init": {
         "status": "passed"
       },
+      "m04_regression": {
+        "status": "passed",
+        "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/verify_m04.py --compose",
+        "exit_code": 0
+      },
       "tests": {
         "status": "passed",
-        "total": 5,
+        "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe -m unittest tests.test_telemetry tests.test_integration tests.test_relational tests.test_roles tests.test_storage_comparison tests.test_verification tests.test_document_store",
+        "scope": "M01-M05 cumulative regression",
+        "total": 75,
         "failures": 0,
-        "errors": 0
+        "errors": 0,
+        "skipped": 0
       }
     }
   }
