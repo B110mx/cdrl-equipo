@@ -52,8 +52,28 @@ def main():
         "stores": stores,
         "weighted_decision": {
             "selected": "document-dynamodb",
+            "weights_percent": {"queries": 30, "scalability": 20,
+                                "consistency": 20, "cost": 15, "failures": 15},
+            "matrix": {
+                "document-dynamodb": {"queries": 4, "scalability": 5,
+                                      "consistency": 4, "cost": 4, "failures": 4},
+                "graph-neptune": {"queries": 2, "scalability": 3,
+                                  "consistency": 5, "cost": 1, "failures": 4},
+                "column-keyspaces": {"queries": 3, "scalability": 5,
+                                     "consistency": 3, "cost": 3, "failures": 3},
+                "object-s3": {"queries": 2, "scalability": 5,
+                              "consistency": 3, "cost": 5, "failures": 4},
+            },
             "scores": {"document-dynamodb": 4.20, "object-s3": 3.55,
                        "column-keyspaces": 3.40, "graph-neptune": 2.95},
+            "criteria_traceability": {
+                "queries": "official-evidence-and-functional-fixtures",
+                "scalability": "falsifiable-load-hypothesis",
+                "consistency": "official-evidence-and-read-after-write-hypothesis",
+                "cost": "falsifiable-common-workload-hypothesis",
+                "failures": "falsifiable-timeout-throttling-recovery-hypothesis",
+            },
+            "discarded_alternative": "graph-neptune",
             "adr": "docs/ADR-003-seleccion-almacenamiento-eventos.md",
         },
     }
