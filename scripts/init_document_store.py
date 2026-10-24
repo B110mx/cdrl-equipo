@@ -1,6 +1,6 @@
-"""Valida fixtures e inicializa DynamoDB sin migrar los documentos existentes.
+"""Valida contratos v1-v3 e inicializa DynamoDB sin migrar documentos existentes.
 
-La ausencia de schema_version identifica v1; los documentos nuevos declaran v2.
+La ausencia de schema_version identifica documentos v1 legados.
 """
 import json
 import os
@@ -25,6 +25,7 @@ ENDPOINT = os.getenv("DYNAMODB_ENDPOINT_URL", "http://localhost:8000") or None
 SCHEMA_PATHS = {
     1: ROOT / "docs" / "M05-event-document-schema.json",
     2: ROOT / "docs" / "M06-event-document-schema-v2.json",
+    3: ROOT / "docs" / "M07-event-document-schema-v3.json",
 }
 EVENT_INDEXES = {
     "EventIdIndex": ("event_id", None),
@@ -170,7 +171,9 @@ def seed_events(client, validators):
 
     fixture_paths = (
         ROOT / "fixtures" / "document_data.json",
+        ROOT / "fixtures" / "m07-document-data-transition-v2.json",
         ROOT / "fixtures" / "m06-document-data-v2.json",
+        ROOT / "fixtures" / "m07-document-data-v3.json",
     )
     documents = [
         event
@@ -210,13 +213,18 @@ def seed_devices(client):
                 raise
 
 
-def main():
+def load_validators():
     validators = {}
     for version, path in SCHEMA_PATHS.items():
         schema = json.loads(path.read_text(encoding="utf-8"))
         Draft202012Validator.check_schema(schema)
         validators[version] = Draft202012Validator(
             schema, format_checker=FormatChecker())
+    return validators
+
+
+def main():
+    validators = load_validators()
     client = make_client()
     wait_for_endpoint(client)
     ensure_table(
@@ -226,7 +234,7 @@ def main():
     seed_events(client, validators)
     seed_devices(client)
     print(
-        "DynamoDB initialized with event schemas v1/v2 and audit table; "
+        "DynamoDB initialized with event schemas v1/v2/v3 and audit table; "
         "event and device fixtures validated."
     )
     return 0

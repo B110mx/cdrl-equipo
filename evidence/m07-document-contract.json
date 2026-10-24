@@ -1,0 +1,19 @@
+{
+  "assignment_id": "m07-document-contract",
+  "author": "Abril Miranda Baltazar Varillas",
+  "status": "blocked",
+  "schema_version": 3,
+  "contract_change": "schema_version only; v3 preserves every v2 field, type, required/optional status, and validation constraint",
+  "fixtures": {
+    "old": "fixtures/document_data.json (legacy v1 without schema_version)",
+    "transition": "fixtures/m07-document-data-transition-v2.json",
+    "existing_v2": "fixtures/m06-document-data-v2.json",
+    "new": "fixtures/m07-document-data-v3.json"
+  },
+  "verification_artifact": "artifacts/m07-document-contract-verify.json",
+  "setup": {
+    "schema_versions_loaded": [1, 2, 3],
+    "idempotent_insertion": "Configured through put_event_idempotent; DynamoDB integration not run."
+  },
+  "limitation": "DynamoDB Local and make verify were not available for integration execution."
+}

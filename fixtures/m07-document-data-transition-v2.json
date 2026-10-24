@@ -1,0 +1,14 @@
+[
+  {
+    "schema_version": 2,
+    "event_id": "018f47a0-79f2-7c19-bc7f-1a26d47e9406",
+    "device_id": "sensor-lab-06",
+    "recorded_at": "2026-10-01T12:05:00Z",
+    "metric": "temperature",
+    "value": 23.0,
+    "unit": "celsius",
+    "metadata": {
+      "source": "synthetic-m07-transition"
+    }
+  }
+]

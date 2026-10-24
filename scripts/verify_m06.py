@@ -39,8 +39,12 @@ def main():
         "src/document_store.py",
         "docs/ADR-005-evolucion-documental.md",
         "docs/ADR-006-evolucion-auditoria.md",
+        "docs/M07-event-document-schema-v3.json",
+        "fixtures/m07-document-data-transition-v2.json",
         "fixtures/m06-document-data-v2.json",
+        "fixtures/m07-document-data-v3.json",
         "scripts/run_m06.py",
+        "tests/test_document_version_contract.py",
         "tests/test_m06_auditoria.py",
     ]
     missing = [path for path in required if not (ROOT / path).is_file()]

@@ -4,6 +4,7 @@ import uuid
 from copy import deepcopy
 from pathlib import Path
 
+from scripts.init_document_store import load_validators, seed_events
 from src.document_store import DocumentEventStore
 
 
@@ -19,6 +20,10 @@ class TestM06EvolucionAuditoria(unittest.TestCase):
         cls.store = DocumentEventStore()
         cls.legacy = json.loads(
             (ROOT / "fixtures/document_data.json").read_text(encoding="utf-8")
+        )[0]
+        cls.transition = json.loads(
+            (ROOT / "fixtures/m07-document-data-transition-v2.json").read_text(
+                encoding="utf-8")
         )[0]
         cls.version_two = json.loads(
             (ROOT / "fixtures/m06-document-data-v2.json").read_text(
@@ -41,10 +46,37 @@ class TestM06EvolucionAuditoria(unittest.TestCase):
 
     def test_caso_normal_versiones_coexisten(self):
         legacy = self.store.get_event(self.legacy["event_id"])
+        transition = self.store.get_event(self.transition["event_id"])
         current = self.store.get_event(self.version_two["event_id"])
         self.assertIsNotNone(legacy)
         self.assertNotIn("schema_version", legacy)
+        self.assertIsNotNone(transition)
+        self.assertEqual(transition["schema_version"], 2)
         self.assertEqual(current["schema_version"], 2)
+
+    def test_limite_repetir_setup_no_sobrescribe_documento_existente(self):
+        initial = self.store.get_event(self.transition["event_id"])
+        self.assertIsNotNone(initial)
+        self.assertEqual(initial["metadata"]["source"], "synthetic-m07-transition")
+
+        seed_events(self.store.client, load_validators())
+
+        self.assertEqual(
+            self.store.get_event(self.transition["event_id"]), initial)
+
+    def test_rollback_productor_v1_conserva_documentos_v2(self):
+        current_v2 = self.store.get_event(self.version_two["event_id"])
+        rollback_event = deepcopy(self.transition)
+        rollback_event["event_id"] = str(uuid.uuid4())
+        rollback_event["device_id"] = "sensor-rollback-test"
+        rollback_event.pop("schema_version")
+        self.created_ids.append(rollback_event["event_id"])
+
+        stored_v1 = self.store.create_event(rollback_event)
+
+        self.assertNotIn("schema_version", stored_v1)
+        self.assertEqual(
+            self.store.get_event(self.version_two["event_id"]), current_v2)
 
     def test_limite_auditoria_no_copia_secretos(self):
         event = self.unique_event()
