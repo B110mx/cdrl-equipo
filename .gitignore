@@ -17,6 +17,7 @@ artifacts/*.log
 !artifacts/m06-run.json
 !artifacts/m07-document-contract-verify.json
 !artifacts/m07-run.json
+!artifacts/m07-verify.json
 evidence/*-local.json
 db/data/
 docker-data/
