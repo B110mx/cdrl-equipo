@@ -3,7 +3,7 @@
   "author": "Abril Miranda Baltazar Varillas",
   "status": "blocked",
   "schema_version": 3,
-  "contract_change": "schema_version only; v3 preserves every v2 field, type, required/optional status, and validation constraint",
+  "contract_change": "v3 adds required synthetic quality (good, uncertain, unknown); migration defaults old documents to unknown while preserving v2 measurement constraints",
   "fixtures": {
     "old": "fixtures/document_data.json (legacy v1 without schema_version)",
     "transition": "fixtures/m07-document-data-transition-v2.json",

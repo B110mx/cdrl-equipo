@@ -5,7 +5,7 @@
   "base_commit_sha": "3262cd4022c175c4a54b7d43e67b265f7b076a7c",
   "source_dirty": true,
   "version": 3,
-  "version_change": "schema_version only; all v2 fields and constraints are preserved",
+  "version_change": "v3 adds required synthetic quality with a closed vocabulary; all v2 measurement fields and constraints are preserved",
   "checks": {
     "schema_and_fixture_tests": {
       "status": "passed",

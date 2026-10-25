@@ -73,9 +73,17 @@ class TestDocumentVersionContract(unittest.TestCase):
         with self.assertRaises(ValidationError):
             self.validators[3].validate(invalid)
 
-    def test_v3_conserva_campos_y_reglas_de_v2(self):
+    def test_v3_agrega_quality_y_conserva_reglas_de_v2(self):
         v2 = deepcopy(self.validators[2].schema)
         v3 = deepcopy(self.validators[3].schema)
+
+        self.assertIn("quality", v3["required"])
+        self.assertEqual(
+            v3["properties"]["quality"]["enum"],
+            ["good", "uncertain", "unknown"],
+        )
+        v3["required"].remove("quality")
+        v3["properties"].pop("quality")
         for schema in (v2, v3):
             schema.pop("title")
             schema.pop("description")

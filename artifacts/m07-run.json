@@ -1,0 +1,40 @@
+{
+  "module": "m07-compatible-document-migration",
+  "status": "passed",
+  "commit_sha": "0d7199eb263999c9af4acf7de6584666e76fd35a",
+  "source_dirty": true,
+  "generated_at": "2026-10-25T05:45:07.673043+00:00",
+  "strategy": "expand-migrate-rollback",
+  "synthetic_fixture": "fixtures/m07-document-data-transition-v2.json",
+  "migration": {
+    "from_version": 2,
+    "to_version": 3,
+    "default_quality": "unknown",
+    "second_run_changed": false
+  },
+  "rollback": {
+    "target_version": 2,
+    "restored_original": true,
+    "second_run_changed": false
+  },
+  "cases": {
+    "normal_v2_migrates_to_v3": {
+      "status": "passed"
+    },
+    "boundary_legacy_v1_remains_readable": {
+      "status": "passed"
+    },
+    "boundary_repeated_migration_is_idempotent": {
+      "status": "passed"
+    },
+    "declared_failure_rejects_unknown_quality": {
+      "status": "passed"
+    },
+    "rollback_restores_v2_fixture": {
+      "status": "passed"
+    },
+    "boundary_repeated_rollback_is_idempotent": {
+      "status": "passed"
+    }
+  }
+}
