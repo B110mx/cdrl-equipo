@@ -116,9 +116,23 @@ def main():
 
         runtime = subprocess.run([sys.executable, "scripts/run_m04.py"], cwd=ROOT,
                                  capture_output=True, text=True, timeout=60)
+        runtime_report = json.loads((ROOT / "artifacts/m04-run.json").read_text(encoding="utf-8"))
+        decision = runtime_report.get("weighted_decision", {})
+        weights = decision.get("weights_percent", {})
+        matrix = decision.get("matrix", {})
         report["checks"]["runtime"] = {
             "status": "passed" if runtime.returncode == 0 else "failed",
             "report": "artifacts/m04-run.json"}
+        report["checks"]["weighted_decision"] = {
+            "status": "passed" if sum(weights.values()) == 100 and len(matrix) == 4 and
+            decision.get("selected") == "document-dynamodb" and
+            decision.get("discarded_alternative") == "graph-neptune" and
+            len(decision.get("criteria_traceability", {})) == 5 else "failed",
+            "weight_total_percent": sum(weights.values()),
+            "alternatives": sorted(matrix),
+            "selected": decision.get("selected"),
+            "discarded_alternative": decision.get("discarded_alternative"),
+        }
         report["status"] = "passed" if all(
             check["status"] == "passed" for check in report["checks"].values()) else "failed"
     except Exception as exc:

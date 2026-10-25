@@ -47,6 +47,9 @@ def configure_roles(connection, environment=None):
                 cursor.execute(sql.SQL(
                     "ALTER TABLE IF EXISTS telemetry_measurements OWNER TO {}"
                 ).format(sql.Identifier(role)))
+                cursor.execute(sql.SQL(
+                    "ALTER VIEW IF EXISTS cdrl_operational_summary OWNER TO {}"
+                ).format(sql.Identifier(role)))
     connection.commit()
 
 

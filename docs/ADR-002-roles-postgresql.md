@@ -12,7 +12,7 @@ responsabilidades de la base de datos:
 | `cdrl_migrator` | `USAGE` y `CREATE` en el esquema actual para aplicar migraciones. |
 | `cdrl_writer` | `INSERT` en `telemetry_measurements`. |
 | `cdrl_reader` | `SELECT` en `devices` y `telemetry_measurements`. |
-| `cdrl_operator` | `SELECT` en `devices` y `telemetry_measurements`. |
+| `cdrl_operator` | `SELECT` únicamente en `cdrl_operational_summary`; no puede leer tablas de negocio. |
 
 Ningún rol puede crear otros roles, crear bases de datos o ser superusuario.
 La migración es repetible: crea cada rol solo si no existe y vuelve a aplicar los
@@ -21,9 +21,13 @@ permisos declarados. Los usuarios `cdrl_migrator_user`, `cdrl_writer_user`,
 y reciben una sola membresía. El migrador es propietario de las tablas existentes
 para poder aplicar cambios posteriores.
 
-Las pruebas usan conexiones reales y comprueban operaciones permitidas y cuatro
-denegaciones: lector insertando, escritor leyendo telemetría, operador actualizando
-dispositivos y migrador creando roles.
+La vista `cdrl_operational_summary` expone solamente el total de mediciones y las
+marcas de tiempo mínima, máxima y de última ingesta. No contiene identificadores,
+métricas, valores, unidades ni metadata. Las pruebas usan conexiones reales y
+comprueban operaciones permitidas y denegaciones: lector insertando, escritor
+leyendo telemetría, operador leyendo directamente o modificando tablas, migrador
+creando roles y acceso a un objeto futuro sin concesión explícita. Cada denegación
+registra `status` y SQLSTATE `42501` en el reporte machine-readable.
 
 La cobertura funcional de M03 incluye un caso normal con las cuatro conexiones,
 dos límites inclusivos de temperatura (`-80` y `200`) y un fallo declarado:
@@ -35,9 +39,15 @@ El configurador revoca primero las cuatro membresías conocidas de cada usuario 
 después concede únicamente la que corresponde. Esto corrige configuraciones
 anteriores y permite comprobar la separación efectiva.
 
+`PUBLIC` no tiene privilegios sobre el esquema ni sobre tablas, secuencias o
+funciones actuales. También se revocan los privilegios predeterminados sobre
+objetos futuros creados tanto por el usuario que ejecuta las migraciones como bajo
+`cdrl_migrator`; esto incluye funciones, que PostgreSQL normalmente permite ejecutar
+a `PUBLIC`. Cada nueva migración debe conceder explícitamente el acceso mínimo necesario.
+
 `make run` abre cuatro conexiones independientes. El migrador crea y elimina una
 tabla de prueba, el escritor inserta una medición sintética, el lector recupera
-esa medición y el operador consulta conteos. Al terminar se elimina la medición
+esa medición y el operador consulta la vista operativa. Al terminar se elimina la medición
 de demostración para que las ejecuciones repetidas conserven el mismo estado.
 
 ## Secretos y rotación

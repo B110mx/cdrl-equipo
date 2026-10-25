@@ -1,72 +1,127 @@
-import os
-import sys
+"""Verificación acumulada y evidencia reproducible de M06."""
+
 import json
 import subprocess
-from datetime import datetime, UTC
+import sys
+import unittest
+from datetime import datetime, timezone
+from pathlib import Path
 
-# Definir la raíz del proyecto
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+from scripts.evidence_support import source_revision
+
+
+def save_json(path, data):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(data, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+
+def command_check(command):
+    completed = subprocess.run(
+        command, cwd=ROOT, capture_output=True, text=True
+    )
+    return {
+        "status": "passed" if completed.returncode == 0 else "failed",
+        "command": " ".join(command),
+        "exit_code": completed.returncode,
+        "stdout": completed.stdout.strip(),
+        "stderr": completed.stderr.strip(),
+    }
+
 
 def main():
-    report = {
-        "module": "M06",
-        "timestamp": datetime.now(UTC).isoformat().replace('+00:00', 'Z'),
-        "checks": {}
-    }
-
-    # 1. Verificar existencia de archivos requeridos del M06
-    required_files = [
+    required = [
+        "src/document_store.py",
+        "docs/ADR-005-evolucion-documental.md",
         "docs/ADR-006-evolucion-auditoria.md",
+        "docs/M07-event-document-schema-v3.json",
+        "fixtures/m07-document-data-transition-v2.json",
+        "fixtures/m06-document-data-v2.json",
+        "fixtures/m07-document-data-v3.json",
+        "scripts/run_m06.py",
+        "tests/test_document_version_contract.py",
         "tests/test_m06_auditoria.py",
-        "scripts/verify_m06.py"
     ]
-    
-    missing = [f for f in required_files if not os.path.exists(os.path.join(ROOT, f))]
-    report["checks"]["required_files"] = {
-        "status": "passed" if not missing else "failed",
-        "missing": missing
+    missing = [path for path in required if not (ROOT / path).is_file()]
+    report = {
+        "assignment_id": "m06-evolution-audit-recovery",
+        "status": "failed",
+        **source_revision(),
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "commands": [
+            "make setup",
+            "make verify",
+            "make run",
+        ],
+        "checks": {
+            "required_files": {
+                "status": "passed" if not missing else "failed",
+                "missing": missing,
+            }
+        },
     }
 
-    # 2. Verificar ausencia de secretos (usando la herramienta existente)
-    script_secretos = os.path.join(ROOT, "scripts", "check_no_secrets.py")
-    if os.path.exists(script_secretos):
-        secret_check = subprocess.run(
-            [sys.executable, script_secretos], 
-            cwd=ROOT, capture_output=True
-        )
-        report["checks"]["no_secrets"] = {
-            "status": "passed" if secret_check.returncode == 0 else "failed"
-        }
-    else:
-        report["checks"]["no_secrets"] = {"status": "skipped", "reason": "Script no encontrado"}
-
-    # 3. Ejecutar las pruebas unitarias del M06
-    print("=> Ejecutando pruebas unitarias de M06...")
-    test_check = subprocess.run(
-        [sys.executable, "-m", "unittest", "tests/test_m06_auditoria.py"], 
-        cwd=ROOT, capture_output=True, text=True
+    report["checks"]["no_secrets"] = command_check(
+        [sys.executable, "scripts/check_no_secrets.py"]
     )
-    
-    report["checks"]["tests"] = {
-        "status": "passed" if test_check.returncode == 0 else "failed",
-        # Guardamos un resumen para no saturar el JSON
-        "details": "Pruebas pasaron correctamente" if test_check.returncode == 0 else "Fallaron algunas pruebas. Revisa los logs."
+    report["checks"]["document_store_init"] = command_check(
+        [sys.executable, "scripts/init_document_store.py"]
+    )
+    # M05 genera su propio reporte y demuestra la regresión M01-M05 desde
+    # el mismo `make verify` usado para la verificación acumulada.
+    report["checks"]["m05_verification"] = command_check(
+        [sys.executable, "scripts/verify_m05.py"]
+    )
+    # La regresión M02 no se limita a descubrir sus tests: ejecuta su
+    # verificador para regenerar y validar el reporte y la evidencia propios.
+    report["checks"]["m02_verification"] = command_check(
+        [sys.executable, "scripts/verify_m02.py", "--compose"]
+    )
+
+    suite = unittest.defaultTestLoader.discover(
+        str(ROOT / "tests"), pattern="test_*.py", top_level_dir=str(ROOT)
+    )
+    result = unittest.TextTestRunner(stream=sys.stdout, verbosity=2).run(suite)
+    report["checks"]["cumulative_tests"] = {
+        "status": "passed" if result.wasSuccessful() else "failed",
+        "command": f"{sys.executable} -m unittest discover -s tests -p test_*.py",
+        "total": result.testsRun,
+        "failures": len(result.failures),
+        "errors": len(result.errors),
+        "skipped": len(result.skipped),
     }
+    report["status"] = (
+        "passed"
+        if all(check["status"] == "passed" for check in report["checks"].values())
+        else "failed"
+    )
+    report["generated_at"] = datetime.now(timezone.utc).isoformat()
 
-    # 4. Generar el artefacto de verificación
-    artifacts_dir = os.path.join(ROOT, "artifacts")
-    os.makedirs(artifacts_dir, exist_ok=True)
-    
-    verify_file = os.path.join(artifacts_dir, "m06-verify.json")
-    with open(verify_file, "w", encoding="utf-8") as f:
-        json.dump(report, f, indent=2)
+    evidence = {
+        "assignment_id": report["assignment_id"],
+        "status": report["status"],
+        "generated_at": report["generated_at"],
+        "commit_sha": report["commit_sha"],
+        "source_dirty": report["source_dirty"],
+        "team": [
+            "Abril Miranda Baltazar Varillas",
+            "Luis Bryan Rojas Rodriguez",
+            "Edwin Yahir Cruz Flores",
+        ],
+        "strategy": "versioned-coexistence",
+        "results": report["checks"],
+    }
+    save_json(ROOT / "artifacts/m06-verify.json", report)
+    save_json(ROOT / "evidence/m06-evolution-audit-recovery.json", evidence)
+    print("\n=== RESUMEN DE VERIFICACIÓN M06 ===")
+    print(json.dumps(report, ensure_ascii=False, indent=2))
+    return 0 if report["status"] == "passed" else 1
 
-    # Imprimir el resultado en consola para GitHub Actions
-    print(json.dumps(report, indent=2))
-    
-    # Si algo falló, salir con error para que el CI falle
-    if any(c.get("status") == "failed" for c in report["checks"].values()):
-        sys.exit(1)
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

@@ -99,5 +99,31 @@ class TestDocumentStore(unittest.TestCase):
         self.assertIn("EventIdIndex", indexes)
         self.assertIn("MetricUnitTimeIndex", indexes)
 
+    def test_timezone_offset_is_normalized_before_building_keys(self):
+        """El mismo intervalo debe encontrarse aunque evento y consulta usen zonas distintas."""
+        event = self.valid_event.copy()
+        event["recorded_at"] = "2026-09-30T07:00:00-05:00"
+        self.store.create_event(event)
+
+        try:
+            stored = self.store.get_event(event["event_id"])
+            by_device = self.store.events_by_device(
+                event["device_id"],
+                "2026-09-30T12:00:00Z",
+                "2026-09-30T12:00:00Z",
+            )
+            by_metric = self.store.events_by_metric_unit(
+                event["metric"],
+                event["unit"],
+                "2026-09-30T12:00:00+00:00",
+                "2026-09-30T12:00:00+00:00",
+            )
+
+            self.assertEqual(stored["recorded_at"], "2026-09-30T12:00:00Z")
+            self.assertEqual([item["event_id"] for item in by_device], [event["event_id"]])
+            self.assertIn(event["event_id"], [item["event_id"] for item in by_metric])
+        finally:
+            self.store.delete_event(event["event_id"])
+
 if __name__ == "__main__":
     unittest.main()

@@ -1,13 +1,10 @@
 {
   "assignment_id": "m03-role-separation",
   "status": "passed",
-  "generated_at": "2026-09-27T20:32:02.731555+00:00",
+  "generated_at": "2026-10-13T06:00:02.899747+00:00",
   "environment": "docker-compose",
   "checks": {
     "required_files": {
-      "status": "passed"
-    },
-    "synthetic_fixtures": {
       "status": "passed"
     },
     "database_roles": {
@@ -18,16 +15,77 @@
     },
     "tests": {
       "status": "passed",
-      "total": 60,
-      "passed": 60,
+      "total": 78,
+      "passed": 78,
       "failures": 0,
       "errors": 0,
       "skipped": 0
     },
+    "negative_access": {
+      "status": "passed",
+      "cases": [
+        {
+          "test": "tests.test_roles.TestRolePermissions.test_migrator_cannot_create_roles",
+          "role": "cdrl_migrator",
+          "operation": "create_role",
+          "status": "passed",
+          "sqlstate": "42501",
+          "expected_sqlstate": "42501"
+        },
+        {
+          "test": "tests.test_roles.TestRolePermissions.test_operator_cannot_modify_devices",
+          "role": "cdrl_operator",
+          "operation": "update_device",
+          "status": "passed",
+          "sqlstate": "42501",
+          "expected_sqlstate": "42501"
+        },
+        {
+          "test": "tests.test_roles.TestRolePermissions.test_operator_cannot_read_telemetry_directly",
+          "role": "cdrl_operator",
+          "operation": "select_telemetry_directly",
+          "status": "passed",
+          "sqlstate": "42501",
+          "expected_sqlstate": "42501"
+        },
+        {
+          "test": "tests.test_roles.TestRolePermissions.test_public_cannot_execute_future_functions",
+          "role": "cdrl_operator",
+          "operation": "execute_future_function",
+          "status": "passed",
+          "sqlstate": "42501",
+          "expected_sqlstate": "42501"
+        },
+        {
+          "test": "tests.test_roles.TestRolePermissions.test_public_cannot_read_future_objects",
+          "role": "cdrl_operator",
+          "operation": "select_future_object",
+          "status": "passed",
+          "sqlstate": "42501",
+          "expected_sqlstate": "42501"
+        },
+        {
+          "test": "tests.test_roles.TestRolePermissions.test_reader_cannot_insert",
+          "role": "cdrl_reader",
+          "operation": "insert_device",
+          "status": "passed",
+          "sqlstate": "42501",
+          "expected_sqlstate": "42501"
+        },
+        {
+          "test": "tests.test_roles.TestRolePermissions.test_writer_cannot_read_telemetry",
+          "role": "cdrl_writer",
+          "operation": "select_telemetry",
+          "status": "passed",
+          "sqlstate": "42501",
+          "expected_sqlstate": "42501"
+        }
+      ]
+    },
     "role_contract": {
       "status": "passed",
-      "cases": 9,
-      "negative_access_cases": 4,
+      "cases": 12,
+      "negative_access_cases": 7,
       "single_membership_verified": true
     },
     "m03_coverage": {
@@ -35,10 +93,35 @@
       "normal_cases": 1,
       "limit_cases": 2,
       "declared_failure_cases": 1,
-      "access_denied_cases": 4
+      "access_denied_cases": 7
     }
   },
   "cases": [
+    {
+      "test": "tests.test_document_store.TestDocumentStore.test_constraints_indexes_are_declared",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_document_store.TestDocumentStore.test_declared_failure_invalid_schema_rejected",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_document_store.TestDocumentStore.test_limits_absence_handling",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_document_store.TestDocumentStore.test_limits_duplicate_insertion",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_document_store.TestDocumentStore.test_normal_crud_operations",
+      "category": "regression_m01",
+      "status": "passed"
+    },
     {
       "test": "tests.test_integration.TestTelemetryIntegration.test_01_seed_data_exists",
       "category": "regression_m01",
@@ -61,6 +144,26 @@
     },
     {
       "test": "tests.test_integration.TestTelemetryIntegration.test_05_index_exists",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_m06_auditoria.TestM06EvolucionAuditoria.test_caso_normal_versiones_coexisten",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_m06_auditoria.TestM06EvolucionAuditoria.test_fallo_declarado_y_recuperacion_fixture",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_m06_auditoria.TestM06EvolucionAuditoria.test_limite_auditoria_no_copia_secretos",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_m06_auditoria.TestM06EvolucionAuditoria.test_limite_zona_horaria_equivalente_consulta_utc",
       "category": "regression_m01",
       "status": "passed"
     },
@@ -180,6 +283,21 @@
       "status": "passed"
     },
     {
+      "test": "tests.test_roles.TestRolePermissions.test_operator_cannot_read_telemetry_directly",
+      "category": "access_denied",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_roles.TestRolePermissions.test_public_cannot_execute_future_functions",
+      "category": "access_denied",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_roles.TestRolePermissions.test_public_cannot_read_future_objects",
+      "category": "access_denied",
+      "status": "passed"
+    },
+    {
       "test": "tests.test_roles.TestRolePermissions.test_reader_cannot_insert",
       "category": "access_denied",
       "status": "passed"
@@ -187,6 +305,31 @@
     {
       "test": "tests.test_roles.TestRolePermissions.test_writer_cannot_read_telemetry",
       "category": "access_denied",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_storage_comparison.TestStorageComparison.test_constraints_same_fixture_population",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_storage_comparison.TestStorageComparison.test_declared_failure_duplicate_event_id",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_storage_comparison.TestStorageComparison.test_limit_empty_device_range",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_storage_comparison.TestStorageComparison.test_limit_inclusive_time_boundaries",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_storage_comparison.TestStorageComparison.test_normal_lookup_by_event_id",
+      "category": "regression_m01",
       "status": "passed"
     },
     {
@@ -330,6 +473,11 @@
       "status": "passed"
     },
     {
+      "test": "tests.test_verification.TestVerification.test_m02_expected_team_uses_real_names",
+      "category": "verification_safety",
+      "status": "passed"
+    },
+    {
       "test": "tests.test_verification.TestVerification.test_missing_category_is_failure",
       "category": "verification_safety",
       "status": "passed"
@@ -340,6 +488,6 @@
       "status": "passed"
     }
   ],
-  "commit_sha": "13bc3c440f4a7820693bddaba20081d23c5c7c7d",
+  "commit_sha": "9c4eeade6c88aa62ff2557a794562e4b3e962cb5",
   "source_dirty": false
 }

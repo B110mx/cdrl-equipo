@@ -10,6 +10,8 @@ from scripts.configure_roles import configure_roles
 from scripts.migrate import apply_migrations
 from src.db import DatabaseConnection
 
+ACCESS_DENIALS = []
+
 
 class TestRolePermissions(unittest.TestCase):
     def setUp(self):
@@ -47,6 +49,22 @@ class TestRolePermissions(unittest.TestCase):
         connection.commit()
         return connection
 
+    def assert_access_denied(self, role, operation, statement, parameters=None):
+        with self.role_connection(role) as connection:
+            with self.assertRaises(errors.InsufficientPrivilege) as caught:
+                with connection.cursor() as cursor:
+                    cursor.execute(statement, parameters)
+            sqlstate = caught.exception.pgcode
+            ACCESS_DENIALS.append({
+                "test": self.id(),
+                "role": role,
+                "operation": operation,
+                "status": "passed",
+                "sqlstate": sqlstate,
+                "expected_sqlstate": "42501",
+            })
+            self.assertEqual(sqlstate, "42501")
+
     def test_declared_permissions_are_available(self):
         with self.role_connection("cdrl_migrator") as connection:
             with connection.cursor() as cursor:
@@ -70,32 +88,68 @@ class TestRolePermissions(unittest.TestCase):
 
         with self.role_connection("cdrl_operator") as connection:
             with connection.cursor() as cursor:
-                cursor.execute("SELECT count(*) FROM telemetry_measurements")
-                self.assertEqual(cursor.fetchall(), [(1,)])
+                cursor.execute("""
+                    SELECT measurement_count, earliest_recorded_at,
+                           latest_recorded_at, latest_ingested_at
+                    FROM cdrl_operational_summary
+                """)
+                row = cursor.fetchone()
+                self.assertEqual(row[0], 1)
+                self.assertIsNotNone(row[1])
+                self.assertIsNotNone(row[2])
+                self.assertIsNotNone(row[3])
 
     def test_reader_cannot_insert(self):
-        with self.role_connection("cdrl_reader") as connection:
-            with self.assertRaises(errors.InsufficientPrivilege):
-                with connection.cursor() as cursor:
-                    cursor.execute("INSERT INTO devices(device_id, device_name) VALUES ('denied', 'Denied')")
+        self.assert_access_denied(
+            "cdrl_reader", "insert_device",
+            "INSERT INTO devices(device_id, device_name) VALUES ('denied', 'Denied')")
 
     def test_writer_cannot_read_telemetry(self):
-        with self.role_connection("cdrl_writer") as connection:
-            with self.assertRaises(errors.InsufficientPrivilege):
-                with connection.cursor() as cursor:
-                    cursor.execute("SELECT count(*) FROM telemetry_measurements")
+        self.assert_access_denied(
+            "cdrl_writer", "select_telemetry",
+            "SELECT count(*) FROM telemetry_measurements")
+
+    def test_operator_cannot_read_telemetry_directly(self):
+        self.assert_access_denied(
+            "cdrl_operator", "select_telemetry_directly",
+            "SELECT count(*) FROM telemetry_measurements")
 
     def test_operator_cannot_modify_devices(self):
-        with self.role_connection("cdrl_operator") as connection:
-            with self.assertRaises(errors.InsufficientPrivilege):
-                with connection.cursor() as cursor:
-                    cursor.execute("UPDATE devices SET status = 'inactive' WHERE device_id = 'role-device'")
+        self.assert_access_denied(
+            "cdrl_operator", "update_device",
+            "UPDATE devices SET status = 'inactive' WHERE device_id = 'role-device'")
 
     def test_migrator_cannot_create_roles(self):
+        self.assert_access_denied(
+            "cdrl_migrator", "create_role", "CREATE ROLE denied_role")
+
+    def test_public_cannot_read_future_objects(self):
+        future_table = "future_probe_" + uuid.uuid4().hex
         with self.role_connection("cdrl_migrator") as connection:
-            with self.assertRaises(errors.InsufficientPrivilege):
-                with connection.cursor() as cursor:
-                    cursor.execute("CREATE ROLE denied_role")
+            with connection.cursor() as cursor:
+                cursor.execute("SET ROLE cdrl_migrator")
+                cursor.execute(sql.SQL("CREATE TABLE {} (probe_id integer)").format(
+                    sql.Identifier(future_table)))
+            connection.commit()
+        self.assertFalse(self.execute(
+            "SELECT has_schema_privilege('public', %s, 'CREATE')", (self.schema,))[0][0])
+        self.assert_access_denied(
+            "cdrl_operator", "select_future_object",
+            sql.SQL("SELECT * FROM {}").format(sql.Identifier(future_table)))
+
+    def test_public_cannot_execute_future_functions(self):
+        future_function = "future_function_" + uuid.uuid4().hex
+        with self.conn.cursor() as cursor:
+            cursor.execute(sql.SQL(
+                "CREATE FUNCTION {}() RETURNS integer LANGUAGE SQL AS 'SELECT 1'"
+            ).format(sql.Identifier(future_function)))
+        self.conn.commit()
+        signature = f"{self.schema}.{future_function}()"
+        self.assertFalse(self.execute(
+            "SELECT has_function_privilege('public', %s, 'EXECUTE')", (signature,))[0][0])
+        self.assert_access_denied(
+            "cdrl_operator", "execute_future_function",
+            sql.SQL("SELECT {}()").format(sql.Identifier(future_function)))
 
     def test_each_login_has_exactly_one_cdrl_membership(self):
         expected = {

@@ -147,3 +147,20 @@ machine-readable en `artifacts/m04-verify.json`. Los adaptadores de M04 son
 modelos locales reproducibles: validan el contrato y las consultas funcionales,
 pero no afirman medir latencia, costo o disponibilidad reales de AWS. Esas
 propiedades permanecen como hipótesis falsables en el ADR.
+
+## Regresión acumulada y reevaluación de M02
+
+El `make verify` actual ejecuta el verificador específico de M02 antes de la
+suite acumulada. No se limita a comprobar que exista la evidencia: regenera
+`artifacts/m02-verify.json`, valida el contenido de
+`evidence/m02-relational-model.json`, comprueba los nombres reales del equipo y
+falla si falta alguna categoría M02, si una prueba se omite o si PostgreSQL no
+está disponible. Para una revisión aislada se puede ejecutar:
+
+```text
+.venv/Scripts/python.exe scripts/verify_m02.py --compose
+```
+
+La ejecución aislada debe mostrar cobertura aprobada para caso normal, vacío,
+límites, fallo declarado, restricciones, reproducibilidad, parametrización y
+ejecución real.

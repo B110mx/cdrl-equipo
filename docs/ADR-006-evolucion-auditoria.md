@@ -1,23 +1,40 @@
-# ADR 006: Estrategia de Evolución, Auditoría y Recuperación
+# ADR 006: Auditoría y recuperación controlada
 
 ## Estado
-Aceptado (Semana 06)
+
+Aceptado para M06.
 
 ## Contexto
-El sistema en su Módulo 06 requiere manejar la evolución de la estructura de datos (esquemas antiguos vs. nuevos), implementar un registro de auditoría seguro y garantizar la recuperación ante fallas mediante un fixture sintético. Todo esto manteniendo la inmutabilidad de la infraestructura y evitando la fuga de credenciales.
+
+La convivencia de documentos v1 y v2 está definida en ADR-005. M06 también
+requiere demostrar una operación auditada sin secretos y recuperar un fixture
+después de una falla controlada, con un resultado medible y reproducible.
 
 ## Decisión
 
-1. **Evolución Documental (Convivencia de versiones):**
-   Dado que utilizamos DynamoDB (base de datos NoSQL), se optó por una **estrategia de convivencia** en lugar de una migración forzada. Los documentos ahora incluyen un campo `schema_version`. El código de la aplicación (capa de lectura) se encarga de aplicar valores por defecto a los documentos `v1` para que cumplan con el contrato de `v2` en tiempo de ejecución. Esto garantiza cero tiempo de inactividad (Zero Downtime).
+Las operaciones auditadas registran únicamente identificadores técnicos,
+instante UTC, nombre de la operación, resultado y nombres de campos modificados.
+No copian valores del evento ni metadatos, por lo que contraseñas, tokens,
+secretos o cadenas de conexión no forman parte del registro de auditoría.
 
-2. **Auditoría Estructurada y Segura:**
-   Se implementó un decorador/middleware en las operaciones de escritura y consulta. Cada acción genera un registro que contiene: `action` (ej. CREATE, RECOVER), `timestamp`, `result` (SUCCESS/FAILED) y `technical_id`. 
-   **Seguridad:** Antes de guardar la auditoría, una función de saneamiento limpia explícitamente cualquier campo llamado `password`, `token`, `secret` o `api_key`.
+La falla controlada elimina exclusivamente el fixture sintético v2. La
+recuperación vuelve a insertarlo de forma idempotente y compara un SHA-256 del
+documento esperado con el documento recuperado. El resultado incluye duración
+en milisegundos y cantidad de registros recuperados en `artifacts/m06-run.json`.
 
-3. **Falla Controlada y Recuperación:**
-   Se automatizó un procedimiento que simula una pérdida de datos (limpieza de tabla) y ejecuta un script de recuperación inyectando el archivo `fixtures/document_data.json`. Al finalizar, el script genera un archivo `artifacts/m06-run.json` (machine-readable) que documenta el tiempo de duración de la recuperación y el recuento total de registros recuperados.
+Los instantes se normalizan a UTC antes de formar claves ordenables o límites de
+consulta. Así, dos representaciones con zonas horarias distintas que describen
+el mismo instante producen la misma clave y el mismo resultado de consulta.
+
+## Alternativas descartadas
+
+- Guardar el payload completo en la auditoría: facilita diagnóstico, pero puede
+  copiar secretos o datos innecesarios y aumenta el costo de almacenamiento.
+- Reconstruir toda la tabla para demostrar recuperación: amplía el impacto de la
+  falla y no es necesario para probar el procedimiento con un fixture sintético.
 
 ## Consecuencias
-* **Positivas:** Alta tolerancia a cambios de esquema futuros. Trazabilidad completa de operaciones críticas para auditorías de seguridad.
-* **Negativas:** La lógica de la aplicación en Python se vuelve ligeramente más compleja al tener que interpretar múltiples versiones de esquemas de forma simultánea.
+
+- La auditoría es verificable sin exponer valores del evento.
+- La recuperación es acotada, repetible y medible.
+- La regresión acumulada detecta incompatibilidades con hitos anteriores.

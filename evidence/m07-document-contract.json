@@ -1,0 +1,19 @@
+{
+  "assignment_id": "m07-document-contract",
+  "author": "Abril Miranda Baltazar Varillas",
+  "status": "blocked",
+  "schema_version": 3,
+  "contract_change": "v3 adds required synthetic quality (good, uncertain, unknown); migration defaults old documents to unknown while preserving v2 measurement constraints",
+  "fixtures": {
+    "old": "fixtures/document_data.json (legacy v1 without schema_version)",
+    "transition": "fixtures/m07-document-data-transition-v2.json",
+    "existing_v2": "fixtures/m06-document-data-v2.json",
+    "new": "fixtures/m07-document-data-v3.json"
+  },
+  "verification_artifact": "artifacts/m07-document-contract-verify.json",
+  "setup": {
+    "schema_versions_loaded": [1, 2, 3],
+    "idempotent_insertion": "Configured through put_event_idempotent; DynamoDB integration not run."
+  },
+  "limitation": "DynamoDB Local and make verify were not available for integration execution."
+}

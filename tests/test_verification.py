@@ -9,6 +9,16 @@ from scripts import verify_m02
 
 
 class TestVerification(unittest.TestCase):
+    def test_m02_expected_team_uses_real_names(self):
+        self.assertEqual(
+            verify_m02.EXPECTED_TEAM,
+            (
+                "Abril Miranda Baltazar Varillas",
+                "Luis Bryan Rojas Rodriguez",
+                "Edwin Yahir Cruz Flores",
+            ),
+        )
+
     def test_missing_category_is_failure(self):
         cases = [{"category": name, "status": "passed"}
                  for name in verify_m02.CATEGORIES if name != "empty"]

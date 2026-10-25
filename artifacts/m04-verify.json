@@ -1,7 +1,7 @@
 {
   "assignment_id": "m04-storage-comparison",
   "status": "passed",
-  "generated_at": "2026-09-28T03:06:13.005445+00:00",
+  "generated_at": "2026-10-13T06:14:25.579019+00:00",
   "environment": "docker-compose",
   "checks": {
     "required_files": {
@@ -42,6 +42,18 @@
     "runtime": {
       "status": "passed",
       "report": "artifacts/m04-run.json"
+    },
+    "weighted_decision": {
+      "status": "passed",
+      "weight_total_percent": 100,
+      "alternatives": [
+        "column-keyspaces",
+        "document-dynamodb",
+        "graph-neptune",
+        "object-s3"
+      ],
+      "selected": "document-dynamodb",
+      "discarded_alternative": "graph-neptune"
     }
   },
   "cases": [
@@ -71,6 +83,6 @@
       "status": "passed"
     }
   ],
-  "commit_sha": "901028e563eccb39bbe8e2d137d3c9d7b0fb4fa8",
-  "source_dirty": true
+  "commit_sha": "94e40b8465e1eeb8a4e03665ee78d153ac712757",
+  "source_dirty": false
 }

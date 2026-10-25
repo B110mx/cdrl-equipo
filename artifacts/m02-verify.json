@@ -1,19 +1,27 @@
 {
   "assignment_id": "m02-relational-model",
   "status": "passed",
-  "generated_at": "2026-09-19T03:19:52.351354+00:00",
+  "generated_at": "2026-10-13T00:15:44.511022+00:00",
   "environment": "docker-compose",
   "checks": {
     "required_files": {
       "status": "passed"
+    },
+    "team_identity": {
+      "status": "passed",
+      "members": [
+        "Abril Miranda Baltazar Varillas",
+        "Luis Bryan Rojas Rodriguez",
+        "Edwin Yahir Cruz Flores"
+      ]
     },
     "database_available": {
       "status": "passed"
     },
     "tests": {
       "status": "passed",
-      "total": 55,
-      "passed": 55,
+      "total": 75,
+      "passed": 75,
       "failures": 0,
       "errors": 0,
       "skipped": 0
@@ -71,6 +79,31 @@
   },
   "cases": [
     {
+      "test": "tests.test_document_store.TestDocumentStore.test_constraints_indexes_are_declared",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_document_store.TestDocumentStore.test_declared_failure_invalid_schema_rejected",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_document_store.TestDocumentStore.test_limits_absence_handling",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_document_store.TestDocumentStore.test_limits_duplicate_insertion",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_document_store.TestDocumentStore.test_normal_crud_operations",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
       "test": "tests.test_integration.TestTelemetryIntegration.test_01_seed_data_exists",
       "category": "regression_m01",
       "status": "passed"
@@ -92,6 +125,26 @@
     },
     {
       "test": "tests.test_integration.TestTelemetryIntegration.test_05_index_exists",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_m06_auditoria.TestM06EvolucionAuditoria.test_caso_normal_versiones_coexisten",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_m06_auditoria.TestM06EvolucionAuditoria.test_fallo_declarado_y_recuperacion_fixture",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_m06_auditoria.TestM06EvolucionAuditoria.test_limite_auditoria_no_copia_secretos",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_m06_auditoria.TestM06EvolucionAuditoria.test_limite_zona_horaria_equivalente_consulta_utc",
       "category": "regression_m01",
       "status": "passed"
     },
@@ -176,7 +229,32 @@
       "status": "passed"
     },
     {
+      "test": "tests.test_roles.TestRolePermissions.test_declared_failure_writer_rejects_null_metric",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
       "test": "tests.test_roles.TestRolePermissions.test_declared_permissions_are_available",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_roles.TestRolePermissions.test_each_login_has_exactly_one_cdrl_membership",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_roles.TestRolePermissions.test_limits_writer_temperature_maximum",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_roles.TestRolePermissions.test_limits_writer_temperature_minimum",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_roles.TestRolePermissions.test_migrator_cannot_create_roles",
       "category": "regression_m01",
       "status": "passed"
     },
@@ -192,6 +270,31 @@
     },
     {
       "test": "tests.test_roles.TestRolePermissions.test_writer_cannot_read_telemetry",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_storage_comparison.TestStorageComparison.test_constraints_same_fixture_population",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_storage_comparison.TestStorageComparison.test_declared_failure_duplicate_event_id",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_storage_comparison.TestStorageComparison.test_limit_empty_device_range",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_storage_comparison.TestStorageComparison.test_limit_inclusive_time_boundaries",
+      "category": "regression_m01",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_storage_comparison.TestStorageComparison.test_normal_lookup_by_event_id",
       "category": "regression_m01",
       "status": "passed"
     },
@@ -336,6 +439,11 @@
       "status": "passed"
     },
     {
+      "test": "tests.test_verification.TestVerification.test_m02_expected_team_uses_real_names",
+      "category": "verification_safety",
+      "status": "passed"
+    },
+    {
       "test": "tests.test_verification.TestVerification.test_missing_category_is_failure",
       "category": "verification_safety",
       "status": "passed"
@@ -346,6 +454,6 @@
       "status": "passed"
     }
   ],
-  "commit_sha": "a2c4193203a73ce56745a2fd1e7daa72bc77646e",
+  "commit_sha": "d2ccad19c8788379990b74a9f75b4163b6afbd17",
   "source_dirty": true
 }

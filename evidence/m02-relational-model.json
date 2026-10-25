@@ -1,9 +1,9 @@
 {
   "assignment_id": "m02-relational-model",
   "team": [
-    "Integrante 1: arquitectura e infraestructura",
-    "Integrante 2: DML y consultas",
-    "Integrante 3: QA y documentación"
+    "Abril Miranda Baltazar Varillas",
+    "Luis Bryan Rojas Rodriguez",
+    "Edwin Yahir Cruz Flores"
   ],
   "repository": "https://github.com/B110mx/cdrl-equipo",
   "commands": [
@@ -29,9 +29,9 @@
     "La evidencia se regenera para el checkout probado; source_dirty=true indica cambios locales sin commit.",
     "El tag final se debe confirmar después de autorizar y publicar las correcciones."
   ],
-  "commit_sha": "a2c4193203a73ce56745a2fd1e7daa72bc77646e",
+  "commit_sha": "d2ccad19c8788379990b74a9f75b4163b6afbd17",
   "source_dirty": true,
-  "generated_at": "2026-09-19T03:19:52.351354+00:00",
+  "generated_at": "2026-10-13T00:15:44.511022+00:00",
   "environment": "docker-compose",
   "results": {
     "status": "passed",
@@ -39,13 +39,21 @@
       "required_files": {
         "status": "passed"
       },
+      "team_identity": {
+        "status": "passed",
+        "members": [
+          "Abril Miranda Baltazar Varillas",
+          "Luis Bryan Rojas Rodriguez",
+          "Edwin Yahir Cruz Flores"
+        ]
+      },
       "database_available": {
         "status": "passed"
       },
       "tests": {
         "status": "passed",
-        "total": 55,
-        "passed": 55,
+        "total": 75,
+        "passed": 75,
         "failures": 0,
         "errors": 0,
         "skipped": 0
