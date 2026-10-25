@@ -1,39 +1,45 @@
 {
   "assignment_id": "m07-document-contract",
-  "status": "blocked",
-  "generated_at": "2026-10-24T09:38:02.3009804-06:00",
-  "base_commit_sha": "3262cd4022c175c4a54b7d43e67b265f7b076a7c",
-  "source_dirty": true,
+  "status": "passed",
+  "generated_at": "2026-10-25T17:43:06.006413+00:00",
+  "commit_sha": "b76076d6a596f4f7832423c5eb14daf17f0ee042",
+  "source_dirty": false,
   "version": 3,
-  "version_change": "v3 adds required synthetic quality with a closed vocabulary; all v2 measurement fields and constraints are preserved",
+  "version_change": "v3 requires synthetic quality; v1/v2 remain readable",
   "checks": {
-    "schema_and_fixture_tests": {
+    "required_files": {
       "status": "passed",
-      "command": ".venv/Scripts/python.exe -m unittest tests.test_document_version_contract -v",
-      "tests": 4,
-      "failures": 0,
-      "validated_fixtures": [
-        "legacy v1 without schema_version",
-        "transition v2 with schema_version=2",
-        "existing v2",
-        "new v3 with schema_version=3"
-      ]
+      "missing": []
     },
-    "validator_loader": {
+    "document_store_init": {
       "status": "passed",
-      "versions_loaded": [1, 2, 3]
+      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/init_document_store.py",
+      "exit_code": 0
     },
-    "python_syntax": {
+    "m07_coverage": {
       "status": "passed",
-      "command": ".venv/Scripts/python.exe -m py_compile scripts/init_document_store.py scripts/verify_m06.py tests/test_document_version_contract.py tests/test_m06_auditoria.py"
-    },
-    "dynamodb_setup": {
-      "status": "not_run",
-      "reason": "Docker Desktop Linux engine was unavailable, so DynamoDB Local could not start."
-    },
-    "make_verify": {
-      "status": "not_run",
-      "reason": "The make executable is not installed in this Windows environment."
+      "categories": {
+        "normal": {
+          "status": "passed",
+          "cases": 1,
+          "minimum": 1
+        },
+        "limits": {
+          "status": "passed",
+          "cases": 2,
+          "minimum": 2
+        },
+        "declared_failure": {
+          "status": "passed",
+          "cases": 1,
+          "minimum": 1
+        },
+        "rollback": {
+          "status": "passed",
+          "cases": 1,
+          "minimum": 1
+        }
+      }
     }
   }
 }

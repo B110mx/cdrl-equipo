@@ -1,9 +1,9 @@
 {
   "module": "m07-compatible-document-migration",
   "status": "passed",
-  "commit_sha": "0d7199eb263999c9af4acf7de6584666e76fd35a",
-  "source_dirty": true,
-  "generated_at": "2026-10-25T05:45:07.673043+00:00",
+  "commit_sha": "b76076d6a596f4f7832423c5eb14daf17f0ee042",
+  "source_dirty": false,
+  "generated_at": "2026-10-25T17:42:58.453090+00:00",
   "strategy": "expand-migrate-rollback",
   "synthetic_fixture": "fixtures/m07-document-data-transition-v2.json",
   "migration": {
