@@ -21,9 +21,8 @@ setup:
 	$(VENV_PYTHON) scripts/configure_roles.py --compose
 
 verify:
-	@echo "=> Verificando integridad del entorno y conexiones M07..."
-	$(VENV_PYTHON) scripts/verify_m07.py
-
+	@echo "=> Verificando evolución compatible M07..."
+	python scripts/verify_m07.py
 
 run:
 	$(VENV_PYTHON) scripts/run_m07.py
