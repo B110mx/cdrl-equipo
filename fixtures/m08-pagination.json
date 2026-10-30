@@ -1,0 +1,321 @@
+{
+  "contract_version": 1,
+  "device_id": "sensor-m08-pagination",
+  "page_size": 5,
+  "events": [
+    {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000100",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:00:00Z",
+      "metric": "temperature",
+      "value": 20,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    },
+    {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000101",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:00:00Z",
+      "metric": "temperature",
+      "value": 21,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    },
+    {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000102",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:00:00Z",
+      "metric": "temperature",
+      "value": 22,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    },
+    {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000103",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:00:00Z",
+      "metric": "temperature",
+      "value": 23,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    },
+    {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000104",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:01:00Z",
+      "metric": "temperature",
+      "value": 24,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    },
+    {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000105",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:01:00Z",
+      "metric": "temperature",
+      "value": 25,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    },
+    {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000106",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:01:00Z",
+      "metric": "temperature",
+      "value": 26,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    },
+    {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000107",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:01:00Z",
+      "metric": "temperature",
+      "value": 27,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    },
+    {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000108",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:02:00Z",
+      "metric": "temperature",
+      "value": 28,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    },
+    {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000109",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:02:00Z",
+      "metric": "temperature",
+      "value": 29,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    },
+    {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000110",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:02:00Z",
+      "metric": "temperature",
+      "value": 20,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    },
+    {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000111",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:02:00Z",
+      "metric": "temperature",
+      "value": 21,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    },
+    {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000112",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:03:00Z",
+      "metric": "temperature",
+      "value": 22,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    },
+    {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000113",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:03:00Z",
+      "metric": "temperature",
+      "value": 23,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    },
+    {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000114",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:03:00Z",
+      "metric": "temperature",
+      "value": 24,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    },
+    {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000115",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:03:00Z",
+      "metric": "temperature",
+      "value": 25,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    },
+    {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000116",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:04:00Z",
+      "metric": "temperature",
+      "value": 26,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    },
+    {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000117",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:04:00Z",
+      "metric": "temperature",
+      "value": 27,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    },
+    {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000118",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:04:00Z",
+      "metric": "temperature",
+      "value": 28,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    },
+    {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000119",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:04:00Z",
+      "metric": "temperature",
+      "value": 29,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    },
+    {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000120",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:05:00Z",
+      "metric": "temperature",
+      "value": 20,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    },
+    {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000121",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:05:00Z",
+      "metric": "temperature",
+      "value": 21,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    },
+    {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000122",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:05:00Z",
+      "metric": "temperature",
+      "value": 22,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    },
+    {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000123",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:05:00Z",
+      "metric": "temperature",
+      "value": 23,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    }
+  ],
+  "insertions": {
+    "before_cursor": {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000099",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:00:00Z",
+      "metric": "temperature",
+      "value": 29,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    },
+    "after_cursor": {
+      "schema_version": 3,
+      "event_id": "00000000-0000-4000-8000-000000000999",
+      "device_id": "sensor-m08-pagination",
+      "recorded_at": "2026-09-30T12:01:00Z",
+      "metric": "temperature",
+      "value": 29,
+      "unit": "celsius",
+      "metadata": {
+        "source": "synthetic-m08-pagination"
+      }
+    }
+  }
+}

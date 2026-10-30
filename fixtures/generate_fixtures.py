@@ -1,6 +1,7 @@
 """Genera fixtures M04 deterministas para las cuatro familias de almacenamiento."""
 import csv
 import json
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,14 +25,53 @@ EVENTS = [
      "unit": "percent", "metadata": {"source": "synthetic-m04", "boundary": "maximum"}},
 ]
 
+M08_DEVICE_ID = "sensor-m08-pagination"
+M08_START_TIME = "2026-09-30T12:00:00Z"
+
 
 def write_json(path, value):
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def generate_m08_pagination_fixture():
+    """Genera una carga documental sintética determinista para M08."""
+    start = datetime.fromisoformat(M08_START_TIME.replace("Z", "+00:00"))
+
+    def event(sequence, timestamp):
+        return {
+            "schema_version": 3,
+            "event_id": f"00000000-0000-4000-8000-{sequence:012d}",
+            "device_id": M08_DEVICE_ID,
+            "recorded_at": timestamp,
+            "metric": "temperature",
+            "value": 20 + sequence % 10,
+            "unit": "celsius",
+            "metadata": {"source": "synthetic-m08-pagination"},
+        }
+
+    events = [
+        event(100 + index, (start + timedelta(minutes=index // 4))
+              .astimezone(timezone.utc).isoformat().replace("+00:00", "Z"))
+        for index in range(24)
+    ]
+    fixture = {
+        "contract_version": 1,
+        "device_id": M08_DEVICE_ID,
+        "page_size": 5,
+        "events": events,
+        "insertions": {
+            "before_cursor": event(99, M08_START_TIME),
+            "after_cursor": event(999, events[4]["recorded_at"]),
+        },
+    }
+    write_json(FIXTURES / "m08-pagination.json", fixture)
+    return fixture
+
+
 def generate():
     """Escribe representaciones equivalentes; repetirlo produce los mismos bytes."""
     FIXTURES.mkdir(exist_ok=True)
+    generate_m08_pagination_fixture()
     write_json(FIXTURES / "document_data.json", EVENTS)
     devices = sorted({event["device_id"] for event in EVENTS})
     graph = {
