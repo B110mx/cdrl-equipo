@@ -97,6 +97,7 @@ class DocumentEventStore:
             selected_paths = schema_paths or {
                 1: ROOT / "docs" / "M05-event-document-schema.json",
                 2: ROOT / "docs" / "M06-event-document-schema-v2.json",
+                3: ROOT / "docs" / "M07-event-document-schema-v3.json",
             }
             selected_schemas = {
                 version: json.loads(
@@ -340,6 +341,35 @@ class DocumentEventStore:
         updated = {**existing, **deepcopy(changes)}
         updated = self.validate(updated)
         stored = self._stored_item(updated)
+        self.client.put_item(
+            TableName=self.table_name,
+            Item=self._serialize_item(stored),
+            ConditionExpression=(
+                "attribute_exists(device_id) AND "
+                "attribute_exists(recorded_at_event_id)"),
+        )
+        return self._deserialize_item(self._serialize_item(stored))
+
+    def replace_event_document(self, event_id, replacement):
+        """Reemplaza un documento conservando identidad y claves de acceso.
+
+        La migración de versión necesita agregar o retirar atributos. Un
+        reemplazo completo evita que queden campos exclusivos de una versión
+        después del rollback, pero nunca permite cambiar la identidad del
+        evento ni su instante de ingestión.
+        """
+        existing = self.get_event(event_id)
+        if existing is None:
+            raise EventNotFoundError(f"event not found: {event_id}")
+        candidate = deepcopy(replacement)
+        if candidate.get("event_id") != event_id:
+            raise InvalidEventError("replacement event_id does not match")
+        for field in self.immutable_fields:
+            if candidate.get(field) != existing.get(field):
+                raise InvalidEventError(
+                    f"immutable field cannot change during replacement: {field}")
+        candidate = self.validate(candidate)
+        stored = self._stored_item(candidate)
         self.client.put_item(
             TableName=self.table_name,
             Item=self._serialize_item(stored),

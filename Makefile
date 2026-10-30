@@ -21,9 +21,9 @@ setup:
 	$(VENV_PYTHON) scripts/configure_roles.py --compose
 
 verify:
-	@echo "=> Verificando M06 y la regresión acumulada..."
-	$(VENV_PYTHON) scripts/verify_m06.py
+	@echo "=> Verificando evolución compatible M07 y la regresión acumulada..."
+	$(VENV_PYTHON) scripts/verify_m07.py
 
 
 run:
-	$(VENV_PYTHON) scripts/run_m06.py
+	$(VENV_PYTHON) scripts/run_m07.py

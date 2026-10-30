@@ -10,7 +10,8 @@
     "recorded_at",
     "metric",
     "value",
-    "unit"
+    "unit",
+    "quality"
   ],
   "properties": {
     "schema_version": {"const": 3},
@@ -20,6 +21,7 @@
     "metric": {"enum": ["temperature", "humidity", "battery_voltage"]},
     "value": {"type": "number"},
     "unit": {"enum": ["celsius", "percent", "volt"]},
+    "quality": {"enum": ["good", "uncertain", "unknown"]},
     "metadata": {"type": "object"},
     "ingested_at": {"type": "string", "format": "date-time"}
   },

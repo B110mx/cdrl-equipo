@@ -1,0 +1,100 @@
+{
+  "assignment_id": "m07-compatible-document-evolution",
+  "status": "passed",
+  "commit_sha": "b76076d6a596f4f7832423c5eb14daf17f0ee042",
+  "source_dirty": false,
+  "generated_at": "2026-10-25T17:43:06.006413+00:00",
+  "commands": [
+    "make setup",
+    "make verify",
+    "make run"
+  ],
+  "checks": {
+    "required_files": {
+      "status": "passed",
+      "missing": []
+    },
+    "no_secrets": {
+      "status": "passed",
+      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/check_no_secrets.py",
+      "exit_code": 0
+    },
+    "document_store_init": {
+      "status": "passed",
+      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/init_document_store.py",
+      "exit_code": 0
+    },
+    "m07_run": {
+      "status": "passed",
+      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/run_m07.py",
+      "exit_code": 0
+    },
+    "machine_readable_run": {
+      "status": "passed",
+      "artifact": "artifacts/m07-run.json",
+      "cases": 6
+    },
+    "cumulative_tests": {
+      "status": "passed",
+      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe -m unittest discover -s tests -p test_*.py",
+      "scope": "M01-M07 cumulative regression",
+      "total": 90,
+      "passed": 90,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "m07_coverage": {
+      "status": "passed",
+      "categories": {
+        "normal": {
+          "status": "passed",
+          "cases": 1,
+          "minimum": 1
+        },
+        "limits": {
+          "status": "passed",
+          "cases": 2,
+          "minimum": 2
+        },
+        "declared_failure": {
+          "status": "passed",
+          "cases": 1,
+          "minimum": 1
+        },
+        "rollback": {
+          "status": "passed",
+          "cases": 1,
+          "minimum": 1
+        }
+      }
+    }
+  },
+  "cases": [
+    {
+      "test": "tests.test_document_migration.TestDocumentMigration.test_declared_failure_invalid_quality_is_rejected_without_mutation",
+      "category": "declared_failure",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_document_migration.TestDocumentMigration.test_limit_legacy_v1_remains_readable_during_transition",
+      "category": "limits",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_document_migration.TestDocumentMigration.test_limit_repeated_migration_is_idempotent",
+      "category": "limits",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_document_migration.TestDocumentMigration.test_normal_v2_migrates_to_v3_without_losing_business_data",
+      "category": "normal",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_document_migration.TestDocumentMigration.test_rollback_restores_v2_and_is_repeatable",
+      "category": "rollback",
+      "status": "passed"
+    }
+  ]
+}

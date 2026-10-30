@@ -1,19 +1,91 @@
 {
-  "assignment_id": "m07-document-contract",
-  "author": "Abril Miranda Baltazar Varillas",
-  "status": "blocked",
-  "schema_version": 3,
-  "contract_change": "schema_version only; v3 preserves every v2 field, type, required/optional status, and validation constraint",
-  "fixtures": {
-    "old": "fixtures/document_data.json (legacy v1 without schema_version)",
-    "transition": "fixtures/m07-document-data-transition-v2.json",
-    "existing_v2": "fixtures/m06-document-data-v2.json",
-    "new": "fixtures/m07-document-data-v3.json"
+  "assignment_id": "m07-compatible-document-evolution",
+  "status": "passed",
+  "generated_at": "2026-10-25T17:43:06.006413+00:00",
+  "commit_sha": "b76076d6a596f4f7832423c5eb14daf17f0ee042",
+  "source_dirty": false,
+  "team": [
+    "Abril Miranda Baltazar Varillas",
+    "Luis Bryan Rojas Rodriguez",
+    "Edwin Yahir Cruz Flores"
+  ],
+  "technical_authorship": {
+    "Abril Miranda Baltazar Varillas": "contrato v3, fixtures e inicialización idempotente",
+    "Luis Bryan Rojas Rodriguez": "migración compatible, ejecución y rollback",
+    "Edwin Yahir Cruz Flores": "verificación acumulada, cobertura y evidencia"
   },
-  "verification_artifact": "artifacts/m07-document-contract-verify.json",
-  "setup": {
-    "schema_versions_loaded": [1, 2, 3],
-    "idempotent_insertion": "Configured through put_event_idempotent; DynamoDB integration not run."
-  },
-  "limitation": "DynamoDB Local and make verify were not available for integration execution."
+  "synthetic_fixtures": true,
+  "strategy": "expand-migrate-rollback",
+  "commands": [
+    "make setup",
+    "make verify",
+    "make run"
+  ],
+  "results": {
+    "status": "passed",
+    "checks": {
+      "required_files": {
+        "status": "passed",
+        "missing": []
+      },
+      "no_secrets": {
+        "status": "passed",
+        "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/check_no_secrets.py",
+        "exit_code": 0
+      },
+      "document_store_init": {
+        "status": "passed",
+        "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/init_document_store.py",
+        "exit_code": 0
+      },
+      "m07_run": {
+        "status": "passed",
+        "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/run_m07.py",
+        "exit_code": 0
+      },
+      "machine_readable_run": {
+        "status": "passed",
+        "artifact": "artifacts/m07-run.json",
+        "cases": 6
+      },
+      "cumulative_tests": {
+        "status": "passed",
+        "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe -m unittest discover -s tests -p test_*.py",
+        "scope": "M01-M07 cumulative regression",
+        "total": 90,
+        "passed": 90,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "m07_coverage": {
+        "status": "passed",
+        "categories": {
+          "normal": {
+            "status": "passed",
+            "cases": 1,
+            "minimum": 1
+          },
+          "limits": {
+            "status": "passed",
+            "cases": 2,
+            "minimum": 2
+          },
+          "declared_failure": {
+            "status": "passed",
+            "cases": 1,
+            "minimum": 1
+          },
+          "rollback": {
+            "status": "passed",
+            "cases": 1,
+            "minimum": 1
+          }
+        }
+      }
+    },
+    "machine_readable_report": "artifacts/m07-verify.json",
+    "run_report": "artifacts/m07-run.json",
+    "verification_output": "artifacts/make-verify-output-m07.txt"
+  }
 }

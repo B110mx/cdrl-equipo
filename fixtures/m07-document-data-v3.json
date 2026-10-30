@@ -7,6 +7,7 @@
     "metric": "temperature",
     "value": 24.0,
     "unit": "celsius",
+    "quality": "good",
     "metadata": {
       "source": "synthetic-m07"
     }
