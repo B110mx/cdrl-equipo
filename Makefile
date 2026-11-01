@@ -21,10 +21,15 @@ setup:
 	$(VENV_PYTHON) scripts/configure_roles.py --compose
 
 verify:
+	@echo "=> Verificando evolución compatible M07..."
+	python scripts/verify_m07.py
+	@echo "=> Verificando evolución compatible M07 y la regresión acumulada..."
+	$(VENV_PYTHON) scripts/verify_m07.py
 	@echo "=> Verificando paginacion estable y rendimiento M08..."
 	python scripts/verify_m08.py
 	$(VENV_PYTHON) scripts/verify_m08.py
 
 
 run:
+	$(VENV_PYTHON) scripts/run_m07.py
 	$(VENV_PYTHON) scripts/run_m08.py
