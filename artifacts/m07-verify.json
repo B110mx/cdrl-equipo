@@ -19,9 +19,9 @@
     "tests": {
       "status": "passed",
       "details": "Pruebas de migraci\u00f3n y compatibilidad pasaron correctamente"
-    }
-  }
-}
+    },
+
+  
     "no_secrets": {
       "status": "passed",
       "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/check_no_secrets.py",
@@ -76,8 +76,7 @@
           "minimum": 1
         }
       }
-    }
-  },
+    },
   "cases": [
     {
       "test": "tests.test_document_migration.TestDocumentMigration.test_declared_failure_invalid_quality_is_rejected_without_mutation",
@@ -105,4 +104,5 @@
       "status": "passed"
     }
   ]
+}
 }
