@@ -46,6 +46,7 @@ def generate_m08_pagination_fixture():
             "metric": "temperature",
             "value": 20 + sequence % 10,
             "unit": "celsius",
+            "quality": "good",
             "metadata": {"source": "synthetic-m08-pagination"},
         }
 

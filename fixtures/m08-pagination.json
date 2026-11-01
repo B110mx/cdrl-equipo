@@ -11,6 +11,7 @@
       "metric": "temperature",
       "value": 20,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -23,6 +24,7 @@
       "metric": "temperature",
       "value": 21,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -35,6 +37,7 @@
       "metric": "temperature",
       "value": 22,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -47,6 +50,7 @@
       "metric": "temperature",
       "value": 23,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -59,6 +63,7 @@
       "metric": "temperature",
       "value": 24,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -71,6 +76,7 @@
       "metric": "temperature",
       "value": 25,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -83,6 +89,7 @@
       "metric": "temperature",
       "value": 26,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -95,6 +102,7 @@
       "metric": "temperature",
       "value": 27,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -107,6 +115,7 @@
       "metric": "temperature",
       "value": 28,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -119,6 +128,7 @@
       "metric": "temperature",
       "value": 29,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -131,6 +141,7 @@
       "metric": "temperature",
       "value": 20,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -143,6 +154,7 @@
       "metric": "temperature",
       "value": 21,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -155,6 +167,7 @@
       "metric": "temperature",
       "value": 22,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -167,6 +180,7 @@
       "metric": "temperature",
       "value": 23,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -179,6 +193,7 @@
       "metric": "temperature",
       "value": 24,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -191,6 +206,7 @@
       "metric": "temperature",
       "value": 25,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -203,6 +219,7 @@
       "metric": "temperature",
       "value": 26,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -215,6 +232,7 @@
       "metric": "temperature",
       "value": 27,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -227,6 +245,7 @@
       "metric": "temperature",
       "value": 28,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -239,6 +258,7 @@
       "metric": "temperature",
       "value": 29,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -251,6 +271,7 @@
       "metric": "temperature",
       "value": 20,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -263,6 +284,7 @@
       "metric": "temperature",
       "value": 21,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -275,6 +297,7 @@
       "metric": "temperature",
       "value": 22,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -287,6 +310,7 @@
       "metric": "temperature",
       "value": 23,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -301,6 +325,7 @@
       "metric": "temperature",
       "value": 29,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }
@@ -313,6 +338,7 @@
       "metric": "temperature",
       "value": 29,
       "unit": "celsius",
+      "quality": "good",
       "metadata": {
         "source": "synthetic-m08-pagination"
       }

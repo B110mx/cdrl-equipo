@@ -1,0 +1,48 @@
+{
+  "module": "m08-document-query-benchmark",
+  "status": "passed",
+  "technical_author": "Luis Bryan Rojas Rodriguez",
+  "commit_sha": "fc0df9f65aa58fdb48841c58a95f1014efcb60a0",
+  "source_dirty": true,
+  "generated_at": "2026-11-01T06:39:43.485396+00:00",
+  "environment": {
+    "python": "3.14.3",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "backend": "dynamodb-local",
+    "region": "us-east-1",
+    "table": "cdrl-events"
+  },
+  "method": {
+    "clock": "time.perf_counter_ns",
+    "percentile": "nearest-rank",
+    "warmup_runs_excluded": 5,
+    "measured_repetitions_per_variant": 40,
+    "dataset_events": 240,
+    "page_size": 25,
+    "fixture_kind": "deterministic-synthetic"
+  },
+  "baseline": {
+    "description": "query completo de la partición y recorte en cliente",
+    "items_materialized_per_run": 240,
+    "unit": "milliseconds",
+    "p50": 55.9655,
+    "p95": 59.4546,
+    "minimum": 53.954,
+    "maximum": 60.6508
+  },
+  "optimized": {
+    "description": "query con Limit y cursor sobre la clave primaria",
+    "items_returned_per_run": 25,
+    "unit": "milliseconds",
+    "p50": 44.1843,
+    "p95": 47.9811,
+    "minimum": 43.7638,
+    "maximum": 48.2874
+  },
+  "comparison": {
+    "same_first_page": true,
+    "p50_baseline_over_optimized": 1.266638,
+    "trade_off": "Limit reduce datos materializados y habilita continuación; el cursor no ofrece una instantánea ante escrituras concurrentes.",
+    "claim": "Resultado observado en este entorno; no se generaliza a producción."
+  }
+}
