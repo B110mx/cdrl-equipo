@@ -1,0 +1,40 @@
+{
+  "module": "m08-stable-document-pagination",
+  "status": "passed",
+  "technical_author": "Luis Bryan Rojas Rodriguez",
+  "commit_sha": "fc0df9f65aa58fdb48841c58a95f1014efcb60a0",
+  "source_dirty": true,
+  "generated_at": "2026-11-01T06:39:36.950554+00:00",
+  "synthetic_fixture": "fixtures/m08-pagination.json",
+  "page_size": 5,
+  "normal_page_sizes": [
+    5,
+    5,
+    5,
+    5,
+    4
+  ],
+  "insertion_page_sizes_after_first": [
+    5,
+    5,
+    5,
+    5
+  ],
+  "cases": {
+    "normal_complete_ordered_traversal": {
+      "status": "passed"
+    },
+    "boundary_empty_device": {
+      "status": "passed"
+    },
+    "boundary_final_partial_page": {
+      "status": "passed"
+    },
+    "boundary_insertions_are_positional": {
+      "status": "passed"
+    },
+    "declared_failure_mismatched_cursor_rejected": {
+      "status": "passed"
+    }
+  }
+}

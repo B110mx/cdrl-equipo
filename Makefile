@@ -23,6 +23,9 @@ setup:
 verify:
 	@echo "=> Verificando evolución compatible M07..."
 	python scripts/verify_m07.py
+	@echo "=> Verificando evolución compatible M07 y la regresión acumulada..."
+	$(VENV_PYTHON) scripts/verify_m07.py
+
 
 run:
 	$(VENV_PYTHON) scripts/run_m07.py

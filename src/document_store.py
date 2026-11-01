@@ -1,7 +1,10 @@
-"""CRUD versionado, auditoría y recuperación para eventos en DynamoDB."""
+"""CRUD, paginación, auditoría y recuperación para eventos en DynamoDB."""
 
+import base64
+import binascii
 import json
 import os
+import re
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
@@ -39,6 +42,10 @@ class DataIntegrityError(DocumentStoreError):
     """El índice devolvió más de un documento para un event_id único."""
 
 
+class InvalidCursorError(DocumentStoreError):
+    """El cursor de paginación es inválido o no corresponde a la consulta."""
+
+
 def _to_decimal(value):
     if isinstance(value, float):
         return Decimal(str(value))
@@ -71,6 +78,8 @@ class DocumentEventStore:
     """Acceso a DynamoDB usando las claves e índices declarados por M05."""
 
     immutable_fields = {"event_id", "device_id", "recorded_at", "ingested_at"}
+    cursor_version = 1
+    _cursor_pattern = re.compile(r"^[A-Za-z0-9_-]+$")
 
     def __init__(self, client=None, table_name=None, schema_path=None,
                  schema_paths=None, audit_table_name=None):
@@ -310,6 +319,104 @@ class DocumentEventStore:
             },
         )
         return [self._deserialize_item(item) for item in response.get("Items", [])]
+
+    @classmethod
+    def _encode_cursor(cls, device_id, page_size, exclusive_start_key):
+        payload = {
+            "version": cls.cursor_version,
+            "device_id": device_id,
+            "page_size": page_size,
+            "exclusive_start_key": {
+                "device_id": exclusive_start_key["device_id"]["S"],
+                "recorded_at_event_id": (
+                    exclusive_start_key["recorded_at_event_id"]["S"]),
+            },
+        }
+        raw = json.dumps(
+            payload, ensure_ascii=True, separators=(",", ":"), sort_keys=True
+        ).encode("utf-8")
+        return base64.urlsafe_b64encode(raw).decode("ascii").rstrip("=")
+
+    @classmethod
+    def _decode_cursor(cls, cursor, device_id, page_size):
+        if (not isinstance(cursor, str) or not cursor
+                or not cls._cursor_pattern.fullmatch(cursor)
+                or len(cursor) % 4 == 1):
+            raise InvalidCursorError("malformed pagination cursor")
+        try:
+            padded = cursor + "=" * (-len(cursor) % 4)
+            raw = base64.b64decode(padded, altchars=b"-_", validate=True)
+            canonical = base64.urlsafe_b64encode(raw).decode("ascii").rstrip("=")
+            if canonical != cursor:
+                raise InvalidCursorError("non-canonical pagination cursor")
+            payload = json.loads(raw.decode("utf-8"))
+        except (binascii.Error, UnicodeDecodeError, json.JSONDecodeError) as error:
+            raise InvalidCursorError("malformed pagination cursor") from error
+
+        expected_fields = {
+            "version", "device_id", "page_size", "exclusive_start_key"}
+        if not isinstance(payload, dict) or set(payload) != expected_fields:
+            raise InvalidCursorError("incomplete pagination cursor")
+        if (type(payload["version"]) is not int
+                or payload["version"] != cls.cursor_version):
+            raise InvalidCursorError("unsupported pagination cursor version")
+        if (not isinstance(payload["device_id"], str)
+                or type(payload["page_size"]) is not int
+                or payload["device_id"] != device_id
+                or payload["page_size"] != page_size):
+            raise InvalidCursorError("cursor does not match query parameters")
+
+        key = payload["exclusive_start_key"]
+        expected_key_fields = {"device_id", "recorded_at_event_id"}
+        if (not isinstance(key, dict) or set(key) != expected_key_fields
+                or not all(isinstance(key[field], str) and key[field]
+                           for field in expected_key_fields)
+                or key["device_id"] != device_id):
+            raise InvalidCursorError("invalid cursor continuation key")
+        return {
+            "device_id": {"S": key["device_id"]},
+            "recorded_at_event_id": {"S": key["recorded_at_event_id"]},
+        }
+
+    def paginate_events_by_device(self, device_id, page_size=25, cursor=None,
+                                  consistent_read=True):
+        """Devuelve una página ordenada mediante la clave primaria de DynamoDB."""
+        if not isinstance(device_id, str) or not device_id:
+            raise ValueError("device_id must be a non-empty string")
+        if type(page_size) is not int or not 1 <= page_size <= 100:
+            raise ValueError("page_size must be an integer between 1 and 100")
+
+        request = {
+            "TableName": self.table_name,
+            "KeyConditionExpression": "device_id = :device_id",
+            "ExpressionAttributeValues": {":device_id": {"S": device_id}},
+            # El elemento adicional permite distinguir una última página llena
+            # de otra que todavía tiene resultados, sin exponerlo al cliente.
+            "Limit": page_size + 1,
+            "ScanIndexForward": True,
+            "ConsistentRead": bool(consistent_read),
+        }
+        if cursor is not None:
+            request["ExclusiveStartKey"] = self._decode_cursor(
+                cursor, device_id, page_size)
+
+        response = self.client.query(**request)
+        raw_items = response.get("Items", [])
+        has_more = len(raw_items) > page_size
+        page_items = raw_items[:page_size]
+        last_key = None
+        if has_more:
+            last_item = page_items[-1]
+            last_key = {
+                "device_id": last_item["device_id"],
+                "recorded_at_event_id": last_item["recorded_at_event_id"],
+            }
+        return {
+            "items": [self._deserialize_item(item) for item in page_items],
+            "next_cursor": (
+                self._encode_cursor(device_id, page_size, last_key)
+                if last_key else None),
+        }
 
     def events_by_metric_unit(self, metric, unit, start, end):
         """Consulta el resumen del ADR mediante MetricUnitTimeIndex."""
