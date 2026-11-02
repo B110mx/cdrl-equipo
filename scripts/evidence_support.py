@@ -10,7 +10,9 @@ def source_revision():
     # No cuenta los reportes regenerados, paquetes locales ni evidencia histórica.
     paths = ["src", "tests", "scripts", "fixtures", "db", "docs", ".github", "Makefile",
              "README.md", "requirements.txt", "docker-compose.yml", ".gitignore", ".env.example",
-             "artifacts/test_cases.sql", ":(exclude)docs/CONTEXTO-PROYECTO-CHATGPT.md"]
+             "artifacts/test_cases.sql",
+             ":(exclude)docs/CONTEXTO-PROYECTO-CHATGPT.md",
+             ":(exclude)docs/BORRADOR-WHATSAPP-M08.md"]
     dirty = bool(subprocess.check_output(
         ["git", "status", "--porcelain", "--untracked-files=all", "--", *paths],
         cwd=ROOT, text=True, timeout=10,

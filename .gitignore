@@ -20,6 +20,7 @@ artifacts/*.log
 !artifacts/m07-verify.json
 !artifacts/m08-run.json
 !artifacts/m08-benchmark.json
+!artifacts/m08-verify.json
 evidence/*-local.json
 db/data/
 docker-data/
