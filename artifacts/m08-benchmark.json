@@ -2,9 +2,9 @@
   "module": "m08-document-query-benchmark",
   "status": "passed",
   "technical_author": "Luis Bryan Rojas Rodriguez",
-  "commit_sha": "fc0df9f65aa58fdb48841c58a95f1014efcb60a0",
-  "source_dirty": true,
-  "generated_at": "2026-11-01T06:39:43.485396+00:00",
+  "commit_sha": "07cfefd5d915fc1cf4db7be0c83ec946649a18a5",
+  "source_dirty": false,
+  "generated_at": "2026-11-02T03:48:54.007395+00:00",
   "environment": {
     "python": "3.14.3",
     "platform": "Windows-11-10.0.26300-SP0",
@@ -25,23 +25,23 @@
     "description": "query completo de la partición y recorte en cliente",
     "items_materialized_per_run": 240,
     "unit": "milliseconds",
-    "p50": 55.9655,
-    "p95": 59.4546,
-    "minimum": 53.954,
-    "maximum": 60.6508
+    "p50": 57.1885,
+    "p95": 60.1846,
+    "minimum": 54.08,
+    "maximum": 62.8169
   },
   "optimized": {
     "description": "query con Limit y cursor sobre la clave primaria",
     "items_returned_per_run": 25,
     "unit": "milliseconds",
-    "p50": 44.1843,
-    "p95": 47.9811,
-    "minimum": 43.7638,
-    "maximum": 48.2874
+    "p50": 44.1921,
+    "p95": 47.7867,
+    "minimum": 43.5293,
+    "maximum": 51.3845
   },
   "comparison": {
     "same_first_page": true,
-    "p50_baseline_over_optimized": 1.266638,
+    "p50_baseline_over_optimized": 1.294089,
     "trade_off": "Limit reduce datos materializados y habilita continuación; el cursor no ofrece una instantánea ante escrituras concurrentes.",
     "claim": "Resultado observado en este entorno; no se generaliza a producción."
   }

@@ -1,0 +1,118 @@
+{
+  "assignment_id": "m08-document-query-performance",
+  "status": "passed",
+  "commit_sha": "07cfefd5d915fc1cf4db7be0c83ec946649a18a5",
+  "source_dirty": false,
+  "generated_at": "2026-11-02T03:49:06.143608+00:00",
+  "commands": [
+    "make setup",
+    "make verify",
+    "make run"
+  ],
+  "checks": {
+    "required_files": {
+      "status": "passed",
+      "missing": []
+    },
+    "adr_decision": {
+      "status": "passed",
+      "required_topics": [
+        "clave primaria",
+        "p50",
+        "p95",
+        "costo",
+        "fallos",
+        "alternativas descartadas",
+        "producción"
+      ]
+    },
+    "no_secrets": {
+      "status": "passed",
+      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/check_no_secrets.py",
+      "exit_code": 0
+    },
+    "document_store_init": {
+      "status": "passed",
+      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/init_document_store.py",
+      "exit_code": 0
+    },
+    "m08_run": {
+      "status": "passed",
+      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/run_m08.py",
+      "exit_code": 0
+    },
+    "m08_benchmark": {
+      "status": "passed",
+      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/benchmark_m08.py",
+      "exit_code": 0
+    },
+    "machine_readable_run": {
+      "status": "passed",
+      "artifact": "artifacts/m08-run.json",
+      "cases": 5
+    },
+    "machine_readable_benchmark": {
+      "status": "passed",
+      "artifact": "artifacts/m08-benchmark.json",
+      "dataset_events": 240,
+      "warmup_runs": 5,
+      "repetitions": 40,
+      "baseline_p50_ms": 57.1885,
+      "baseline_p95_ms": 60.1846,
+      "optimized_p50_ms": 44.1921,
+      "optimized_p95_ms": 47.7867
+    },
+    "cumulative_tests": {
+      "status": "passed",
+      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe -m unittest discover -s tests -p test_*.py",
+      "scope": "M01-M08 cumulative regression",
+      "total": 94,
+      "passed": 94,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "m08_coverage": {
+      "status": "passed",
+      "categories": {
+        "normal": {
+          "status": "passed",
+          "cases": 1,
+          "minimum": 1
+        },
+        "limits": {
+          "status": "passed",
+          "cases": 2,
+          "minimum": 2
+        },
+        "declared_failure": {
+          "status": "passed",
+          "cases": 1,
+          "minimum": 1
+        }
+      }
+    }
+  },
+  "cases": [
+    {
+      "test": "tests.test_m08_paginacion.TestM08Paginacion.test_declared_failure_rechaza_cursor_malformado_e_incompatible",
+      "category": "declared_failure",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_m08_paginacion.TestM08Paginacion.test_limit_consulta_vacia_y_tamanos_inclusivos",
+      "category": "limits",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_m08_paginacion.TestM08Paginacion.test_limit_inserciones_respetan_posicion_del_cursor",
+      "category": "limits",
+      "status": "passed"
+    },
+    {
+      "test": "tests.test_m08_paginacion.TestM08Paginacion.test_normal_recorrido_completo_sin_omisiones",
+      "category": "normal",
+      "status": "passed"
+    }
+  ]
+}
