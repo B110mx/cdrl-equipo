@@ -1,0 +1,57 @@
+{
+  "assignment_id": "security-collection-access-controls",
+  "status": "passed",
+  "generated_at": "2026-11-07T06:38:04.040998+00:00",
+  "commit_sha": "2fe175f2f0f8627bb610f671d8e36aac344cb6d3",
+  "source_dirty": true,
+  "technical_authorship": {
+    "Abril Miranda Baltazar Varillas": "matriz de permisos, contrato de auditoría, políticas IAM y fixtures"
+  },
+  "synthetic_fixtures": true,
+  "commands": [
+    "python scripts/verify_security.py"
+  ],
+  "workflow_commands": [
+    "make setup",
+    "make verify",
+    "make run"
+  ],
+  "results": {
+    "checks": {
+      "required_files": {
+        "status": "passed",
+        "missing": []
+      },
+      "security_tests": {
+        "status": "passed",
+        "total": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "coverage": {
+        "status": "passed",
+        "categories": {
+          "normal": {
+            "status": "passed",
+            "cases": 1,
+            "minimum": 1
+          },
+          "limits": {
+            "status": "passed",
+            "cases": 2,
+            "minimum": 2
+          },
+          "declared_failure": {
+            "status": "passed",
+            "cases": 1,
+            "minimum": 1
+          }
+        }
+      }
+    },
+    "run_report": "artifacts/security-access-controls-run.json",
+    "verification_report": "artifacts/security-access-controls-verify.json",
+    "verification_output": "artifacts/make-verify-output-security.txt"
+  }
+}

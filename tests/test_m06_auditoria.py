@@ -89,10 +89,16 @@ class TestM06EvolucionAuditoria(unittest.TestCase):
                 "token": "value-that-must-not-be-audited",
             }},
             audit_id=audit_id,
+            actor="role:writer",
         )
         stored = self.store.get_audit(audit_id)
         serialized = json.dumps(stored).lower()
         self.assertEqual(result["audit"]["changed_fields"], ["metadata"])
+        self.assertEqual(stored["actor"], "role:writer")
+        self.assertEqual(stored["action"], "write")
+        self.assertEqual(stored["resource"], f"events:{event['event_id']}")
+        self.assertEqual(stored["result"], "succeeded")
+        self.assertIn("occurred_at", stored)
         self.assertFalse(any(term in serialized for term in FORBIDDEN_AUDIT_TERMS))
         self.assertNotIn("value-that-must-not-be-audited", serialized)
 

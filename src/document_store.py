@@ -5,6 +5,7 @@ import binascii
 import json
 import os
 import re
+import uuid
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
@@ -16,6 +17,8 @@ from botocore.exceptions import ClientError
 from dotenv import load_dotenv
 from jsonschema import Draft202012Validator, FormatChecker
 from jsonschema.exceptions import ValidationError
+
+from src.access_control import make_audit_event, validate_audit_event
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -78,6 +81,10 @@ class DocumentEventStore:
     """Acceso a DynamoDB usando las claves e índices declarados por M05."""
 
     immutable_fields = {"event_id", "device_id", "recorded_at", "ingested_at"}
+    auditable_fields = {
+        "schema_version", "device_id", "recorded_at", "metric", "value",
+        "unit", "quality", "metadata", "ingested_at",
+    }
     cursor_version = 1
     _cursor_pattern = re.compile(r"^[A-Za-z0-9_-]+$")
 
@@ -152,22 +159,54 @@ class DocumentEventStore:
         return document
 
     def record_audit(self, event_id, operation, changed_fields, outcome="succeeded",
-                     audit_id=None, occurred_at=None):
+                     audit_id=None, occurred_at=None, actor="service:document-store"):
         """Registra metadatos de una operación sin copiar valores ni secretos."""
+        if operation != "update_event":
+            raise ValueError("unsupported audit operation")
         timestamp = occurred_at or datetime.now(timezone.utc).isoformat()
         identifier = audit_id or f"{operation}#{event_id}#{timestamp}"
+        audit_event = make_audit_event(
+            actor=actor,
+            action="write",
+            resource=f"events:{event_id}",
+            result=outcome,
+            occurred_at=timestamp,
+        )
         record = {
+            **audit_event,
             "audit_id": identifier,
             "event_id": event_id,
-            "occurred_at": timestamp,
-            "occurred_at_audit_id": f"{timestamp}#{identifier}",
+            "occurred_at_audit_id": (
+                f"{audit_event['occurred_at']}#{identifier}"),
             "operation": operation,
             "outcome": outcome,
-            "changed_fields": sorted(set(changed_fields)),
+            "changed_fields": sorted({
+                field for field in set(changed_fields)
+                if field in self.auditable_fields
+            }),
         }
         self.client.put_item(
             TableName=self.audit_table_name,
             Item=self._serialize_item(record),
+        )
+        return _to_plain(record)
+
+    def record_audit_event(self, event):
+        """Persiste un evento mínimo con clave nueva e inmutable."""
+        audit_event = validate_audit_event(event)
+        audit_id = uuid.uuid4().hex
+        resource_id = audit_event["resource"].split(":", 1)[1]
+        record = {
+            **audit_event,
+            "audit_id": audit_id,
+            "event_id": resource_id,
+            "occurred_at_audit_id": (
+                f"{audit_event['occurred_at']}#{audit_id}"),
+        }
+        self.client.put_item(
+            TableName=self.audit_table_name,
+            Item=self._serialize_item(record),
+            ConditionExpression="attribute_not_exists(audit_id)",
         )
         return _to_plain(record)
 
@@ -180,7 +219,8 @@ class DocumentEventStore:
         item = response.get("Item")
         return self._deserialize_item(item) if item else None
 
-    def update_event_audited(self, event_id, changes, audit_id=None):
+    def update_event_audited(self, event_id, changes, audit_id=None,
+                             actor="service:document-store"):
         """Actualiza un evento y deja una traza sin valores del documento."""
         updated = self.update_event(event_id, changes)
         audit = self.record_audit(
@@ -188,6 +228,7 @@ class DocumentEventStore:
             operation="update_event",
             changed_fields=changes.keys(),
             audit_id=audit_id,
+            actor=actor,
         )
         return {"event": updated, "audit": audit}
 

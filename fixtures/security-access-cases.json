@@ -1,0 +1,51 @@
+{
+  "contract_version": 1,
+  "synthetic": true,
+  "cases": [
+    {
+      "name": "reader_can_read_event",
+      "actor": "role:reader",
+      "role": "reader",
+      "collection": "events",
+      "operation": "read",
+      "resource_id": "evt-synthetic-001",
+      "expected": "succeeded"
+    },
+    {
+      "name": "reader_cannot_write_event",
+      "actor": "role:reader",
+      "role": "reader",
+      "collection": "events",
+      "operation": "write",
+      "resource_id": "evt-synthetic-002",
+      "expected": "denied"
+    },
+    {
+      "name": "auditor_cannot_read_business_collection",
+      "actor": "role:auditor",
+      "role": "auditor",
+      "collection": "events",
+      "operation": "read",
+      "resource_id": "evt-synthetic-003",
+      "expected": "denied"
+    },
+    {
+      "name": "writer_cannot_administer_event",
+      "actor": "role:writer",
+      "role": "writer",
+      "collection": "events",
+      "operation": "administer",
+      "resource_id": "evt-synthetic-004",
+      "expected": "denied"
+    },
+    {
+      "name": "auditor_can_query_audit",
+      "actor": "role:auditor",
+      "role": "auditor",
+      "collection": "audit",
+      "operation": "query_audit",
+      "resource_id": "audit-synthetic-001",
+      "expected": "succeeded"
+    }
+  ]
+}

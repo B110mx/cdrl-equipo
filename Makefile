@@ -23,6 +23,8 @@ setup:
 verify:
 	@echo "=> Verificando paginación y rendimiento M08 con regresión acumulada..."
 	$(VENV_PYTHON) scripts/verify_m08.py
+	@echo "=> Verificando permisos por colección, políticas IAM y auditoría..."
+	$(VENV_PYTHON) scripts/verify_security.py
 
 
 run:

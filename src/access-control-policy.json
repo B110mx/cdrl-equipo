@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "collections": {
+    "events": {
+      "table_env": "DYNAMODB_EVENTS_TABLE",
+      "arn_env": "DYNAMODB_EVENTS_TABLE_ARN"
+    },
+    "audit": {
+      "table_env": "DYNAMODB_AUDIT_TABLE",
+      "arn_env": "DYNAMODB_AUDIT_TABLE_ARN"
+    }
+  },
+  "operations": [
+    "read",
+    "write",
+    "administer",
+    "query_audit",
+    "append_audit"
+  ],
+  "roles": {
+    "reader": {
+      "events": ["read"],
+      "audit": []
+    },
+    "writer": {
+      "events": ["read", "write"],
+      "audit": []
+    },
+    "administrator": {
+      "events": ["read", "write", "administer"],
+      "audit": []
+    },
+    "auditor": {
+      "events": [],
+      "audit": ["query_audit"]
+    },
+    "audit_writer": {
+      "events": [],
+      "audit": ["append_audit"]
+    }
+  }
+}

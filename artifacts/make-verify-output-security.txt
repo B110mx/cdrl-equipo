@@ -1,0 +1,50 @@
+test_auditoria_existente_filtra_campos_no_permitidos (tests.test_security_access.TestSecurityAccess.test_auditoria_existente_filtra_campos_no_permitidos) ... ok
+test_contrato_de_auditoria_rechaza_carga_y_campos_no_permitidos (tests.test_security_access.TestSecurityAccess.test_contrato_de_auditoria_rechaza_carga_y_campos_no_permitidos) ... ok
+test_fallo_declarado_escribe_denegacion_de_administracion (tests.test_security_access.TestSecurityAccess.test_fallo_declarado_escribe_denegacion_de_administracion) ... ok
+test_fixture_sintetico_de_permisos (tests.test_security_access.TestSecurityAccess.test_fixture_sintetico_de_permisos) ... ok
+test_limite_auditor_no_lee_eventos_pero_consulta_auditoria (tests.test_security_access.TestSecurityAccess.test_limite_auditor_no_lee_eventos_pero_consulta_auditoria) ... ok
+test_limite_lector_no_escribe_y_no_invoca_el_almacen (tests.test_security_access.TestSecurityAccess.test_limite_lector_no_escribe_y_no_invoca_el_almacen) ... ok
+test_normal_lector_lee_y_genera_auditoria_util (tests.test_security_access.TestSecurityAccess.test_normal_lector_lee_y_genera_auditoria_util) ... ok
+test_persistencia_de_auditoria_guarda_solo_el_contrato (tests.test_security_access.TestSecurityAccess.test_persistencia_de_auditoria_guarda_solo_el_contrato) ... ok
+test_politica_iam_refleja_minimo_privilegio (tests.test_security_access.TestSecurityAccess.test_politica_iam_refleja_minimo_privilegio) ... ok
+test_writer_escribe_y_auditor_no_puede_escribir_evento (tests.test_security_access.TestSecurityAccess.test_writer_escribe_y_auditor_no_puede_escribir_evento) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.016s
+
+OK
+
+Security access verification: passed
+{
+  "required_files": {
+    "status": "passed",
+    "missing": []
+  },
+  "security_tests": {
+    "status": "passed",
+    "total": 10,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "coverage": {
+    "status": "passed",
+    "categories": {
+      "normal": {
+        "status": "passed",
+        "cases": 1,
+        "minimum": 1
+      },
+      "limits": {
+        "status": "passed",
+        "cases": 2,
+        "minimum": 2
+      },
+      "declared_failure": {
+        "status": "passed",
+        "cases": 1,
+        "minimum": 1
+      }
+    }
+  }
+}
