@@ -69,6 +69,16 @@ test_public_cannot_execute_future_functions (tests.test_roles.TestRolePermission
 test_public_cannot_read_future_objects (tests.test_roles.TestRolePermissions.test_public_cannot_read_future_objects) ... ok
 test_reader_cannot_insert (tests.test_roles.TestRolePermissions.test_reader_cannot_insert) ... ok
 test_writer_cannot_read_telemetry (tests.test_roles.TestRolePermissions.test_writer_cannot_read_telemetry) ... ok
+test_auditoria_existente_filtra_campos_no_permitidos (tests.test_security_access.TestSecurityAccess.test_auditoria_existente_filtra_campos_no_permitidos) ... ok
+test_contrato_de_auditoria_rechaza_carga_y_campos_no_permitidos (tests.test_security_access.TestSecurityAccess.test_contrato_de_auditoria_rechaza_carga_y_campos_no_permitidos) ... ok
+test_fallo_declarado_escribe_denegacion_de_administracion (tests.test_security_access.TestSecurityAccess.test_fallo_declarado_escribe_denegacion_de_administracion) ... ok
+test_fixture_sintetico_de_permisos (tests.test_security_access.TestSecurityAccess.test_fixture_sintetico_de_permisos) ... ok
+test_limite_auditor_no_lee_eventos_pero_consulta_auditoria (tests.test_security_access.TestSecurityAccess.test_limite_auditor_no_lee_eventos_pero_consulta_auditoria) ... ok
+test_limite_lector_no_escribe_y_no_invoca_el_almacen (tests.test_security_access.TestSecurityAccess.test_limite_lector_no_escribe_y_no_invoca_el_almacen) ... ok
+test_normal_lector_lee_y_genera_auditoria_util (tests.test_security_access.TestSecurityAccess.test_normal_lector_lee_y_genera_auditoria_util) ... ok
+test_persistencia_de_auditoria_guarda_solo_el_contrato (tests.test_security_access.TestSecurityAccess.test_persistencia_de_auditoria_guarda_solo_el_contrato) ... ok
+test_politica_iam_refleja_minimo_privilegio (tests.test_security_access.TestSecurityAccess.test_politica_iam_refleja_minimo_privilegio) ... ok
+test_writer_escribe_y_auditor_no_puede_escribir_evento (tests.test_security_access.TestSecurityAccess.test_writer_escribe_y_auditor_no_puede_escribir_evento) ... ok
 test_constraints_same_fixture_population (tests.test_storage_comparison.TestStorageComparison.test_constraints_same_fixture_population)
 Todas las representaciones contienen exactamente los mismos eventos. ... ok
 test_declared_failure_duplicate_event_id (tests.test_storage_comparison.TestStorageComparison.test_declared_failure_duplicate_event_id)
@@ -112,14 +122,14 @@ test_missing_category_is_failure (tests.test_verification.TestVerification.test_
 test_skipped_case_is_failure (tests.test_verification.TestVerification.test_skipped_case_is_failure) ... ok
 
 ----------------------------------------------------------------------
-Ran 94 tests in 11.519s
+Ran 104 tests in 15.573s
 
 OK
 
 M08 verification: passed
 {
-  "commit_sha": "07cfefd5d915fc1cf4db7be0c83ec946649a18a5",
-  "source_dirty": false,
+  "commit_sha": "624d63607b0b164c3616713cd92f5404907ab703",
+  "source_dirty": true,
   "checks": {
     "required_files": {
       "status": "passed",
@@ -139,22 +149,22 @@ M08 verification: passed
     },
     "no_secrets": {
       "status": "passed",
-      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/check_no_secrets.py",
+      "command": "C:\\Users\\DELL\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/check_no_secrets.py",
       "exit_code": 0
     },
     "document_store_init": {
       "status": "passed",
-      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/init_document_store.py",
+      "command": "C:\\Users\\DELL\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/init_document_store.py",
       "exit_code": 0
     },
     "m08_run": {
       "status": "passed",
-      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/run_m08.py",
+      "command": "C:\\Users\\DELL\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/run_m08.py",
       "exit_code": 0
     },
     "m08_benchmark": {
       "status": "passed",
-      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/benchmark_m08.py",
+      "command": "C:\\Users\\DELL\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/benchmark_m08.py",
       "exit_code": 0
     },
     "machine_readable_run": {
@@ -168,17 +178,17 @@ M08 verification: passed
       "dataset_events": 240,
       "warmup_runs": 5,
       "repetitions": 40,
-      "baseline_p50_ms": 57.1885,
-      "baseline_p95_ms": 60.1846,
-      "optimized_p50_ms": 44.1921,
-      "optimized_p95_ms": 47.7867
+      "baseline_p50_ms": 69.2191,
+      "baseline_p95_ms": 78.5779,
+      "optimized_p50_ms": 49.204,
+      "optimized_p95_ms": 52.0194
     },
     "cumulative_tests": {
       "status": "passed",
-      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe -m unittest discover -s tests -p test_*.py",
+      "command": "C:\\Users\\DELL\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe -m unittest discover -s tests -p test_*.py",
       "scope": "M01-M08 cumulative regression",
-      "total": 94,
-      "passed": 94,
+      "total": 104,
+      "passed": 104,
       "failures": 0,
       "errors": 0,
       "skipped": 0

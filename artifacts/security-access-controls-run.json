@@ -1,7 +1,7 @@
 {
   "assignment_id": "security-collection-access-controls",
   "status": "passed",
-  "generated_at": "2026-11-07T06:38:04.040998+00:00",
+  "generated_at": "2026-11-08T21:14:22.523877+00:00",
   "cases": [
     {
       "test": "tests.test_security_access.TestSecurityAccess.test_auditoria_existente_filtra_campos_no_permitidos",

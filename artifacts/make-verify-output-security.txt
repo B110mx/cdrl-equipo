@@ -10,7 +10,7 @@ test_politica_iam_refleja_minimo_privilegio (tests.test_security_access.TestSecu
 test_writer_escribe_y_auditor_no_puede_escribir_evento (tests.test_security_access.TestSecurityAccess.test_writer_escribe_y_auditor_no_puede_escribir_evento) ... ok
 
 ----------------------------------------------------------------------
-Ran 10 tests in 0.016s
+Ran 10 tests in 0.010s
 
 OK
 

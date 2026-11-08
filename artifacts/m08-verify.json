@@ -1,9 +1,9 @@
 {
   "assignment_id": "m08-document-query-performance",
   "status": "passed",
-  "commit_sha": "07cfefd5d915fc1cf4db7be0c83ec946649a18a5",
-  "source_dirty": false,
-  "generated_at": "2026-11-02T03:49:06.143608+00:00",
+  "commit_sha": "624d63607b0b164c3616713cd92f5404907ab703",
+  "source_dirty": true,
+  "generated_at": "2026-11-08T21:14:21.247247+00:00",
   "commands": [
     "make setup",
     "make verify",
@@ -28,22 +28,22 @@
     },
     "no_secrets": {
       "status": "passed",
-      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/check_no_secrets.py",
+      "command": "C:\\Users\\DELL\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/check_no_secrets.py",
       "exit_code": 0
     },
     "document_store_init": {
       "status": "passed",
-      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/init_document_store.py",
+      "command": "C:\\Users\\DELL\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/init_document_store.py",
       "exit_code": 0
     },
     "m08_run": {
       "status": "passed",
-      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/run_m08.py",
+      "command": "C:\\Users\\DELL\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/run_m08.py",
       "exit_code": 0
     },
     "m08_benchmark": {
       "status": "passed",
-      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/benchmark_m08.py",
+      "command": "C:\\Users\\DELL\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/benchmark_m08.py",
       "exit_code": 0
     },
     "machine_readable_run": {
@@ -57,17 +57,17 @@
       "dataset_events": 240,
       "warmup_runs": 5,
       "repetitions": 40,
-      "baseline_p50_ms": 57.1885,
-      "baseline_p95_ms": 60.1846,
-      "optimized_p50_ms": 44.1921,
-      "optimized_p95_ms": 47.7867
+      "baseline_p50_ms": 69.2191,
+      "baseline_p95_ms": 78.5779,
+      "optimized_p50_ms": 49.204,
+      "optimized_p95_ms": 52.0194
     },
     "cumulative_tests": {
       "status": "passed",
-      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe -m unittest discover -s tests -p test_*.py",
+      "command": "C:\\Users\\DELL\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe -m unittest discover -s tests -p test_*.py",
       "scope": "M01-M08 cumulative regression",
-      "total": 94,
-      "passed": 94,
+      "total": 104,
+      "passed": 104,
       "failures": 0,
       "errors": 0,
       "skipped": 0
