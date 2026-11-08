@@ -24,6 +24,7 @@ class AccessDeniedError(AccessControlError, PermissionError):
 
     def __init__(self, audit_event):
         super().__init__("operation denied by collection access policy")
+        self.code = "ACCESS_DENIED"
         self.audit_event = audit_event
 
 
@@ -147,9 +148,22 @@ class AuthorizedDocumentStore:
             lambda: self.store.events_by_metric_unit(metric, unit, start, end))
 
     def create_event(self, event):
+        resource_id = (
+            event.get("event_id", "new-event")
+            if isinstance(event, dict) else "new-event"
+        )
         return self._execute(
-            "events", "write", "new-event",
+            "events", "write", resource_id,
             lambda: self.store.create_event(event))
+
+    def put_event_idempotent(self, event):
+        resource_id = (
+            event.get("event_id", "new-event")
+            if isinstance(event, dict) else "new-event"
+        )
+        return self._execute(
+            "events", "write", resource_id,
+            lambda: self.store.put_event_idempotent(event))
 
     def update_event(self, event_id, changes):
         return self._execute(

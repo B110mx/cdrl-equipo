@@ -191,10 +191,15 @@ class DocumentEventStore:
         )
         return _to_plain(record)
 
-    def record_audit_event(self, event):
-        """Persiste un evento mínimo con clave nueva e inmutable."""
+    def record_audit_event(self, event, audit_id=None):
+        """Persiste un evento mínimo con clave inmutable.
+
+        Un ``audit_id`` explícito permite que scripts reproducibles reintenten
+        la misma escritura. Si la clave ya existe, únicamente se acepta cuando
+        el contrato almacenado es idéntico; nunca se sobrescribe auditoría.
+        """
         audit_event = validate_audit_event(event)
-        audit_id = uuid.uuid4().hex
+        audit_id = audit_id or uuid.uuid4().hex
         resource_id = audit_event["resource"].split(":", 1)[1]
         record = {
             **audit_event,
@@ -203,11 +208,20 @@ class DocumentEventStore:
             "occurred_at_audit_id": (
                 f"{audit_event['occurred_at']}#{audit_id}"),
         }
-        self.client.put_item(
-            TableName=self.audit_table_name,
-            Item=self._serialize_item(record),
-            ConditionExpression="attribute_not_exists(audit_id)",
-        )
+        try:
+            self.client.put_item(
+                TableName=self.audit_table_name,
+                Item=self._serialize_item(record),
+                ConditionExpression="attribute_not_exists(audit_id)",
+            )
+        except ClientError as error:
+            if error.response["Error"]["Code"] != "ConditionalCheckFailedException":
+                raise
+            existing = self.get_audit(audit_id)
+            if existing != _to_plain(record):
+                raise DataIntegrityError(
+                    f"audit_id belongs to a different event: {audit_id}") from error
+            return existing
         return _to_plain(record)
 
     def get_audit(self, audit_id):

@@ -12,7 +12,8 @@ def source_revision():
              "README.md", "requirements.txt", "docker-compose.yml", ".gitignore", ".env.example",
              "artifacts/test_cases.sql",
              ":(exclude)docs/CONTEXTO-PROYECTO-CHATGPT.md",
-             ":(exclude)docs/BORRADOR-WHATSAPP-M08.md"]
+             ":(exclude)docs/BORRADOR-WHATSAPP-M08.md",
+             ":(exclude)docs/BORRADOR-WHATSAPP-M09.md"]
     dirty = bool(subprocess.check_output(
         ["git", "status", "--porcelain", "--untracked-files=all", "--", *paths],
         cwd=ROOT, text=True, timeout=10,

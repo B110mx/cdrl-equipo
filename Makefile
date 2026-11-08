@@ -30,3 +30,4 @@ verify:
 run:
 	$(VENV_PYTHON) scripts/run_m08.py
 	$(VENV_PYTHON) scripts/benchmark_m08.py
+	$(VENV_PYTHON) scripts/run_m09.py

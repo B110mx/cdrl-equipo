@@ -23,6 +23,7 @@ artifacts/*.log
 !artifacts/m08-verify.json
 !artifacts/security-access-controls-run.json
 !artifacts/security-access-controls-verify.json
+!artifacts/m09-run.json
 evidence/*-local.json
 db/data/
 docker-data/
