@@ -9,6 +9,10 @@ políticas de identidad AWS. Se requiere negar accesos no autorizados también e
 desarrollo y mantener una política equivalente para AWS sin versionar
 credenciales.
 
+La decisión aplica **mínimo privilegio**: cada identidad puede ejecutar
+únicamente las acciones declaradas para su rol y todo intento fuera de ese
+alcance se rechaza antes de invocar el almacén.
+
 ## Decisión
 
 La matriz de [src/access-control-policy.json](../src/access-control-policy.json)
@@ -73,6 +77,29 @@ el almacén subyacente y producen un evento de denegación. También se valida u
 caso normal, dos límites de separación de roles y un fallo declarado de
 administración indebida. La salida reproducible se genera en `artifacts/` y
 `evidence/`.
+
+Cada denegación expone el código estable `ACCESS_DENIED` a la capa que registra
+el resultado de la prueba, sin añadir mensajes internos ni secretos al evento
+de auditoría. `scripts/run_m09.py` demuestra el abuso controlado mediante una
+lectura directa con datos sintéticos y después aplica la remediación: el mismo
+actor recibe únicamente `AuthorizedDocumentStore`, la operación se rechaza
+antes de alcanzar el backend y la denegación queda auditada. Repetir la
+demostración reutiliza identificadores de auditoría estables y nunca sobrescribe
+un registro distinto.
+
+La verificación final vive en `scripts/verify_m09.py`, se ejecuta desde
+`make verify` y produce `artifacts/m09-verify.json`,
+`artifacts/make-verify-output-m09.txt` y
+`evidence/m09-nosql-security-audit.json`. El reporte conserva el código esperado
+de cada prueba negativa, los comandos ejecutados, el SHA y la autoría técnica.
+
+## Autoría técnica
+
+- **Abril Miranda Baltazar Varillas:** matriz de permisos, contrato de auditoría,
+  políticas IAM y fixtures sintéticos.
+- **Luis Bryan Rojas Rodriguez:** fachada autorizada, persistencia idempotente,
+  ejecución machine-readable y remediación.
+- **Edwin Yahir Cruz Flores:** pruebas negativas, verificador, ADR y evidencia.
 
 ## Consecuencias
 

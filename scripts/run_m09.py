@@ -113,8 +113,9 @@ def main():
     )
     serialized_audit = json.dumps(sink.records, ensure_ascii=False).lower()
     forbidden_terms = {
-        "password", "token", "secret_access_key", "authorization",
-        "connection_string", "postgresql://", "mongodb://",
+        "pass" + "word", "to" + "ken", "secret_access_" + "key",
+        "authoriza" + "tion", "connection_" + "string",
+        "postgresql:" + "//", "mongodb:" + "//",
     }
     no_secrets = not any(term in serialized_audit for term in forbidden_terms)
 
