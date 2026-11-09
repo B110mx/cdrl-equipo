@@ -1,0 +1,59 @@
+{
+  "assignment_id": "m09-nosql-security-audit",
+  "status": "passed",
+  "technical_author": "Luis Bryan Rojas Rodriguez",
+  "commit_sha": "8e79654e840c4122d016ec4791ef5f6454d46947",
+  "source_dirty": false,
+  "generated_at": "2026-11-09T03:44:37.857560+00:00",
+  "command": "python scripts/run_m09.py",
+  "workflow_commands": [
+    "make setup",
+    "make verify",
+    "make run"
+  ],
+  "synthetic_fixture": "fixtures/document_data.json",
+  "policy": "src/access-control-policy.json",
+  "cases": {
+    "normal_authorized_read": {
+      "status": "passed",
+      "operation": "events/read"
+    },
+    "boundary_reader_write_denied": {
+      "status": "passed",
+      "error_code": "ACCESS_DENIED",
+      "audit_result": "denied",
+      "operation": "events/write"
+    },
+    "boundary_auditor_business_read_denied": {
+      "status": "passed",
+      "error_code": "ACCESS_DENIED",
+      "audit_result": "denied",
+      "operation": "events/read"
+    },
+    "declared_failure_writer_admin_denied": {
+      "status": "passed",
+      "error_code": "ACCESS_DENIED",
+      "audit_result": "denied",
+      "operation": "events/administer"
+    },
+    "controlled_abuse_remediated": {
+      "status": "passed",
+      "error_code": "ACCESS_DENIED",
+      "audit_result": "denied",
+      "operation": "events/read",
+      "unguarded_access_observed": true,
+      "guarded_access_denied": true
+    },
+    "audit_contract_and_secret_absence": {
+      "status": "passed",
+      "audit_records": 5,
+      "minimal_contract": true,
+      "forbidden_terms_absent": true
+    }
+  },
+  "audit_summary": {
+    "records_persisted": 5,
+    "allowed": 1,
+    "denied": 4
+  }
+}

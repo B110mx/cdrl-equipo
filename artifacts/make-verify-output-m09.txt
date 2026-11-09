@@ -1,0 +1,96 @@
+test_auditoria_existente_filtra_campos_no_permitidos (tests.test_security_access.TestSecurityAccess.test_auditoria_existente_filtra_campos_no_permitidos) ... ok
+test_contrato_de_auditoria_rechaza_carga_y_campos_no_permitidos (tests.test_security_access.TestSecurityAccess.test_contrato_de_auditoria_rechaza_carga_y_campos_no_permitidos) ... ok
+test_fallo_declarado_escribe_denegacion_de_administracion (tests.test_security_access.TestSecurityAccess.test_fallo_declarado_escribe_denegacion_de_administracion) ... ok
+test_fixture_sintetico_de_permisos (tests.test_security_access.TestSecurityAccess.test_fixture_sintetico_de_permisos) ... ok
+test_limite_auditor_no_lee_eventos_pero_consulta_auditoria (tests.test_security_access.TestSecurityAccess.test_limite_auditor_no_lee_eventos_pero_consulta_auditoria) ... ok
+test_limite_lector_no_escribe_y_no_invoca_el_almacen (tests.test_security_access.TestSecurityAccess.test_limite_lector_no_escribe_y_no_invoca_el_almacen) ... ok
+test_normal_lector_lee_y_genera_auditoria_util (tests.test_security_access.TestSecurityAccess.test_normal_lector_lee_y_genera_auditoria_util) ... ok
+test_persistencia_de_auditoria_guarda_solo_el_contrato (tests.test_security_access.TestSecurityAccess.test_persistencia_de_auditoria_guarda_solo_el_contrato) ... ok
+test_politica_iam_refleja_minimo_privilegio (tests.test_security_access.TestSecurityAccess.test_politica_iam_refleja_minimo_privilegio) ... ok
+test_writer_escribe_y_auditor_no_puede_escribir_evento (tests.test_security_access.TestSecurityAccess.test_writer_escribe_y_auditor_no_puede_escribir_evento) ... ok
+test_auditoria_reproducible_no_sobrescribe_registros (tests.test_m09_seguridad.TestM09Seguridad.test_auditoria_reproducible_no_sobrescribe_registros) ... ok
+test_declared_failure_writer_no_administra_eventos (tests.test_m09_seguridad.TestM09Seguridad.test_declared_failure_writer_no_administra_eventos) ... ok
+test_limit_auditor_no_lee_eventos_y_si_consulta_auditoria (tests.test_m09_seguridad.TestM09Seguridad.test_limit_auditor_no_lee_eventos_y_si_consulta_auditoria) ... ok
+test_limit_reader_no_escribe_y_reporta_codigo (tests.test_m09_seguridad.TestM09Seguridad.test_limit_reader_no_escribe_y_reporta_codigo) ... ok
+test_normal_writer_escribe_y_audita_resultado (tests.test_m09_seguridad.TestM09Seguridad.test_normal_writer_escribe_y_audita_resultado) ... ok
+test_remediation_impide_que_el_abuso_llegue_al_backend (tests.test_m09_seguridad.TestM09Seguridad.test_remediation_impide_que_el_abuso_llegue_al_backend) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.005s
+
+OK
+
+M09 verification: passed
+{
+  "commit_sha": "8e79654e840c4122d016ec4791ef5f6454d46947",
+  "source_dirty": false,
+  "checks": {
+    "required_files": {
+      "status": "passed",
+      "missing": []
+    },
+    "adr": {
+      "status": "passed",
+      "required_topics": [
+        "mínimo privilegio",
+        "actor",
+        "acción",
+        "recurso",
+        "resultado",
+        "remediación",
+        "audit_writer",
+        "dynamodb local",
+        "aws"
+      ]
+    },
+    "no_secrets": {
+      "status": "passed",
+      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/check_no_secrets.py",
+      "exit_code": 0
+    },
+    "m09_run": {
+      "status": "passed",
+      "command": "C:\\Users\\H33B3\\Documents\\cdrl-equipo\\.venv\\Scripts\\python.exe scripts/run_m09.py",
+      "exit_code": 0
+    },
+    "machine_readable_run": {
+      "status": "passed",
+      "artifact": "artifacts/m09-run.json",
+      "cases": 6,
+      "denied_cases_with_error_code": 4
+    },
+    "m09_tests": {
+      "status": "passed",
+      "total": 16,
+      "passed": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "coverage": {
+      "status": "passed",
+      "categories": {
+        "normal": {
+          "status": "passed",
+          "cases": 2,
+          "minimum": 1
+        },
+        "limits": {
+          "status": "passed",
+          "cases": 2,
+          "minimum": 2
+        },
+        "declared_failure": {
+          "status": "passed",
+          "cases": 1,
+          "minimum": 1
+        }
+      }
+    },
+    "negative_access": {
+      "status": "passed",
+      "passed_cases": 4,
+      "expected_error_code": "ACCESS_DENIED"
+    }
+  }
+}
